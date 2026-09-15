@@ -1,0 +1,1030 @@
+
+<section class="offer-letter-page">
+
+  @if (isLoading()) {
+
+    <section class="state-card loading-state">
+
+      <div class="loading-spinner"></div>
+
+      <div>
+        <h2>Loading Offer Letter</h2>
+
+        <p>
+          Please wait while we prepare the candidate information.
+        </p>
+      </div>
+
+    </section>
+
+  } @else if (!onboarding()) {
+
+    <section class="state-card empty-state">
+
+      <div class="state-icon">
+        !
+      </div>
+
+      <h2>Onboarding Record Not Found</h2>
+
+      <p>
+        The onboarding record could not be loaded.
+        Please return to the offers page and try again.
+      </p>
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="back()">
+
+        Back to Offers
+
+      </button>
+
+    </section>
+
+  } @else {
+
+    <header class="page-header">
+
+      <div class="header-left">
+
+        <button
+          type="button"
+          class="back-button"
+          (click)="back()">
+
+          <span class="back-icon">
+            ←
+          </span>
+
+          <span>
+            Back to Offers
+          </span>
+
+        </button>
+
+        <div class="header-content">
+
+          <span class="page-eyebrow">
+            HIRING
+          </span>
+
+          <h1>
+            Create Offer Letter
+          </h1>
+
+          <p>
+            Prepare and review the employment offer before sending it
+            to the candidate.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="header-meta">
+
+        <span class="meta-label">
+          ONBOARDING
+        </span>
+
+        <strong>
+          #{{ onboarding()!.id }}
+        </strong>
+
+      </div>
+
+    </header>
+
+
+    <div class="offer-layout">
+
+      <!-- Main Offer Letter -->
+
+      <main class="offer-document">
+
+        <div class="document-top">
+
+          <div class="company-mark">
+            EMAS
+          </div>
+
+          <div class="document-label">
+            EMPLOYMENT OFFER
+          </div>
+
+        </div>
+
+
+        <div class="document-body">
+
+          <div class="document-introduction">
+
+            <span class="document-eyebrow">
+              LETTER OF OFFER
+            </span>
+
+            <h2>
+              Employment Offer
+            </h2>
+
+            <p class="document-date">
+              Prepared
+              {{ onboarding()!.createdAt | date:'dd MMMM yyyy' }}
+            </p>
+
+          </div>
+
+
+          <!-- Candidate -->
+
+          <section class="letter-section candidate-section">
+
+            <div class="section-heading">
+
+              <span class="section-number">
+                01
+              </span>
+
+              <div>
+
+                <span class="section-eyebrow">
+                  CANDIDATE
+                </span>
+
+                <h3>
+                  Candidate Information
+                </h3>
+
+              </div>
+
+            </div>
+
+
+            <div class="candidate-introduction">
+
+              <div class="candidate-avatar">
+                {{ onboarding()!.email.charAt(0).toUpperCase() }}
+              </div>
+
+              <div class="candidate-details">
+
+                <strong>
+                  {{ onboarding()!.email }}
+                </strong>
+
+                @if (onboarding()!.phone) {
+
+                  <span>
+                    {{ onboarding()!.phone }}
+                  </span>
+
+                }
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <!-- Position -->
+
+          <section class="letter-section">
+
+            <div class="section-heading">
+
+              <span class="section-number">
+                02
+              </span>
+
+              <div>
+
+                <span class="section-eyebrow">
+                  POSITION
+                </span>
+
+                <h3>
+                  Employment Details
+                </h3>
+
+              </div>
+
+            </div>
+
+
+            <div class="details-grid">
+
+              <div class="detail-block">
+
+                <span class="detail-label">
+                  Department
+                </span>
+
+                <strong>
+                  {{ onboarding()!.departmentName || 'Not specified' }}
+                </strong>
+
+              </div>
+
+
+              <div class="detail-block">
+
+                <span class="detail-label">
+                  Designation
+                </span>
+
+                <strong>
+                  {{ onboarding()!.designationName || 'Not specified' }}
+                </strong>
+
+              </div>
+
+
+              <div class="detail-block">
+
+                <span class="detail-label">
+                  Employment Type
+                </span>
+
+                <strong>
+                  {{ onboarding()!.employmentType || 'Not specified' }}
+                </strong>
+
+              </div>
+
+
+              <div class="detail-block">
+
+                <span class="detail-label">
+                  Joining Date
+                </span>
+
+                <strong>
+                  {{
+                    onboarding()!.joiningDate
+                      ? (
+                          onboarding()!.joiningDate
+                          | date:'dd MMMM yyyy'
+                        )
+                      : 'To be confirmed'
+                  }}
+                </strong>
+
+              </div>
+
+
+              <div class="detail-block">
+
+                <span class="detail-label">
+                  Reporting Manager
+                </span>
+
+                <strong>
+                  {{ onboarding()!.managerName || 'Not assigned' }}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <!-- Compensation -->
+
+          <section class="letter-section compensation-section">
+
+            <div class="section-heading">
+
+              <span class="section-number">
+                03
+              </span>
+
+              <div>
+
+                <span class="section-eyebrow">
+                  COMPENSATION
+                </span>
+
+                <h3>
+                  Offered Compensation
+                </h3>
+
+              </div>
+
+            </div>
+
+
+            <div class="salary-display">
+
+              <div>
+
+                <span class="salary-label">
+                  Monthly Salary
+                </span>
+
+                <span class="salary-description">
+                  Gross monthly compensation
+                </span>
+
+              </div>
+
+              <strong class="salary-value">
+
+                @if (onboarding()!.salary !== null) {
+
+                  PKR
+                  {{ onboarding()!.salary | number:'1.0-2' }}
+
+                } @else {
+
+                  Not specified
+
+                }
+
+              </strong>
+
+            </div>
+
+          </section>
+
+
+          <!-- Offer Validity -->
+
+          <section class="letter-section validity-section">
+
+            <div class="section-heading">
+
+              <span class="section-number">
+                04
+              </span>
+
+              <div>
+
+                <span class="section-eyebrow">
+                  VALIDITY
+                </span>
+
+                <h3>
+                  Offer Validity
+                </h3>
+
+              </div>
+
+            </div>
+
+
+            <div class="validity-content">
+
+              <div class="validity-description">
+
+                <strong>
+                  Offer Expiry
+                </strong>
+
+                <p>
+                  Select the date until which the candidate can
+                  accept this offer.
+                </p>
+
+              </div>
+
+
+              <div class="form-field">
+
+                <label for="expiresAt">
+                  Expires On
+                </label>
+
+                <input
+                  id="expiresAt"
+                  type="datetime-local"
+                  [(ngModel)]="expiresAt"
+                />
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <!-- Terms -->
+
+          <section class="letter-section terms-section">
+
+            <div class="section-heading">
+
+              <span class="section-number">
+                05
+              </span>
+
+              <div>
+
+                <span class="section-eyebrow">
+                  TERMS
+                </span>
+
+                <h3>
+                  Terms &amp; Conditions
+                </h3>
+
+              </div>
+
+            </div>
+
+
+            <div class="terms-content">
+
+              <p>
+                This employment offer is subject to the terms and
+                conditions applicable to the position and the policies
+                of the organization.
+              </p>
+
+              <ul>
+
+                <li>
+                  Employment is subject to successful completion
+                  of the required onboarding process.
+                </li>
+
+                <li>
+                  The candidate is expected to provide accurate
+                  and complete information during onboarding.
+                </li>
+
+                <li>
+                  The employment relationship will be governed by
+                  applicable company policies and employment terms.
+                </li>
+
+                <li>
+                  The candidate must accept the offer before the
+                  specified expiry date.
+                </li>
+
+              </ul>
+
+            </div>
+
+          </section>
+
+
+          <!-- Closing -->
+
+          <section class="letter-closing">
+
+            <p>
+              We are pleased to present this employment opportunity
+              and look forward to welcoming you to the organization.
+            </p>
+
+            <p>
+              Please review the offer carefully and complete the
+              required onboarding steps after acceptance.
+            </p>
+
+            <div class="signature-area">
+
+              <div class="signature-line"></div>
+
+              <strong>
+                Human Resources
+              </strong>
+
+              <span>
+                Employee Management System
+              </span>
+
+            </div>
+
+          </section>
+
+        </div>
+
+      </main>
+
+
+      <!-- Right Sidebar -->
+
+      <aside class="offer-sidebar">
+
+
+        <!-- Candidate Summary -->
+
+        <section class="sidebar-card">
+
+          <div class="sidebar-card-header">
+
+            <div>
+
+              <span class="sidebar-eyebrow">
+                CANDIDATE
+              </span>
+
+              <h3>
+                Candidate Summary
+              </h3>
+
+            </div>
+
+          </div>
+
+
+          <div class="candidate-summary">
+
+            <div class="summary-avatar">
+              {{ onboarding()!.email.charAt(0).toUpperCase() }}
+            </div>
+
+            <div>
+
+              <strong>
+                {{ onboarding()!.email }}
+              </strong>
+
+              <span>
+                Onboarding #{{ onboarding()!.id }}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="summary-list">
+
+            <div>
+
+              <span>
+                Department
+              </span>
+
+              <strong>
+                {{ onboarding()!.departmentName || 'Not assigned' }}
+              </strong>
+
+            </div>
+
+            <div>
+
+              <span>
+                Designation
+              </span>
+
+              <strong>
+                {{ onboarding()!.designationName || 'Not assigned' }}
+              </strong>
+
+            </div>
+
+            <div>
+
+              <span>
+                Status
+              </span>
+
+              <strong class="status-badge">
+                {{ getStatusLabel(onboarding()!.status) }}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- Offer Settings -->
+
+        <section class="sidebar-card">
+
+          <div class="sidebar-card-header">
+
+            <span class="sidebar-eyebrow">
+              OFFER SETTINGS
+            </span>
+
+            <h3>
+              Before Sending
+            </h3>
+
+          </div>
+
+
+          <div class="check-list">
+
+            <div class="check-item">
+
+              <span class="check-icon">
+                ✓
+              </span>
+
+              <div>
+
+                <strong>
+                  Candidate identified
+                </strong>
+
+                <span>
+                  Candidate email is linked to onboarding.
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="check-item">
+
+              <span class="check-icon">
+                ✓
+              </span>
+
+              <div>
+
+                <strong>
+                  Employment information
+                </strong>
+
+                <span>
+                  Position and compensation are prepared.
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div
+              class="check-item"
+              [class.check-warning]="!expiresAt">
+
+              <span class="check-icon">
+
+                @if (expiresAt) {
+                  ✓
+                } @else {
+                  !
+                }
+
+              </span>
+
+              <div>
+
+                <strong>
+                  Offer expiry
+                </strong>
+
+                <span>
+
+                  @if (expiresAt) {
+                    Expiry date selected.
+                  } @else {
+                    Expiry date is required.
+                  }
+
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- Delivery Information -->
+
+        <section class="sidebar-card delivery-card">
+
+          <div class="delivery-icon">
+            ✉
+          </div>
+
+          <div>
+
+            <strong>
+              Secure Candidate Delivery
+            </strong>
+
+            <p>
+              When the offer is sent, the candidate will receive
+              an email containing a secure invitation link.
+            </p>
+
+          </div>
+
+        </section>
+
+      </aside>
+
+    </div>
+
+
+    <!-- Bottom Actions -->
+
+    <footer class="page-actions">
+
+      <div class="action-information">
+
+        <span class="action-status">
+          OFFER DRAFT
+        </span>
+
+        <p>
+          Review all information before creating the offer.
+        </p>
+
+      </div>
+
+
+      <div class="action-buttons">
+
+        <button
+          type="button"
+          class="secondary-button"
+          [disabled]="isCreating() || isSending()"
+          (click)="back()">
+
+          Cancel
+
+        </button>
+
+
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="isCreating() || isSending() || !expiresAt"
+          (click)="createOffer()">
+
+          @if (isCreating()) {
+
+            <span class="button-spinner"></span>
+
+            <span>
+              Creating Offer...
+            </span>
+
+          } @else {
+
+            <span>
+              Create Offer
+            </span>
+
+            <span class="button-arrow">
+              →
+            </span>
+
+          }
+
+        </button>
+
+      </div>
+
+    </footer>
+
+  }
+
+</section>
+
+
+<!-- Offer Created Modal -->
+
+@if (showCreatedModal()) {
+
+  <div
+    class="modal-backdrop"
+    role="presentation">
+
+    <div
+      class="success-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="offer-created-title">
+
+      <div class="success-modal-icon">
+        ✓
+      </div>
+
+      <div class="success-modal-content">
+
+        <span class="modal-eyebrow">
+          OFFER CREATED
+        </span>
+
+        <h2 id="offer-created-title">
+          Offer Created Successfully
+        </h2>
+
+        <p>
+          The offer has been created successfully and is currently
+          saved as a draft.
+        </p>
+
+        @if (offer()) {
+
+          <div class="created-offer-reference">
+
+            <span>
+              Offer
+            </span>
+
+            <strong>
+              #{{ offer()!.id }}
+            </strong>
+
+          </div>
+
+        }
+
+      </div>
+
+      <div class="success-modal-actions">
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="closeCreatedModal()">
+
+          Close
+
+        </button>
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="reviewAndSend()">
+
+          <span>
+            Review &amp; Send
+          </span>
+
+          <span>
+            →
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}
+
+
+<!-- Send Offer Confirmation Modal -->
+
+@if (showSendConfirmationModal()) {
+
+  <div
+    class="modal-backdrop"
+    role="presentation">
+
+    <div
+      class="confirmation-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="send-offer-title">
+
+      <div class="confirmation-modal-icon">
+        ✉
+      </div>
+
+      <div class="confirmation-modal-content">
+
+        <span class="modal-eyebrow">
+          SEND OFFER
+        </span>
+
+        <h2 id="send-offer-title">
+          Send Offer to Candidate?
+        </h2>
+
+        <p>
+          This will send the offer to the candidate through the
+          secure invitation process.
+        </p>
+
+        @if (offer()) {
+
+          <div class="send-offer-summary">
+
+            <div class="summary-row">
+
+              <span>
+                Offer
+              </span>
+
+              <strong>
+                #{{ offer()!.id }}
+              </strong>
+
+            </div>
+
+            <div class="summary-row">
+
+              <span>
+                Candidate
+              </span>
+
+              <strong>
+                {{ onboarding()!.email }}
+              </strong>
+
+            </div>
+
+            <div class="summary-row">
+
+              <span>
+                Offer expiry
+              </span>
+
+              <strong>
+
+                {{
+                  offer()!.expiresAt
+                    ? (
+                        offer()!.expiresAt
+                        | date:'dd MMM yyyy, hh:mm a'
+                      )
+                    : 'No expiry'
+                }}
+
+              </strong>
+
+            </div>
+
+          </div>
+
+        }
+
+        <div class="confirmation-notice">
+
+          <span class="notice-icon">
+            ✓
+          </span>
+
+          <p>
+            The candidate will receive a secure link to review
+            the offer and accept or decline it.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="confirmation-modal-actions">
+
+        <button
+          type="button"
+          class="secondary-button"
+          [disabled]="isSending()"
+          (click)="closeSendConfirmation()">
+
+          Cancel
+
+        </button>
+
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="isSending()"
+          (click)="sendOffer()">
+
+          @if (isSending()) {
+
+            <span class="button-spinner"></span>
+
+            <span>
+              Sending Offer...
+            </span>
+
+          } @else {
+
+            <span>
+              Send Offer
+            </span>
+
+            <span>
+              →
+            </span>
+
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}
+

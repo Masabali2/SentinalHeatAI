@@ -1,0 +1,158 @@
+.hiring-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 32px;
+}
+
+.page-eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #0f172a;
+}
+
+.page-header p {
+  margin: 10px 0 0;
+  max-width: 650px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+.hiring-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.hiring-card {
+  display: flex;
+  gap: 24px;
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.hiring-card:hover {
+  transform: translateY(-3px);
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+.card-icon {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  font-size: 24px;
+}
+
+.single-icon {
+  background: #eff6ff;
+}
+
+.bulk-icon {
+  background: #f5f3ff;
+}
+
+.card-content {
+  min-width: 0;
+}
+
+.card-content h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 650;
+  color: #0f172a;
+}
+
+.card-content p {
+  margin: 10px 0 24px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #64748b;
+}
+
+button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+.primary-button {
+  color: #ffffff;
+  background: #2563eb;
+}
+
+.primary-button:hover {
+  background: #1d4ed8;
+}
+
+.secondary-button {
+  color: #ffffff;
+  background: #7c3aed;
+}
+
+.secondary-button:hover {
+  background: #6d28d9;
+}
+
+button span {
+  font-size: 17px;
+  line-height: 1;
+}
+
+@media (max-width: 850px) {
+  .hiring-options {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .hiring-card {
+    flex-direction: column;
+    padding: 22px;
+  }
+
+  .page-header h1 {
+    font-size: 28px;
+  }
+}

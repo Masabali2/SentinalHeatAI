@@ -1,0 +1,442 @@
+<div class="dashboard">
+
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div>
+      <h1>Good morning, {{ firstName }} 👋</h1>
+      <p>Here is what is happening across your organization today.</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      [disabled]="isLoading()"
+      (click)="reloadDashboard()"
+    >
+      <span class="refresh-icon">↻</span>
+      <span>Refresh</span>
+    </button>
+  </header>
+
+  @if (errorMessage()) {
+
+    <div class="dashboard-error">
+      <span>{{ errorMessage() }}</span>
+
+      <button
+        type="button"
+        (click)="reloadDashboard()"
+      >
+        Try again
+      </button>
+    </div>
+
+  } @else if (isLoading() && !dashboard()) {
+
+    <div class="dashboard-loading">
+      Loading dashboard...
+    </div>
+
+  } @else if (dashboard(); as data) {
+
+   <section class="statistics-grid">
+  @for (stat of primaryStats(data.statistics); track stat.key) {
+    <article class="stat-card" [attr.data-stat]="stat.key">
+
+      <div class="stat-icon">
+        @switch (stat.key) {
+          @case ('totalEmployees') {
+            <span>👥</span>
+          }
+
+          @case ('totalDepartments') {
+            <span>🏢</span>
+          }
+
+          @case ('totalOffers') {
+            <span>💼</span>
+          }
+
+          @case ('pendingOnboarding') {
+            <span>⏳</span>
+          }
+
+          @default {
+            <span>📊</span>
+          }
+        }
+      </div>
+
+      <div class="stat-card-content">
+        <span class="stat-title">{{ stat.title }}</span>
+        <strong class="stat-value">{{ stat.value }}</strong>
+
+        @if (stat.description) {
+          <span class="stat-description">
+            {{ stat.description }}
+          </span>
+        }
+      </div>
+
+      <div class="stat-decoration"></div>
+    </article>
+  }
+</section>
+
+    <!-- Priority Work + Designation Distribution -->
+    <section class="dashboard-grid dashboard-grid-main">
+
+      <!-- Priority Work -->
+     <article class="dashboard-card priority-work-card">
+
+  <div class="card-header">
+    <div class="card-heading">
+      <div class="card-heading-icon">
+        <span>⚡</span>
+      </div>
+
+      <div>
+        <h2>Priority Work</h2>
+        <p>Items that require your attention.</p>
+      </div>
+    </div>
+
+    <span class="card-count">
+      {{ data.priorityWork.length }}
+    </span>
+  </div>
+
+  @if (data.priorityWork.length > 0) {
+
+    <!-- Desktop table -->
+    <div class="table-wrapper desktop-table">
+      <table class="priority-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Designation</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (row of data.priorityWork; track row.id) {
+            <tr>
+
+              <td>
+                <div class="employee-cell">
+                  <div class="employee-avatar">
+                    {{ row.name.charAt(0) || '?' }}
+                  </div>
+
+                  <span class="table-name">
+                    {{ row.name || '-' }}
+                  </span>
+                </div>
+              </td>
+
+              <td>{{ row.department }}</td>
+
+              <td>{{ row.designation }}</td>
+
+              <td>
+                <span
+                  class="status-badge"
+                  [attr.data-status]="row.status"
+                >
+                  <span class="status-dot"></span>
+                  {{ row.status }}
+                </span>
+              </td>
+
+              <td>
+                <a
+                  class="table-action"
+                  [routerLink]="row.route"
+                >
+                  View
+                  <span>→</span>
+                </a>
+              </td>
+
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile cards -->
+    <div class="mobile-priority-list">
+      @for (row of data.priorityWork; track row.id) {
+
+        <article class="priority-mobile-card">
+
+          <div class="priority-mobile-header">
+
+            <div class="employee-cell">
+              <div class="employee-avatar">
+                {{ row.name.charAt(0) || '?' }}
+              </div>
+
+              <div>
+                <strong class="table-name">
+                  {{ row.name || '-' }}
+                </strong>
+
+                <span class="mobile-designation">
+                  {{ row.designation }}
+                </span>
+              </div>
+            </div>
+
+            <span
+              class="status-badge"
+              [attr.data-status]="row.status"
+            >
+              <span class="status-dot"></span>
+              {{ row.status }}
+            </span>
+
+          </div>
+
+          <div class="priority-mobile-details">
+
+            <div>
+              <span class="mobile-detail-label">
+                Department
+              </span>
+
+              <strong>
+                {{ row.department }}
+              </strong>
+            </div>
+
+            <a
+              class="mobile-view-action"
+              [routerLink]="row.route"
+            >
+              View
+              <span>→</span>
+            </a>
+
+          </div>
+
+        </article>
+
+      }
+    </div>
+
+  } @else {
+
+    <div class="empty-state">
+      <span class="empty-state-icon">✓</span>
+      <strong>No priority work</strong>
+      <p>
+        Everything requiring your attention is up to date.
+      </p>
+    </div>
+
+  }
+
+</article>
+      <!-- Designation Distribution -->
+      <article class="dashboard-card distribution-card">
+
+        <div class="card-header">
+          <div>
+            <h2>Designation Distribution</h2>
+            <p>Employees by designation.</p>
+          </div>
+        </div>
+
+        @for (
+          chart of data.charts;
+          track chart.key
+        ) {
+
+          @if (chart.key === 'designationDistribution') {
+
+            @if (chart.data.length > 0) {
+
+              <div class="donut-section">
+
+                <div
+                  class="donut-chart"
+                  [style.background]="donutBackground(chart.data)"
+                >
+                  <div class="donut-center">
+                   <strong>
+  {{ donutTotal(chart.data) }}
+</strong>
+                    <span>Employees</span>
+                  </div>
+                </div>
+
+                <div class="chart-legend">
+
+                  @for (
+                    item of chart.data;
+                    track item.label;
+                    let i = $index
+                  ) {
+
+                    <div class="legend-item">
+
+                      <span
+                        class="legend-dot"
+                        [style.background]="colorFor(i)"
+                      ></span>
+
+                      <span class="legend-label">
+                        {{ item.label }}
+                      </span>
+
+                      <strong class="legend-value">
+                        {{ item.value }}
+                      </strong>
+
+                    </div>
+
+                  }
+
+                </div>
+
+              </div>
+
+            } @else {
+
+              <div class="empty-state">
+                <span class="empty-state-icon">◌</span>
+                <strong>No designation data</strong>
+                <p>No employee designation data is available.</p>
+              </div>
+
+            }
+
+          }
+
+        }
+
+      </article>
+
+    </section>
+
+    <!-- Recent Activities + Quick Actions -->
+    <section class="dashboard-grid dashboard-grid-bottom">
+
+      <!-- Recent Activities -->
+      <article class="dashboard-card">
+
+        <div class="card-header">
+          <div>
+            <h2>Recent Activities</h2>
+            <p>Latest updates across the system.</p>
+          </div>
+        </div>
+
+        @if (data.recentActivities.length > 0) {
+
+          <div class="activity-list">
+
+            @for (
+              activity of data.recentActivities;
+              track activity.id
+            ) {
+
+              <div class="activity-item">
+
+                <div class="activity-marker"></div>
+
+                <div class="activity-content">
+
+                  <strong>
+                    {{ activity.title }}
+                  </strong>
+
+                  <p>
+                    {{ activity.description }}
+                  </p>
+
+                  <span class="activity-time">
+                    {{ activity.timestamp | date:'MMM d, y, h:mm a' }}
+                  </span>
+
+                </div>
+
+              </div>
+
+            }
+
+          </div>
+
+        } @else {
+
+          <div class="empty-state">
+            <span class="empty-state-icon">◌</span>
+            <strong>No recent activities</strong>
+            <p>There are no recent system activities to display.</p>
+          </div>
+
+        }
+
+      </article>
+
+      <!-- Quick Actions -->
+      <article class="dashboard-card">
+
+        <div class="card-header">
+          <div>
+            <h2>Quick Actions</h2>
+            <p>Common actions available to you.</p>
+          </div>
+        </div>
+
+        @if (data.quickActions.length > 0) {
+
+          <div class="quick-actions">
+
+            @for (
+              action of data.quickActions;
+              track action.key
+            ) {
+
+              <a
+                class="quick-action"
+                [routerLink]="action.route"
+              >
+                <span class="quick-action-icon">+</span>
+
+                <span class="quick-action-content">
+                  <strong>{{ action.label }}</strong>
+
+                  @if (action.permission) {
+                    <small>{{ action.permission }}</small>
+                  }
+                </span>
+
+                <span class="quick-action-arrow">→</span>
+              </a>
+
+            }
+
+          </div>
+
+        } @else {
+
+          <div class="empty-state">
+            <span class="empty-state-icon">−</span>
+            <strong>No actions available</strong>
+            <p>You currently have no available quick actions.</p>
+          </div>
+
+        }
+
+      </article>
+
+    </section>
+
+  }
+
+</div>

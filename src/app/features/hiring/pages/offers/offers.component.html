@@ -1,0 +1,334 @@
+
+<section class="offers-page">
+
+  <header class="page-header">
+
+    <div class="header-content">
+      <span class="page-eyebrow">
+        HIRING
+      </span>
+
+      <h1>Candidate Offers</h1>
+
+      <p>
+        Manage offers associated with this onboarding record.
+      </p>
+    </div>
+
+    @if (onboardingId()) {
+      <div class="onboarding-badge">
+        <span class="badge-label">ONBOARDING</span>
+        <span class="badge-value">#{{ onboardingId() }}</span>
+      </div>
+    }
+
+  </header>
+
+  @if (isLoading()) {
+
+    <section class="state-card loading-state">
+
+      <div class="loading-spinner"></div>
+
+      <h2>Loading Offers</h2>
+
+      <p>
+        Please wait while we retrieve the candidate offers.
+      </p>
+
+    </section>
+
+  } @else if (offers().length === 0) {
+
+    <section class="state-card empty-state">
+
+      <div class="empty-icon">
+        <span>📄</span>
+      </div>
+
+      <h2>No Offers Yet</h2>
+
+      <p>
+        No offer has been created for this candidate yet.
+        Create the first offer to continue the hiring process.
+      </p>
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="createOffer()">
+
+        <span>Create Offer</span>
+        <span class="button-arrow">→</span>
+
+      </button>
+
+    </section>
+
+  } @else {
+
+    <div class="offers-summary">
+
+      <div class="summary-item">
+
+        <span class="summary-label">
+          Total Offers
+        </span>
+
+        <strong>
+          {{ offers().length }}
+        </strong>
+
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-item">
+
+        <span class="summary-label">
+          Active Offer
+        </span>
+
+        <strong>
+
+          @if (
+            offers().some(
+              offer =>
+                offer.status === OfferStatus.Sent ||
+                offer.status === OfferStatus.Viewed
+            )
+          ) {
+            Yes
+          } @else {
+            No
+          }
+
+        </strong>
+
+      </div>
+
+    </div>
+
+    <section class="offers-list">
+
+      @for (offer of offers(); track offer.id) {
+
+        <article class="offer-card">
+
+          <div class="offer-header">
+
+            <div class="offer-title">
+
+              <div class="offer-icon">
+                <span>📄</span>
+              </div>
+
+              <div>
+
+                <h2>
+                  Offer #{{ offer.id }}
+                </h2>
+
+                <span class="offer-reference">
+                  Onboarding #{{ offer.employeeOnboardingId }}
+                </span>
+
+              </div>
+
+            </div>
+
+            <span
+              class="offer-status"
+              [class.status-draft]="offer.status === OfferStatus.Draft"
+              [class.status-sent]="offer.status === OfferStatus.Sent"
+              [class.status-viewed]="offer.status === OfferStatus.Viewed"
+              [class.status-accepted]="offer.status === OfferStatus.Accepted"
+              [class.status-declined]="offer.status === OfferStatus.Declined"
+              [class.status-expired]="offer.status === OfferStatus.Expired"
+              [class.status-cancelled]="offer.status === OfferStatus.Cancelled">
+
+              <span class="status-dot"></span>
+
+              {{ getOfferStatusLabel(offer.status) }}
+
+            </span>
+
+          </div>
+
+          <div class="offer-main">
+
+            <div class="salary-section">
+
+              <span class="detail-label">
+                Offered Salary
+              </span>
+
+              <strong class="salary-value">
+                {{ offer.salary | number:'1.0-2' }}
+              </strong>
+
+            </div>
+
+            <div class="offer-details">
+
+              <div class="detail-item">
+
+                <span class="detail-label">
+                  Employment Type
+                </span>
+
+                <span class="detail-value">
+                  {{ offer.employmentType || 'Not specified' }}
+                </span>
+
+              </div>
+
+              <div class="detail-item">
+
+                <span class="detail-label">
+                  Joining Date
+                </span>
+
+                <span class="detail-value">
+                  {{
+                    offer.joiningDate
+                      ? (offer.joiningDate | date:'dd MMM yyyy')
+                      : 'Not specified'
+                  }}
+                </span>
+
+              </div>
+
+              <div class="detail-item">
+
+                <span class="detail-label">
+                  Sent At
+                </span>
+
+                <span class="detail-value">
+                  {{
+                    offer.sentAt
+                      ? (offer.sentAt | date:'dd MMM yyyy, hh:mm a')
+                      : 'Not sent'
+                  }}
+                </span>
+
+              </div>
+
+              <div class="detail-item">
+
+                <span class="detail-label">
+                  Expires At
+                </span>
+
+                <span class="detail-value">
+                  {{
+                    offer.expiresAt
+                      ? (offer.expiresAt | date:'dd MMM yyyy, hh:mm a')
+                      : 'No expiry'
+                  }}
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          @if (offer.acceptedAt || offer.declinedAt) {
+
+            <div class="offer-result">
+
+              @if (offer.acceptedAt) {
+
+                <span class="result-icon success">
+                  ✓
+                </span>
+
+                <div>
+
+                  <strong>
+                    Offer Accepted
+                  </strong>
+
+                  <span>
+                    {{
+                      offer.acceptedAt
+                        | date:'dd MMM yyyy, hh:mm a'
+                    }}
+                  </span>
+
+                </div>
+
+              }
+
+              @if (offer.declinedAt) {
+
+                <span class="result-icon declined">
+                  ×
+                </span>
+
+                <div>
+
+                  <strong>
+                    Offer Declined
+                  </strong>
+
+                  <span>
+                    {{
+                      offer.declinedAt
+                        | date:'dd MMM yyyy, hh:mm a'
+                    }}
+                  </span>
+
+                </div>
+
+              }
+
+            </div>
+
+          }
+
+          <footer class="offer-footer">
+
+            <span class="offer-footer-text">
+              Offer details
+            </span>
+
+            <div class="offer-actions">
+
+              <button
+                type="button"
+                class="secondary-button"
+                (click)="viewOffer(offer.id)">
+
+                View
+
+              </button>
+
+              @if (offer.status === OfferStatus.Draft) {
+
+                <button
+                  type="button"
+                  class="primary-small-button"
+                  (click)="continueOffer(offer.id)">
+
+                  Continue
+
+                </button>
+
+              }
+
+            </div>
+
+          </footer>
+
+        </article>
+
+      }
+
+    </section>
+
+  }
+
+</section>`

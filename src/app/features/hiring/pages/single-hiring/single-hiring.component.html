@@ -1,0 +1,375 @@
+<section class="single-hiring-page">
+
+  <header class="page-header">
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="cancel()">
+      <span>←</span>
+      Back to Hiring
+    </button>
+
+    <span class="page-eyebrow">
+      SINGLE HIRING
+    </span>
+
+    <h1>Hire a Candidate</h1>
+
+    <p>
+      Create an onboarding record for a new candidate by providing
+      their contact and employment information.
+    </p>
+
+  </header>
+
+
+  <form
+    class="hiring-form"
+    (ngSubmit)="createOnboarding()">
+
+    <!-- Candidate Information -->
+
+    <section class="form-card">
+
+      <div class="card-header">
+
+        <div class="card-icon candidate-icon">
+          👤
+        </div>
+
+        <div>
+          <h2>Candidate Information</h2>
+
+          <p>
+            Enter the candidate's basic contact information.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-field">
+
+          <label for="email">
+            Email
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="email"
+            name="email"
+            type="email"
+            [(ngModel)]="email"
+            placeholder="candidate@example.com"
+            required />
+
+          <span class="field-hint">
+            The candidate will receive hiring and onboarding communication
+            at this email address.
+          </span>
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="phone">
+            Phone
+          </label>
+
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            [(ngModel)]="phone"
+            placeholder="+92 300 1234567" />
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Employment Information -->
+
+    <section class="form-card">
+
+      <div class="card-header">
+
+        <div class="card-icon employment-icon">
+          💼
+        </div>
+
+        <div>
+          <h2>Employment Information</h2>
+
+          <p>
+            Define the initial employment details for this candidate.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+
+        <!-- Department -->
+
+        <div class="form-field">
+
+          <label for="department">
+            Department
+          </label>
+
+          <select
+            id="department"
+            name="department"
+            [(ngModel)]="departmentId"
+            [disabled]="isLoadingLookups()">
+
+            <option [ngValue]="null">
+
+              @if (isLoadingLookups()) {
+                Loading departments...
+              } @else {
+                Select department
+              }
+
+            </option>
+
+            @for (
+              department of departments();
+              track department.id
+            ) {
+              <option [ngValue]="department.id">
+                {{ department.name }}
+              </option>
+            }
+
+          </select>
+
+        </div>
+
+
+        <!-- Designation -->
+
+        <div class="form-field">
+
+          <label for="designation">
+            Designation
+          </label>
+
+          <select
+            id="designation"
+            name="designation"
+            [(ngModel)]="designationId"
+            [disabled]="isLoadingLookups()">
+
+            <option [ngValue]="null">
+
+              @if (isLoadingLookups()) {
+                Loading designations...
+              } @else {
+                Select designation
+              }
+
+            </option>
+
+            @for (
+              designation of designations();
+              track designation.id
+            ) {
+              <option [ngValue]="designation.id">
+                {{ designation.name }}
+              </option>
+            }
+
+          </select>
+
+        </div>
+
+
+        <!-- Salary -->
+
+        <div class="form-field">
+
+          <label for="salary">
+            Salary
+          </label>
+
+          <input
+            id="salary"
+            name="salary"
+            type="number"
+            min="0"
+            step="0.01"
+            [(ngModel)]="salary"
+            placeholder="Enter salary" />
+
+        </div>
+
+
+        <!-- Joining Date -->
+
+        <div class="form-field">
+
+          <label for="joiningDate">
+            Joining Date
+          </label>
+
+          <input
+            id="joiningDate"
+            name="joiningDate"
+            type="date"
+            [(ngModel)]="joiningDate" />
+
+        </div>
+
+
+        <!-- Employment Type -->
+
+        <div class="form-field">
+
+          <label for="employmentType">
+            Employment Type
+          </label>
+
+          <select
+            id="employmentType"
+            name="employmentType"
+            [(ngModel)]="employmentType">
+
+            <option value="">
+              Select employment type
+            </option>
+
+            <option value="FullTime">
+              Full Time
+            </option>
+
+            <option value="PartTime">
+              Part Time
+            </option>
+
+            <option value="Contract">
+              Contract
+            </option>
+
+            <option value="Internship">
+              Internship
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- Manager -->
+
+        <div class="form-field">
+
+          <label for="manager">
+            Manager
+          </label>
+
+          <select
+            id="manager"
+            name="managerId"
+            [(ngModel)]="managerId"
+            [disabled]="isLoadingLookups()">
+
+            <option [ngValue]="null">
+
+              @if (isLoadingLookups()) {
+                Loading managers...
+              } @else {
+                Select Manager (Optional)
+              }
+
+            </option>
+
+            @for (
+              manager of managers();
+              track manager.id
+            ) {
+              <option [ngValue]="manager.id">
+                {{ manager.firstName }} {{ manager.lastName }}
+              </option>
+            }
+
+          </select>
+
+          <span class="field-hint">
+            A manager can be assigned later by HR.
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Hiring Process Information -->
+
+    <section class="information-card">
+
+      <div class="information-icon">
+        ℹ
+      </div>
+
+      <div class="information-content">
+
+        <strong>
+          What happens after creating the onboarding record?
+        </strong>
+
+        <p>
+          The candidate will be added to the onboarding process.
+          HR can then create an offer and send it to the candidate.
+          After accepting the offer, the candidate will continue
+          with self-onboarding.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- Actions -->
+
+    <footer class="form-actions">
+
+      <button
+        type="button"
+        class="cancel-button"
+        [disabled]="isSubmitting()"
+        (click)="cancel()">
+        Cancel
+      </button>
+
+
+      <button
+        type="submit"
+        class="create-button"
+        [disabled]="isSubmitting() || isLoadingLookups()">
+
+        @if (isSubmitting()) {
+          Creating...
+        } @else {
+          Create Onboarding
+          <span>→</span>
+        }
+
+      </button>
+
+    </footer>
+
+  </form>
+
+</section>

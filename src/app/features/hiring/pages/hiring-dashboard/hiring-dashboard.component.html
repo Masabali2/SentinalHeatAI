@@ -1,0 +1,274 @@
+<section class="hiring-dashboard">
+
+  <header class="page-header">
+    <div class="page-heading">
+
+      <span class="page-eyebrow">
+        EMPLOYEE MANAGEMENT
+      </span>
+
+      <h1>Hiring</h1>
+
+      <p>
+        Start a new hiring process and manage candidates through
+        employee onboarding.
+      </p>
+
+    </div>
+  </header>
+
+
+  <!-- Hiring Options -->
+
+  <section class="hiring-selection">
+
+    <div class="section-heading">
+      <h2>Choose Hiring Method</h2>
+
+      <p>
+        Select how you want to add candidates to the hiring process.
+      </p>
+    </div>
+
+    <div class="hiring-options">
+
+      <app-hiring-option-card
+        icon="👤"
+        title="Single Hiring"
+        description="Hire one candidate through a guided manual process. Enter candidate information and continue through onboarding and offer management."
+        buttonLabel="Start Single Hiring"
+        variant="primary"
+        (selected)="startSingleHiring()"
+      />
+
+      <app-hiring-option-card
+        icon="👥"
+        title="Bulk Hiring"
+        description="Import multiple candidates using an Excel or CSV file, review the imported information, and prepare candidates for onboarding."
+        buttonLabel="Start Bulk Hiring"
+        variant="secondary"
+        (selected)="startBulkHiring()"
+      />
+
+    </div>
+
+  </section>
+
+
+  <!-- Onboarding Pipeline -->
+
+  <section class="dashboard-section">
+
+    <div class="section-heading">
+      <h2>Onboarding Pipeline</h2>
+
+      <p>
+        Track candidates as they move through the hiring process.
+      </p>
+    </div>
+
+    <div class="pipeline">
+
+      @for (stage of onboardingStages; track stage.key) {
+
+        <article class="pipeline-stage">
+
+          <div class="pipeline-count">
+            0
+          </div>
+
+          <span class="pipeline-label">
+            {{ stage.label }}
+          </span>
+
+        </article>
+
+      }
+
+    </div>
+
+  </section>
+<section class="dashboard-section">
+  <div class="section-heading section-heading-row">
+    <div>
+      <span class="section-eyebrow">ACTIVE PIPELINE</span>
+
+      <h2>Hiring in Progress</h2>
+
+      <p>
+        Candidates currently moving through the hiring and onboarding process.
+      </p>
+    </div>
+  </div>
+
+  @if (isLoadingHiringProgress()) {
+    <div class="hiring-progress-state">
+      <div class="loading-spinner"></div>
+
+      <div>
+        <strong>Loading hiring pipeline...</strong>
+        <p>Fetching active candidates.</p>
+      </div>
+    </div>
+  }
+  @else if (hiringInProgress().length === 0) {
+    <div class="hiring-progress-state empty-state">
+      <div class="empty-state-icon">
+        👥
+      </div>
+
+      <div>
+        <strong>No hiring processes in progress</strong>
+
+        <p>
+          Candidates will appear here once the hiring process begins.
+        </p>
+
+        <button
+          type="button"
+          class="start-hiring-button"
+          (click)="startSingleHiring()"
+        >
+          Start Hiring
+        </button>
+      </div>
+    </div>
+  }
+  @else {
+    <div class="hiring-table-card">
+
+      <div class="table-header">
+        <div>
+          <strong>Active Candidates</strong>
+
+          <span>
+            {{ hiringInProgress().length }}
+            {{ hiringInProgress().length === 1 ? 'candidate' : 'candidates' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="hiring-table">
+
+          <thead>
+            <tr>
+              <th>Candidate</th>
+              <th>Department</th>
+              <th>Designation</th>
+              <th>Stage</th>
+              <th>Started</th>
+              <th class="action-column">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (candidate of hiringInProgress(); track candidate.id) {
+              <tr>
+
+                <td>
+                  <div class="candidate-cell">
+
+                    <div class="candidate-avatar">
+                      {{ candidate.email.charAt(0).toUpperCase() }}
+                    </div>
+
+                    <div class="candidate-info">
+                      <strong>{{ candidate.email }}</strong>
+
+                      <span>
+                        Hiring #{{ candidate.id }}
+                      </span>
+                    </div>
+
+                  </div>
+                </td>
+
+                <td>
+                  <span class="table-primary-text">
+                    {{ candidate.departmentName || 'Not assigned' }}
+                  </span>
+                </td>
+
+                <td>
+                  <span class="table-primary-text">
+                    {{ candidate.designationName || 'Not assigned' }}
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    class="status-badge"
+                    [class]="getStatusClass(candidate.status)"
+                  >
+                    <span class="status-dot"></span>
+
+                    {{ getStatusLabel(candidate.status) }}
+                  </span>
+                </td>
+
+                <td>
+                  <span class="date-text">
+                    {{ candidate.createdAt | date:'dd MMM yyyy' }}
+                  </span>
+                </td>
+
+                <td class="action-column">
+                  <button
+                    type="button"
+                    class="process-button"
+                    (click)="viewHiringProcess(candidate.id)"
+                  >
+                    View Process
+                    <span>→</span>
+                  </button>
+                </td>
+
+              </tr>
+            }
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
+  }
+</section>
+
+</section>
+  <!-- Recent Candidates -->
+
+  <section class="dashboard-section">
+
+    <div class="section-heading section-heading-row">
+
+      <div>
+        <h2>Recent Candidates</h2>
+
+        <p>
+          Recently added candidates in the hiring process.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="candidates-card">
+
+      <div class="empty-candidates">
+
+        <div class="empty-icon">
+          👤
+        </div>
+
+        <strong>No candidates yet</strong>
+
+        <p>
+          Candidates will appear here once the hiring process begins.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+

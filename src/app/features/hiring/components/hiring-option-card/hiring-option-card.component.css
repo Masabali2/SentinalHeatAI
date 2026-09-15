@@ -1,0 +1,99 @@
+.option-card {
+  display: flex;
+  gap: 24px;
+  height: 100%;
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.option-card:hover {
+  transform: translateY(-3px);
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+.option-icon {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #eff6ff;
+  font-size: 24px;
+}
+
+.option-icon.secondary {
+  background: #f5f3ff;
+}
+
+.option-content {
+  min-width: 0;
+}
+
+.option-content h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 650;
+  line-height: 1.3;
+  color: #0f172a;
+}
+
+.option-content p {
+  margin: 10px 0 24px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #64748b;
+}
+
+.option-button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 9px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.option-button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.option-button.secondary {
+  background: #7c3aed;
+}
+
+.option-button.secondary:hover {
+  background: #6d28d9;
+}
+
+.arrow {
+  font-size: 17px;
+  line-height: 1;
+}
+
+@media (max-width: 600px) {
+  .option-card {
+    flex-direction: column;
+    padding: 22px;
+  }
+}

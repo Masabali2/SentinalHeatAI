@@ -1,0 +1,28 @@
+<article class="option-card">
+
+  <div class="option-icon" [class.secondary]="variant === 'secondary'">
+    <span>{{ icon }}</span>
+  </div>
+
+  <div class="option-content">
+
+    <h2>{{ title }}</h2>
+
+    <p>
+      {{ description }}
+    </p>
+
+    <button
+      type="button"
+      class="option-button"
+      [class.secondary]="variant === 'secondary'"
+      (click)="select()">
+
+      <span>{{ buttonLabel }}</span>
+      <span class="arrow">→</span>
+
+    </button>
+
+  </div>
+
+</article>

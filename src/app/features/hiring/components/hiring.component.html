@@ -1,0 +1,75 @@
+<section class="hiring-page">
+
+  <header class="page-header">
+    <div>
+      <span class="page-eyebrow">EMPLOYEE MANAGEMENT</span>
+
+      <h1>Hiring</h1>
+
+      <p>
+        Start a new hiring process and onboard employees efficiently.
+      </p>
+    </div>
+  </header>
+
+  <div class="hiring-options">
+
+    <article class="hiring-card">
+
+      <div class="card-icon single-icon">
+        <span>👤</span>
+      </div>
+
+      <div class="card-content">
+
+        <h2>Single Hiring</h2>
+
+        <p>
+          Hire one candidate through a guided manual hiring process.
+          Enter the candidate's information and continue through
+          onboarding and offer management.
+        </p>
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="selectSingleHiring()">
+          Start Single Hiring
+          <span>→</span>
+        </button>
+
+      </div>
+
+    </article>
+
+    <article class="hiring-card">
+
+      <div class="card-icon bulk-icon">
+        <span>👥</span>
+      </div>
+
+      <div class="card-content">
+
+        <h2>Bulk Hiring</h2>
+
+        <p>
+          Import multiple candidates using an Excel or CSV file,
+          review the imported information, and prepare candidates
+          for onboarding.
+        </p>
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="selectBulkHiring()">
+          Start Bulk Hiring
+          <span>→</span>
+        </button>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>

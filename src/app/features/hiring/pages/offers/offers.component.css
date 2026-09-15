@@ -1,0 +1,791 @@
+.offers-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 48px;
+}
+
+/* Page Header */
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+
+  margin-bottom: 28px;
+}
+
+.header-content {
+  min-width: 0;
+}
+
+.page-eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+
+  color: #2563eb;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 700;
+
+  color: #0f172a;
+}
+
+.page-header p {
+  max-width: 700px;
+
+  margin: 10px 0 0;
+
+  font-size: 15px;
+  line-height: 1.6;
+
+  color: #64748b;
+}
+
+
+/* Onboarding Badge */
+
+.onboarding-badge {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  flex-shrink: 0;
+
+  padding: 9px 13px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.badge-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+
+  color: #94a3b8;
+}
+
+.badge-value {
+  font-size: 13px;
+  font-weight: 700;
+
+  color: #334155;
+}
+
+
+/* State Card */
+
+.state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 300px;
+
+  padding: 48px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+
+  text-align: center;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+
+/* Empty State */
+
+.empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 64px;
+  height: 64px;
+
+  margin-bottom: 20px;
+
+  background: #eff6ff;
+
+  border-radius: 16px;
+
+  font-size: 28px;
+}
+
+.empty-state h2,
+.loading-state h2 {
+  margin: 0 0 8px;
+
+  font-size: 20px;
+  font-weight: 700;
+
+  color: #0f172a;
+}
+
+.empty-state p,
+.loading-state p {
+  max-width: 480px;
+
+  margin: 0 0 24px;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  color: #64748b;
+}
+
+
+/* Loading */
+
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+
+  margin-bottom: 20px;
+
+  border: 3px solid #e2e8f0;
+  border-top-color: #2563eb;
+
+  border-radius: 50%;
+
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* Buttons */
+
+.primary-button,
+.primary-small-button,
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+
+  font-family: inherit;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.primary-button {
+  gap: 10px;
+
+  padding: 11px 18px;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  border-radius: 9px;
+
+  font-size: 14px;
+}
+
+.primary-button:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 5px 12px rgba(37, 99, 235, 0.18);
+}
+
+.button-arrow {
+  font-size: 16px;
+}
+
+
+/* Offers Summary */
+
+.offers-summary {
+  display: flex;
+  align-items: center;
+
+  width: fit-content;
+
+  margin-bottom: 20px;
+
+  padding: 14px 18px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.summary-label {
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #64748b;
+}
+
+.summary-item strong {
+  font-size: 14px;
+  font-weight: 700;
+
+  color: #0f172a;
+}
+
+.summary-divider {
+  width: 1px;
+  height: 20px;
+
+  margin: 0 18px;
+
+  background: #e2e8f0;
+}
+
+
+/* Offers List */
+
+.offers-list {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 20px;
+}
+
+
+/* Offer Card */
+
+.offer-card {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+
+  padding: 24px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.offer-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #d7e1f0;
+
+  box-shadow:
+    0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+
+/* Offer Header */
+
+.offer-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.offer-title {
+  display: flex;
+  align-items: center;
+
+  min-width: 0;
+
+  gap: 12px;
+}
+
+.offer-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  width: 42px;
+  height: 42px;
+
+  background: #eff6ff;
+
+  border-radius: 11px;
+
+  font-size: 19px;
+}
+
+.offer-title h2 {
+  margin: 0 0 4px;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  color: #0f172a;
+}
+
+.offer-reference {
+  display: block;
+
+  font-size: 12px;
+
+  color: #94a3b8;
+}
+
+
+/* Status */
+
+.offer-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  min-width: 78px;
+
+  padding: 6px 10px;
+
+  border: 1px solid transparent;
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: currentColor;
+}
+
+
+/* Draft */
+
+.status-draft {
+  background: #f8fafc;
+  color: #475569;
+
+  border-color: #e2e8f0;
+}
+
+
+/* Sent */
+
+.status-sent {
+  background: #eff6ff;
+  color: #2563eb;
+
+  border-color: #dbeafe;
+}
+
+
+/* Viewed */
+
+.status-viewed {
+  background: #f5f3ff;
+  color: #7c3aed;
+
+  border-color: #ede9fe;
+}
+
+
+/* Accepted */
+
+.status-accepted {
+  background: #f0fdf4;
+  color: #16a34a;
+
+  border-color: #dcfce7;
+}
+
+
+/* Declined */
+
+.status-declined {
+  background: #fef2f2;
+  color: #dc2626;
+
+  border-color: #fee2e2;
+}
+
+
+/* Expired */
+
+.status-expired {
+  background: #fff7ed;
+  color: #ea580c;
+
+  border-color: #ffedd5;
+}
+
+
+/* Cancelled */
+
+.status-cancelled {
+  background: #f1f5f9;
+  color: #64748b;
+
+  border-color: #e2e8f0;
+}
+
+
+/* Offer Main */
+
+.offer-main {
+  padding-top: 20px;
+}
+
+
+/* Salary */
+
+.salary-section {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  margin-bottom: 22px;
+
+  padding: 16px;
+
+  background: #f8fafc;
+
+  border: 1px solid #f1f5f9;
+
+  border-radius: 12px;
+}
+
+.detail-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+
+  color: #64748b;
+}
+
+.salary-value {
+  font-size: 23px;
+  line-height: 1.2;
+  font-weight: 700;
+
+  color: #0f172a;
+}
+
+
+/* Offer Details */
+
+.offer-details {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+
+  gap: 5px;
+}
+
+.detail-value {
+  overflow: hidden;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #0f172a;
+
+  text-overflow: ellipsis;
+}
+
+
+/* Offer Result */
+
+.offer-result {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 20px;
+  padding: 12px 14px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.result-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 26px;
+  height: 26px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.result-icon.success {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.result-icon.declined {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.offer-result div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.offer-result strong {
+  font-size: 12px;
+  font-weight: 700;
+
+  color: #334155;
+}
+
+.offer-result span:not(.result-icon) {
+  font-size: 11px;
+
+  color: #64748b;
+}
+
+
+/* Offer Footer */
+
+.offer-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-top: 22px;
+  padding-top: 18px;
+
+  border-top: 1px solid #e2e8f0;
+}
+
+.offer-footer-text {
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #94a3b8;
+}
+
+.offer-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.secondary-button,
+.primary-small-button {
+  padding: 8px 13px;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+}
+
+.secondary-button {
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  color: #475569;
+}
+
+.secondary-button:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+
+  color: #0f172a;
+}
+
+.primary-small-button {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.primary-small-button:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-1px);
+}
+
+
+/* Responsive */
+
+@media (max-width: 900px) {
+
+  .offers-list {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 640px) {
+
+  .offers-page {
+    padding-bottom: 24px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    margin-bottom: 22px;
+  }
+
+  .page-header h1 {
+    font-size: 27px;
+  }
+
+  .page-header p {
+    font-size: 14px;
+  }
+
+  .onboarding-badge {
+    width: 100%;
+
+    justify-content: space-between;
+  }
+
+  .offers-summary {
+    width: 100%;
+
+    justify-content: space-between;
+  }
+
+  .summary-divider {
+    margin: 0 12px;
+  }
+
+  .offer-card {
+    padding: 20px;
+  }
+
+  .offer-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .offer-status {
+    align-self: flex-start;
+  }
+
+  .offer-details {
+    grid-template-columns: 1fr;
+
+    gap: 14px;
+  }
+
+  .offer-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .offer-actions {
+    width: 100%;
+  }
+
+  .secondary-button,
+  .primary-small-button {
+    flex: 1;
+  }
+
+}
+
+
+@media (max-width: 400px) {
+
+  .state-card {
+    padding: 32px 20px;
+  }
+
+  .offer-title h2 {
+    font-size: 16px;
+  }
+
+  .salary-value {
+    font-size: 21px;
+  }
+
+}

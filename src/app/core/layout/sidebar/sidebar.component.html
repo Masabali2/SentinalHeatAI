@@ -1,0 +1,94 @@
+@if (mobileOpen) {
+  <div
+    class="sidebar-overlay"
+    (click)="closeMobileMenu()"
+    aria-hidden="true"
+  ></div>
+}
+
+<aside
+  class="sidebar"
+  [class.collapsed]="collapsed"
+  [class.mobile-open]="mobileOpen"
+>
+
+  <div class="sidebar-brand">
+
+    <div class="brand-logo">
+      E
+    </div>
+
+    @if (!collapsed) {
+      <div class="brand-content">
+        <span class="brand-title">
+          EMAS
+        </span>
+
+        <span class="brand-subtitle">
+          Employee Management
+        </span>
+      </div>
+    }
+
+    <!-- Desktop collapse button -->
+    <button
+      type="button"
+      class="collapse-button"
+      [attr.aria-label]="collapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+      [attr.title]="collapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+      (click)="toggleSidebar()"
+    >
+      <span aria-hidden="true">
+        {{ collapsed ? '›' : '‹' }}
+      </span>
+    </button>
+
+    <!-- Mobile close button -->
+    <button
+      type="button"
+      class="mobile-close-button"
+      aria-label="Close navigation"
+      (click)="closeMobileMenu()"
+    >
+      ✕
+    </button>
+
+  </div>
+
+  <nav class="sidebar-navigation">
+
+    @if (!collapsed) {
+      <p class="navigation-title">
+        MAIN MENU
+      </p>
+    }
+
+    @for (item of navigationItems; track item.route) {
+
+      <a
+        class="navigation-item"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{
+          exact: item.route === '/'
+        }"
+        (click)="closeMobileMenu()"
+      >
+
+        <span class="navigation-icon">
+          {{ item.icon }}
+        </span>
+
+        @if (!collapsed) {
+          <span class="navigation-label">
+            {{ item.label }}
+          </span>
+        }
+
+      </a>
+
+    }
+
+  </nav>
+
+</aside>

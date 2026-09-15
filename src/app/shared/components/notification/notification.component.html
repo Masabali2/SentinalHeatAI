@@ -1,0 +1,51 @@
+@if (notification(); as currentNotification) {
+
+  <div
+    class="notification"
+    [class.success]="currentNotification.type === 'success'"
+    [class.error]="currentNotification.type === 'error'"
+    [class.warning]="currentNotification.type === 'warning'"
+    [class.info]="currentNotification.type === 'info'"
+    role="alert"
+  >
+
+    <div class="notification-content">
+
+      @switch (currentNotification.type) {
+
+        @case ('success') {
+          <span class="notification-icon">✓</span>
+        }
+
+        @case ('error') {
+          <span class="notification-icon">!</span>
+        }
+
+        @case ('warning') {
+          <span class="notification-icon">!</span>
+        }
+
+        @case ('info') {
+          <span class="notification-icon">i</span>
+        }
+
+      }
+
+      <span class="notification-message">
+        {{ currentNotification.message }}
+      </span>
+
+    </div>
+
+    <button
+      type="button"
+      class="notification-close"
+      (click)="close()"
+      aria-label="Close notification"
+    >
+      ×
+    </button>
+
+  </div>
+
+}

@@ -1,0 +1,64 @@
+<header class="navbar">
+
+  <div class="navbar-left">
+
+    <button
+      type="button"
+      class="menu-button"
+      aria-label="Open navigation"
+      (click)="toggleMenu()"
+    >
+      ☰
+    </button>
+
+    <div class="page-context">
+      <span class="page-title">
+        Employee Management System
+      </span>
+    </div>
+
+  </div>
+
+  <div class="navbar-right">
+
+    @if (user(); as currentUser) {
+
+      <div class="user-info">
+
+        <div class="user-avatar">
+          <span>
+            {{ currentUser.firstName.charAt(0) }}
+          </span>
+        </div>
+
+        <div class="user-details">
+
+          <span class="user-name">
+            {{ currentUser.firstName }} {{ currentUser.lastName }}
+          </span>
+
+          <span class="user-role">
+            {{ currentUser.roles[0] || 'User' }}
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="navbar-divider"></div>
+
+      <button
+        type="button"
+        class="logout-button"
+        (click)="logout()"
+        title="Logout"
+      >
+        <span class="logout-icon">↪</span>
+        <span>Logout</span>
+      </button>
+
+    }
+
+  </div>
+
+</header>
