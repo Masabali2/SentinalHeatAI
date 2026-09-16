@@ -74,7 +74,7 @@
         <article class="pipeline-stage">
 
           <div class="pipeline-count">
-            0
+            {{ getStageCount(stage.key) }}
           </div>
 
           <span class="pipeline-label">
@@ -158,7 +158,7 @@
               <th>Designation</th>
               <th>Stage</th>
               <th>Started</th>
-              <th class="action-column">Action</th>
+              <th class="action-column">Actions</th>
             </tr>
           </thead>
 
@@ -176,9 +176,7 @@
                     <div class="candidate-info">
                       <strong>{{ candidate.email }}</strong>
 
-                      <span>
-                        Hiring #{{ candidate.id }}
-                      </span>
+                      <span>Candidate in active hiring</span>
                     </div>
 
                   </div>

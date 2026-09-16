@@ -8,7 +8,9 @@ import {
   
   CreateOnboardingRequest,
   Onboarding,OnboardingInProgress,
-  UpdateOnboardingRequest
+  UpdateOnboardingRequest,
+  CandidateOnboarding,
+  SubmitOnboardingRequest
 } from '../../features/hiring/models/onboarding.model';
 import { environment } from '../../../environments/environment.development';
 
@@ -52,4 +54,60 @@ updateOnboarding(
     request
   );
 }
+
+  resendRegistrationEmail(
+    onboardingId: number
+  ): Observable<ApiResponse<string>> {
+
+    return this.http.post<ApiResponse<string>>(
+      `${this.apiUrl}/${onboardingId}/resend-registration`,
+      {}
+    );
+  }
+
+  resendVerificationEmail(
+    onboardingId: number
+  ): Observable<ApiResponse<string>> {
+
+    return this.http.post<ApiResponse<string>>(
+      `${this.apiUrl}/${onboardingId}/resend-verification`,
+      {}
+    );
+  }
+
+  getByInvitationToken(
+    token: string
+  ): Observable<ApiResponse<CandidateOnboarding>> {
+    return this.http.get<ApiResponse<CandidateOnboarding>>(
+      `${this.apiUrl}/invitation?token=${encodeURIComponent(token)}`
+    );
+  }
+
+  submitByInvitation(
+    token: string,
+    request: SubmitOnboardingRequest
+  ): Observable<ApiResponse<string>> {
+    const formData = new FormData();
+
+    formData.append('FirstName', request.firstName);
+    formData.append('LastName', request.lastName);
+    formData.append('DateOfBirth', request.dateOfBirth);
+    formData.append('Phone', request.phone);
+    formData.append('Address', request.address);
+    formData.append('City', request.city);
+    formData.append('PostalCode', request.postalCode);
+    formData.append('EmergencyContactName', request.emergencyContactName);
+    formData.append('EmergencyContactPhone', request.emergencyContactPhone);
+    formData.append('EmergencyContactRelation', request.emergencyContactRelation);
+    formData.append('Password', request.password);
+
+    if (request.profilePicture) {
+      formData.append('ProfilePicture', request.profilePicture);
+    }
+
+    return this.http.post<ApiResponse<string>>(
+      `${this.apiUrl}/invitation/register?token=${encodeURIComponent(token)}`,
+      formData
+    );
+  }
 }

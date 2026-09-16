@@ -83,11 +83,106 @@
   }
 </section>
 
-    <!-- Priority Work + Designation Distribution -->
+    <!-- Active Employees + Designation Distribution -->
     <section class="dashboard-grid dashboard-grid-main">
 
+      <article class="dashboard-card active-employees-card">
+
+        <div class="card-header">
+          <div class="card-heading">
+            <div class="card-heading-icon active-icon">
+              <span>●</span>
+            </div>
+
+            <div>
+              <h2>Active Employees</h2>
+              <p>People currently active in the organization.</p>
+            </div>
+          </div>
+
+          <span class="card-count">{{ data.activeEmployees.length }}</span>
+        </div>
+
+        @if (data.activeEmployees.length > 0) {
+          <div class="active-employee-list">
+            @for (employee of data.activeEmployees; track employee.id) {
+              <article class="active-employee-row">
+                <div class="employee-avatar">
+                  {{ employee.name.charAt(0) || employee.email.charAt(0) || '?' }}
+                </div>
+
+                <div class="active-employee-info">
+                  <strong>{{ employee.name || 'Employee' }}</strong>
+                  <span>{{ employee.email }}</span>
+                </div>
+
+                <div class="active-employee-role">
+                  <strong>{{ employee.designation }}</strong>
+                  <span>{{ employee.department }}</span>
+                </div>
+
+                <span class="active-indicator" title="Active employee"></span>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <span class="empty-state-icon">◌</span>
+            <strong>No active employees</strong>
+            <p>Active employees will appear here.</p>
+          </div>
+        }
+
+      </article>
+
+      <!-- Designation Distribution -->
+      <article class="dashboard-card distribution-card">
+
+        <div class="card-header">
+          <div>
+            <h2>Designation Distribution</h2>
+            <p>Employees by designation.</p>
+          </div>
+        </div>
+
+        @for (chart of data.charts; track chart.key) {
+          @if (chart.key === 'designationDistribution') {
+            @if (chart.data.length > 0) {
+              <div class="donut-section">
+                <div
+                  class="donut-chart"
+                  [style.background]="donutBackground(chart.data)"
+                >
+                  <div class="donut-center">
+                    <strong>{{ donutTotal(chart.data) }}</strong>
+                    <span>Employees</span>
+                  </div>
+                </div>
+
+                <div class="chart-legend">
+                  @for (item of chart.data; track item.label; let i = $index) {
+                    <div class="legend-item">
+                      <span class="legend-dot" [style.background]="colorFor(i)"></span>
+                      <span class="legend-label">{{ item.label }}</span>
+                      <strong class="legend-value">{{ item.value }}</strong>
+                    </div>
+                  }
+                </div>
+              </div>
+            } @else {
+              <div class="empty-state">
+                <span class="empty-state-icon">◌</span>
+                <strong>No designation data</strong>
+                <p>No employee designation data is available.</p>
+              </div>
+            }
+          }
+        }
+
+      </article>
+
       <!-- Priority Work -->
-     <article class="dashboard-card priority-work-card">
+      <article class="dashboard-card priority-work-card">
 
   <div class="card-header">
     <div class="card-heading">
@@ -122,7 +217,7 @@
         </thead>
 
         <tbody>
-          @for (row of data.priorityWork; track row.id) {
+          @for (row of data.priorityWork; track row.id + row.status) {
             <tr>
 
               <td>
@@ -169,7 +264,7 @@
 
     <!-- Mobile cards -->
     <div class="mobile-priority-list">
-      @for (row of data.priorityWork; track row.id) {
+      @for (row of data.priorityWork; track row.id + row.status) {
 
         <article class="priority-mobile-card">
 
@@ -241,89 +336,9 @@
   }
 
 </article>
-      <!-- Designation Distribution -->
-      <article class="dashboard-card distribution-card">
-
-        <div class="card-header">
-          <div>
-            <h2>Designation Distribution</h2>
-            <p>Employees by designation.</p>
-          </div>
-        </div>
-
-        @for (
-          chart of data.charts;
-          track chart.key
-        ) {
-
-          @if (chart.key === 'designationDistribution') {
-
-            @if (chart.data.length > 0) {
-
-              <div class="donut-section">
-
-                <div
-                  class="donut-chart"
-                  [style.background]="donutBackground(chart.data)"
-                >
-                  <div class="donut-center">
-                   <strong>
-  {{ donutTotal(chart.data) }}
-</strong>
-                    <span>Employees</span>
-                  </div>
-                </div>
-
-                <div class="chart-legend">
-
-                  @for (
-                    item of chart.data;
-                    track item.label;
-                    let i = $index
-                  ) {
-
-                    <div class="legend-item">
-
-                      <span
-                        class="legend-dot"
-                        [style.background]="colorFor(i)"
-                      ></span>
-
-                      <span class="legend-label">
-                        {{ item.label }}
-                      </span>
-
-                      <strong class="legend-value">
-                        {{ item.value }}
-                      </strong>
-
-                    </div>
-
-                  }
-
-                </div>
-
-              </div>
-
-            } @else {
-
-              <div class="empty-state">
-                <span class="empty-state-icon">◌</span>
-                <strong>No designation data</strong>
-                <p>No employee designation data is available.</p>
-              </div>
-
-            }
-
-          }
-
-        }
-
-      </article>
-
     </section>
 
-    <!-- Recent Activities + Quick Actions -->
+    <!-- Recent Activities -->
     <section class="dashboard-grid dashboard-grid-bottom">
 
       <!-- Recent Activities -->
@@ -377,58 +392,6 @@
             <span class="empty-state-icon">◌</span>
             <strong>No recent activities</strong>
             <p>There are no recent system activities to display.</p>
-          </div>
-
-        }
-
-      </article>
-
-      <!-- Quick Actions -->
-      <article class="dashboard-card">
-
-        <div class="card-header">
-          <div>
-            <h2>Quick Actions</h2>
-            <p>Common actions available to you.</p>
-          </div>
-        </div>
-
-        @if (data.quickActions.length > 0) {
-
-          <div class="quick-actions">
-
-            @for (
-              action of data.quickActions;
-              track action.key
-            ) {
-
-              <a
-                class="quick-action"
-                [routerLink]="action.route"
-              >
-                <span class="quick-action-icon">+</span>
-
-                <span class="quick-action-content">
-                  <strong>{{ action.label }}</strong>
-
-                  @if (action.permission) {
-                    <small>{{ action.permission }}</small>
-                  }
-                </span>
-
-                <span class="quick-action-arrow">→</span>
-              </a>
-
-            }
-
-          </div>
-
-        } @else {
-
-          <div class="empty-state">
-            <span class="empty-state-icon">−</span>
-            <strong>No actions available</strong>
-            <p>You currently have no available quick actions.</p>
           </div>
 
         }

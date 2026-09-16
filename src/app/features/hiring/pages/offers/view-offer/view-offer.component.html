@@ -1,0 +1,179 @@
+<section class="view-offer-page">
+  @if (isLoading()) {
+    <section class="state-card">
+      <div class="loading-spinner"></div>
+      <h2>Loading offer</h2>
+      <p>Retrieving the latest offer details.</p>
+    </section>
+  } @else if (!offer()) {
+    <section class="state-card">
+      <div class="state-icon">!</div>
+      <h2>Offer not found</h2>
+      <p>This offer may have been removed or is no longer available.</p>
+      <button type="button" class="secondary-button" (click)="back()">Back to Offers</button>
+    </section>
+  } @else {
+    <header class="page-header">
+      <div>
+        <button type="button" class="back-button" (click)="back()">← Back to Offers</button>
+        <span class="page-eyebrow">HIRING / OFFER DETAILS</span>
+        <h1>Employment Offer</h1>
+        <p>Review the complete employment offer for this candidate.</p>
+      </div>
+      <span class="status-badge" [class]="'status-' + getStatusLabel(offer()!.status).toLowerCase()">
+        <span class="status-dot"></span>
+        {{ getStatusLabel(offer()!.status) }}
+      </span>
+    </header>
+
+    <main class="offer-panel">
+      <div class="panel-heading">
+        <div>
+          <span class="panel-eyebrow">EMPLOYMENT OFFER</span>
+          <h2>Offer summary</h2>
+        </div>
+        <div class="header-actions">
+          @if (offer()!.status === OfferStatus.Draft) {
+            <button type="button" class="secondary-button" (click)="editOffer()">Continue editing</button>
+            <button type="button" class="primary-button" [disabled]="isSending()" (click)="sendOffer()">
+              {{ isSending() ? 'Sending...' : 'Send Offer' }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <section class="highlight-grid">
+        <div class="highlight salary-highlight">
+          <span>Offered salary</span>
+          <strong>{{ offer()!.salary | number:'1.0-2' }}</strong>
+        </div>
+        <div class="highlight">
+          <span>Employment type</span>
+          <strong>{{ offer()!.employmentType || 'Not specified' }}</strong>
+        </div>
+        <div class="highlight">
+          <span>Joining date</span>
+          <strong>{{ offer()!.joiningDate ? (offer()!.joiningDate | date:'dd MMM yyyy') : 'Not specified' }}</strong>
+        </div>
+      </section>
+
+      <section class="information-section">
+        <div class="section-heading">
+          <span class="panel-eyebrow">CANDIDATE</span>
+          <h2>Candidate information</h2>
+        </div>
+        @if (onboarding()) {
+          <div class="information-grid">
+            <div class="information-item wide-item">
+              <span>Full email</span>
+              <strong>{{ onboarding()!.email }}</strong>
+            </div>
+            <div class="information-item">
+              <span>Phone</span>
+              <strong>{{ onboarding()!.phone || 'Not provided' }}</strong>
+            </div>
+          </div>
+        } @else {
+          <p class="muted-text">Candidate details are unavailable.</p>
+        }
+      </section>
+
+      @if (onboarding()) {
+        <section class="information-section">
+          <div class="section-heading">
+            <span class="panel-eyebrow">POSITION</span>
+            <h2>Department and designation</h2>
+          </div>
+          <div class="information-grid">
+            <div class="information-item">
+              <span>Department</span>
+              <strong>{{ onboarding()!.departmentName || 'Not assigned' }}</strong>
+            </div>
+            <div class="information-item">
+              <span>Designation</span>
+              <strong>{{ onboarding()!.designationName || 'Not assigned' }}</strong>
+            </div>
+            <div class="information-item">
+              <span>Manager</span>
+              <strong>{{ onboarding()!.managerName || 'Not assigned' }}</strong>
+            </div>
+            <div class="information-item">
+              <span>Employment type</span>
+              <strong>{{ onboarding()!.employmentType || 'Not specified' }}</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="information-section">
+          <div class="section-heading">
+            <span class="panel-eyebrow">ONBOARDING RECORD</span>
+            <h2>Hiring lifecycle</h2>
+          </div>
+          <div class="information-grid">
+            <div class="information-item">
+              <span>Onboarding status</span>
+              <strong>{{ getOnboardingStatusLabel(onboarding()!.status) }}</strong>
+            </div>
+            <div class="information-item">
+              <span>Started</span>
+              <strong>{{ onboarding()!.createdAt | date:'dd MMM yyyy, hh:mm a' }}</strong>
+            </div>
+            <div class="information-item">
+              <span>Completed</span>
+              <strong>{{ onboarding()!.completedAt ? (onboarding()!.completedAt | date:'dd MMM yyyy, hh:mm a') : 'Not completed' }}</strong>
+            </div>
+            <div class="information-item">
+              <span>Hiring batch</span>
+              <strong>{{ onboarding()!.hiringBatchId ? 'Bulk hiring' : 'Individual hiring' }}</strong>
+            </div>
+            <div class="information-item">
+              <span>Account</span>
+              <strong>{{ onboarding()!.userId ? 'Created' : 'Not created' }}</strong>
+            </div>
+            <div class="information-item">
+              <span>Employee record</span>
+              <strong>{{ onboarding()!.employeeId ? 'Created' : 'Not created' }}</strong>
+            </div>
+          </div>
+
+          @if (canResendRegistration() || canResendVerification()) {
+            <div class="lifecycle-action">
+              <div>
+                <span class="action-eyebrow">NEXT ACTION</span>
+                <strong>
+                  {{ canResendVerification() ? 'Candidate needs email verification' : 'Candidate needs registration' }}
+                </strong>
+                <p>
+                  {{ canResendVerification() ? 'Send a new verification code to the candidate.' : 'Send a fresh secure registration link to the candidate.' }}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                class="resend-button"
+                [disabled]="isResending()"
+                (click)="canResendVerification() ? resendVerificationEmail() : resendRegistrationEmail()"
+              >
+                @if (isResending()) {
+                  Sending...
+                } @else {
+                  {{ canResendVerification() ? 'Resend Verification' : 'Resend Registration' }}
+                }
+              </button>
+            </div>
+          }
+        </section>
+      }
+
+      <section class="details-section">
+        <span class="panel-eyebrow">TIMELINE</span>
+        <div class="details-grid">
+          <div><span>Sent</span><strong>{{ offer()!.sentAt ? (offer()!.sentAt | date:'dd MMM yyyy, hh:mm a') : 'Not sent' }}</strong></div>
+          <div><span>Expires</span><strong>{{ offer()!.expiresAt ? (offer()!.expiresAt | date:'dd MMM yyyy, hh:mm a') : 'No expiry' }}</strong></div>
+          <div><span>Accepted</span><strong>{{ offer()!.acceptedAt ? (offer()!.acceptedAt | date:'dd MMM yyyy, hh:mm a') : 'Not accepted' }}</strong></div>
+          <div><span>Declined</span><strong>{{ offer()!.declinedAt ? (offer()!.declinedAt | date:'dd MMM yyyy, hh:mm a') : 'Not declined' }}</strong></div>
+        </div>
+      </section>
+    </main>
+  }
+</section>

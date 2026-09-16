@@ -9,7 +9,8 @@ import {
   Offer,
   CreateOfferRequest,
   UpdateOfferRequest,
-  RespondToOfferRequest
+  RespondToOfferRequest,
+  Invitation
 } from '../../features/hiring/models/offer.model';
 
 @Injectable({
@@ -71,6 +72,16 @@ export class OfferService {
     );
   }
 
+  markAsViewed(
+    offerId: number
+  ): Observable<ApiResponse<Offer>> {
+
+    return this.http.post<ApiResponse<Offer>>(
+      `${this.apiUrl}/${offerId}/view`,
+      {}
+    );
+  }
+
   respondByInvitation(
     token: string,
     request: RespondToOfferRequest
@@ -79,6 +90,12 @@ export class OfferService {
     return this.http.post<ApiResponse<string>>(
       `${this.apiUrl}/invitation/respond?token=${encodeURIComponent(token)}`,
       request
+    );
+  }
+
+  validateInvitation(token: string): Observable<ApiResponse<Invitation>> {
+    return this.http.get<ApiResponse<Invitation>>(
+      `${this.apiUrl}/invitation/validate?token=${encodeURIComponent(token)}`
     );
   }
 }

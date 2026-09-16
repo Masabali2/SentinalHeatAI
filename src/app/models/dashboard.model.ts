@@ -4,6 +4,7 @@ export interface Dashboard {
   charts: DashboardChart[];
   recentActivities: DashboardActivity[];
   quickActions: DashboardAction[];
+  activeEmployees: ActiveEmployee[];
 }
 
 export interface DashboardStat {
@@ -46,4 +47,14 @@ export interface DashboardAction {
   label: string;
   route: string;
   permission?: string | null;
+}
+
+export interface ActiveEmployee {
+  id: number;
+  name: string;
+  email: string;
+  department: string;
+  designation: string;
+  isActive: boolean;
+  createdAt: string;
 }

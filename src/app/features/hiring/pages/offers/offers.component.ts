@@ -64,6 +64,10 @@ export class OffersComponent implements OnInit {
     ]);
   }
 
+  backToHiring(): void {
+    this.router.navigate(['/hiring']);
+  }
+
   viewOffer(offerId: number): void {
     const onboardingId = this.onboardingId();
 

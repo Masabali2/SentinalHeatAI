@@ -20,7 +20,13 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         req.url.includes('/auth/login') ||
         req.url.includes('/auth/register');
 
-      if (!isAuthenticationRequest) {
+      const isPublicRequest =
+        isAuthenticationRequest ||
+        req.url.includes('/onboarding/invitation') ||
+        req.url.includes('/offer/invitation') ||
+        req.url.includes('/email-verification');
+
+      if (!isPublicRequest) {
         errorHandlerService.handle(error);
       }
 

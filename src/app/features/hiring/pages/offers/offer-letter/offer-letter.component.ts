@@ -1,6 +1,6 @@
 
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -16,7 +16,8 @@ import {
 
 import {
   Offer,
-  OfferStatus
+  OfferStatus,
+  UpdateOfferRequest
 } from '../../../models/offer.model';
 
 @Component({
@@ -24,8 +25,7 @@ import {
   standalone: true,
   imports: [
     FormsModule,
-    DatePipe,
-    DecimalPipe
+    DatePipe
   ],
   templateUrl: './offer-letter.component.html',
   styleUrl: './offer-letter.component.css'
@@ -65,11 +65,19 @@ export class OfferLetterComponent implements OnInit {
   readonly showSendConfirmationModal =
     signal(false);
 
+  readonly isEditMode = signal(false);
+
   readonly OfferStatus =
     OfferStatus;
 
   onboardingId = 0;
+  offerId = 0;
 
+  salary = 0;
+  departmentName = '';
+  designationName = '';
+  employmentType = '';
+  joiningDate = '';
   expiresAt = '';
 
   ngOnInit(): void {
@@ -87,7 +95,15 @@ export class OfferLetterComponent implements OnInit {
       return;
     }
 
+    this.offerId = Number(
+      this.route.snapshot.paramMap.get('offerId')
+    );
+    this.isEditMode.set(!!this.offerId);
+
     this.loadOnboarding();
+    if (this.offerId) {
+      this.loadOffer();
+    }
   }
 
   back(): void {
@@ -107,6 +123,10 @@ export class OfferLetterComponent implements OnInit {
 
   createOffer(): void {
 
+    if (this.isCreating()) {
+      return;
+    }
+
     const onboarding = this.onboarding();
 
     if (!onboarding) {
@@ -114,61 +134,73 @@ export class OfferLetterComponent implements OnInit {
     }
 
     if (!this.expiresAt) {
-
       this.notificationService.error(
         'Please select an offer expiry date.'
       );
-
       return;
     }
 
-    const expiryDate =
-      new Date(this.expiresAt);
+    const expiryDate = new Date(this.expiresAt);
 
-    if (expiryDate <= new Date()) {
-
+    if (Number.isNaN(expiryDate.getTime()) || expiryDate <= new Date()) {
       this.notificationService.error(
-        'Offer expiry must be in the future.'
+        'Offer expiry must be a valid future date.'
       );
-
       return;
     }
+
+    if (!this.departmentName.trim() || !this.designationName.trim()) {
+      this.notificationService.error(
+        'Department and designation are required.'
+      );
+      return;
+    }
+
+    const request = this.buildOfferRequest(expiryDate.toISOString());
 
     this.isCreating.set(true);
 
-    this.offerService
-      .create({
-        employeeOnboardingId:
-          onboarding.id,
+    const action$ = this.isEditMode()
+      ? this.offerService.update(this.offerId, request)
+      : this.offerService.create({
+          employeeOnboardingId: onboarding.id,
+          expiresAt: request.expiresAt
+        });
 
-        expiresAt:
-          expiryDate.toISOString()
-      })
-      .pipe(
-        finalize(() =>
-          this.isCreating.set(false)
-        )
-      )
+    action$
+      .pipe(finalize(() => this.isCreating.set(false)))
       .subscribe({
-
         next: response => {
-
-          if (
-            !response.success ||
-            !response.data
-          ) {
+          if (!response.success || !response.data) {
             return;
           }
 
-          this.offer.set(
-            response.data
+          this.offer.set(response.data);
+          this.syncOfferForm(response.data);
+
+          this.notificationService.success(
+            this.isEditMode()
+              ? 'Offer updated successfully.'
+              : 'Offer created successfully.'
           );
 
-          this.showCreatedModal.set(
-            true
+          if (!this.isEditMode()) {
+            this.showCreatedModal.set(true);
+          }
+        },
+        error: error => {
+          const errorBody = error?.error;
+          const message = typeof errorBody === 'string'
+            ? errorBody
+            : errorBody?.message;
+
+          this.notificationService.error(
+            message ||
+            (this.isEditMode()
+              ? 'Unable to update the offer.'
+              : 'Unable to create the offer.')
           );
         }
-
       });
   }
 
@@ -387,8 +419,79 @@ export class OfferLetterComponent implements OnInit {
           this.onboarding.set(
             response.data
           );
+
+          this.isEditMode()
+            ? this.syncOfferForm(this.offer())
+            : this.syncOfferFormFromOnboarding(response.data);
         }
 
       });
+  }
+
+  private loadOffer(): void {
+    this.offerService
+      .getById(this.offerId)
+      .subscribe({
+        next: response => {
+          if (!response.success || !response.data) {
+            this.notificationService.error(response.message || 'Unable to load offer.');
+            return;
+          }
+
+          this.offer.set(response.data);
+          this.syncOfferForm(response.data);
+        },
+        error: () => this.notificationService.error('Unable to load offer.')
+      });
+  }
+
+  private syncOfferForm(offer: Offer | null): void {
+    const onboarding = this.onboarding();
+
+    this.salary = offer?.salary ?? onboarding?.salary ?? 0;
+    this.departmentName = offer?.departmentName ?? onboarding?.departmentName ?? '';
+    this.designationName = offer?.designationName ?? onboarding?.designationName ?? '';
+    this.employmentType = offer?.employmentType ?? onboarding?.employmentType ?? '';
+    this.joiningDate = offer?.joiningDate ? this.toDateValue(offer.joiningDate) : onboarding?.joiningDate ? this.toDateValue(onboarding.joiningDate) : '';
+    this.expiresAt = offer?.expiresAt ? this.toDateTimeLocal(offer.expiresAt) : '';
+  }
+
+  private syncOfferFormFromOnboarding(onboarding: Onboarding): void {
+    this.salary = onboarding.salary ?? 0;
+    this.departmentName = onboarding.departmentName ?? '';
+    this.designationName = onboarding.designationName ?? '';
+    this.employmentType = onboarding.employmentType ?? '';
+    this.joiningDate = onboarding.joiningDate ? this.toDateValue(onboarding.joiningDate) : '';
+    this.expiresAt = '';
+  }
+
+  private buildOfferRequest(expiryIsoString: string | null): UpdateOfferRequest {
+    const departmentId = this.offer()?.departmentId ?? this.onboarding()?.departmentId ?? null;
+    const designationId = this.offer()?.designationId ?? this.onboarding()?.designationId ?? null;
+
+    return {
+      salary: Number(this.salary) || 0,
+      departmentId,
+      departmentName: this.departmentName.trim(),
+      designationId,
+      designationName: this.designationName.trim(),
+      employmentType: this.employmentType.trim() || this.onboarding()?.employmentType || null,
+      joiningDate: this.joiningDate || this.onboarding()?.joiningDate || null,
+      expiresAt: expiryIsoString
+    };
+  }
+
+  private toDateValue(value: string | null): string {
+    if (!value) {
+      return '';
+    }
+
+    return new Date(value).toISOString().slice(0, 10);
+  }
+
+  private toDateTimeLocal(value: string): string {
+    const date = new Date(value);
+    const offset = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() - offset).toISOString().slice(0, 16);
   }
 }

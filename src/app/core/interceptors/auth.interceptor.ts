@@ -7,6 +7,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const authStateService = inject(AuthStateService);
 
+  const isPublicRequest =
+    req.url.includes('/onboarding/invitation') ||
+    req.url.includes('/offer/invitation') ||
+    req.url.includes('/email-verification');
+
+  if (isPublicRequest) {
+    return next(req);
+  }
+
   const token = authStateService.user()?.token;
 
   if (!token) {

@@ -4,6 +4,14 @@
   <header class="page-header">
 
     <div class="header-content">
+      <button
+        type="button"
+        class="back-button"
+        (click)="backToHiring()">
+        <span aria-hidden="true">←</span>
+        Back to Hiring
+      </button>
+
       <span class="page-eyebrow">
         HIRING
       </span>
@@ -14,13 +22,6 @@
         Manage offers associated with this onboarding record.
       </p>
     </div>
-
-    @if (onboardingId()) {
-      <div class="onboarding-badge">
-        <span class="badge-label">ONBOARDING</span>
-        <span class="badge-value">#{{ onboardingId() }}</span>
-      </div>
-    }
 
   </header>
 
@@ -125,13 +126,9 @@
 
               <div>
 
-                <h2>
-                  Offer #{{ offer.id }}
-                </h2>
+                <h2>Employment Offer</h2>
 
-                <span class="offer-reference">
-                  Onboarding #{{ offer.employeeOnboardingId }}
-                </span>
+                <span class="offer-reference">Candidate offer</span>
 
               </div>
 

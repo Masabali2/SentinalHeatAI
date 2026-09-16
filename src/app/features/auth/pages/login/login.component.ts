@@ -62,10 +62,10 @@ export class LoginComponent {
         const backendMessage =
           typeof errorBody === 'string'
             ? errorBody
-            : errorBody?.message;
+            : errorBody?.message || errorBody?.Message;
 
         this.errorMessage.set(
-          backendMessage || 'Invalid email or password.'
+          backendMessage || 'Unable to sign in. Please check your credentials and try again.'
         );
       }
     });

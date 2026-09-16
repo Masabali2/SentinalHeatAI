@@ -20,7 +20,9 @@ export interface Offer {
   salary: number;
 
   departmentId: number | null;
+  departmentName?: string | null;
   designationId: number | null;
+  designationName?: string | null;
 
   employmentType: string | null;
   joiningDate: string | null;
@@ -36,7 +38,9 @@ export interface Offer {
 export interface UpdateOfferRequest {
   salary: number;
   departmentId: number | null;
+  departmentName: string;
   designationId: number | null;
+  designationName: string;
   employmentType: string | null;
   joiningDate: string | null;
   expiresAt: string | null;
@@ -44,4 +48,19 @@ export interface UpdateOfferRequest {
 
 export interface RespondToOfferRequest {
   accept: boolean;
+}
+
+export interface Invitation {
+  id: number;
+  employeeOnboardingId: number;
+  employeeName: string;
+  employeeEmail: string;
+  expiresAt: string;
+  createdAt: string;
+  usedAt: string | null;
+  revokedAt: string | null;
+  isUsed: boolean;
+  isRevoked: boolean;
+  isExpired: boolean;
+  isActive: boolean;
 }

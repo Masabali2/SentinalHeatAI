@@ -1,17 +1,17 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, DestroyRef, inject, signal } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { finalize } from 'rxjs';
+import { filter, finalize } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { HiringOptionCardComponent } from '../../components/hiring-option-card/hiring-option-card.component';
 import { OnboardingService } from '../../../../core/services/onboarding.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 
 import {
-  OnboardingInProgress
+  OnboardingInProgress,
+  OnboardingStatus
 } from '../../models/onboarding.model';
-
-import { OnboardingStatus } from '../../models/onboarding.model';
 
 @Component({
   selector: 'app-hiring-dashboard',
@@ -26,6 +26,7 @@ import { OnboardingStatus } from '../../models/onboarding.model';
 export class HiringDashboardComponent implements OnInit {
 
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly onboardingService = inject(OnboardingService);
   private readonly notificationService = inject(NotificationService);
 
@@ -55,6 +56,17 @@ export class HiringDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadHiringInProgress();
+
+    this.router.events
+      .pipe(
+        filter(
+          event =>
+            event instanceof NavigationEnd &&
+            event.urlAfterRedirects === '/hiring'
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => this.loadHiringInProgress());
   }
 
   startSingleHiring(): void {
@@ -132,6 +144,23 @@ export class HiringDashboardComponent implements OnInit {
     }
   }
 
+  getStageCount(stage: string): number {
+    return this.hiringInProgress().filter(candidate => {
+      switch (stage) {
+        case 'offer-pending':
+          return candidate.status === OnboardingStatus.OfferPending;
+        case 'offer-accepted':
+          return candidate.status === OnboardingStatus.OfferAccepted;
+        case 'profile-submitted':
+          return candidate.status === OnboardingStatus.ProfileSubmitted;
+        case 'verification':
+          return candidate.status === OnboardingStatus.EmailVerificationPending;
+        default:
+          return false;
+      }
+    }).length;
+  }
+
   private loadHiringInProgress(): void {
     this.isLoadingHiringProgress.set(true);
 
@@ -150,4 +179,5 @@ export class HiringDashboardComponent implements OnInit {
         }
       });
   }
+
 }

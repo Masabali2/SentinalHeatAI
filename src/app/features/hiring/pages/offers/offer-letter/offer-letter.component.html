@@ -71,7 +71,7 @@
           </span>
 
           <h1>
-            Create Offer Letter
+              {{ isEditMode() ? 'Edit Offer Letter' : 'Create Offer Letter' }}
           </h1>
 
           <p>
@@ -80,18 +80,6 @@
           </p>
 
         </div>
-
-      </div>
-
-      <div class="header-meta">
-
-        <span class="meta-label">
-          ONBOARDING
-        </span>
-
-        <strong>
-          #{{ onboarding()!.id }}
-        </strong>
 
       </div>
 
@@ -222,9 +210,14 @@
                   Department
                 </span>
 
-                <strong>
-                  {{ onboarding()!.departmentName || 'Not specified' }}
-                </strong>
+                <input
+                  type="text"
+                  class="editable-input"
+                  [(ngModel)]="departmentName"
+                  name="departmentName"
+                  placeholder="e.g. Human Resources"
+                  required
+                />
 
               </div>
 
@@ -235,9 +228,14 @@
                   Designation
                 </span>
 
-                <strong>
-                  {{ onboarding()!.designationName || 'Not specified' }}
-                </strong>
+                <input
+                  type="text"
+                  class="editable-input"
+                  [(ngModel)]="designationName"
+                  name="designationName"
+                  placeholder="e.g. HR Manager"
+                  required
+                />
 
               </div>
 
@@ -248,9 +246,13 @@
                   Employment Type
                 </span>
 
-                <strong>
-                  {{ onboarding()!.employmentType || 'Not specified' }}
-                </strong>
+                <input
+                  type="text"
+                  class="editable-input"
+                  [(ngModel)]="employmentType"
+                  name="employmentType"
+                  placeholder="e.g. Full-time"
+                />
 
               </div>
 
@@ -261,16 +263,12 @@
                   Joining Date
                 </span>
 
-                <strong>
-                  {{
-                    onboarding()!.joiningDate
-                      ? (
-                          onboarding()!.joiningDate
-                          | date:'dd MMMM yyyy'
-                        )
-                      : 'To be confirmed'
-                  }}
-                </strong>
+                <input
+                  type="date"
+                  class="editable-input"
+                  [(ngModel)]="joiningDate"
+                  name="joiningDate"
+                />
 
               </div>
 
@@ -331,20 +329,18 @@
 
               </div>
 
-              <strong class="salary-value">
-
-                @if (onboarding()!.salary !== null) {
-
-                  PKR
-                  {{ onboarding()!.salary | number:'1.0-2' }}
-
-                } @else {
-
-                  Not specified
-
-                }
-
-              </strong>
+              <label class="salary-editor">
+                <span class="currency-prefix">PKR</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="1000"
+                  class="editable-input salary-input"
+                  [(ngModel)]="salary"
+                  name="salary"
+                  placeholder="0"
+                />
+              </label>
 
             </div>
 
@@ -546,9 +542,7 @@
                 {{ onboarding()!.email }}
               </strong>
 
-              <span>
-                Onboarding #{{ onboarding()!.id }}
-              </span>
+              <span>Candidate onboarding</span>
 
             </div>
 
@@ -737,7 +731,7 @@
         </span>
 
         <p>
-          Review all information before creating the offer.
+          Review all information before {{ isEditMode() ? 'updating' : 'creating' }} the offer.
         </p>
 
       </div>
@@ -759,6 +753,7 @@
         <button
           type="button"
           class="primary-button"
+          [class.is-translucent]="isCreating()"
           [disabled]="isCreating() || isSending() || !expiresAt"
           (click)="createOffer()">
 
@@ -767,13 +762,13 @@
             <span class="button-spinner"></span>
 
             <span>
-              Creating Offer...
+              {{ isEditMode() ? 'Updating Offer...' : 'Creating Offer...' }}
             </span>
 
           } @else {
 
             <span>
-              Create Offer
+              {{ isEditMode() ? 'Update Offer' : 'Create Offer' }}
             </span>
 
             <span class="button-arrow">
@@ -783,6 +778,24 @@
           }
 
         </button>
+
+        @if (offer() && offer()!.status === OfferStatus.Draft) {
+          <button
+            type="button"
+            class="primary-button secondary-action"
+            [disabled]="isSending()"
+            (click)="sendOffer()">
+
+            @if (isSending()) {
+              <span class="button-spinner"></span>
+              <span>Sending...</span>
+            } @else {
+              <span>Send Offer</span>
+              <span class="button-arrow">→</span>
+            }
+
+          </button>
+        }
 
       </div>
 
@@ -827,18 +840,6 @@
         </p>
 
         @if (offer()) {
-
-          <div class="created-offer-reference">
-
-            <span>
-              Offer
-            </span>
-
-            <strong>
-              #{{ offer()!.id }}
-            </strong>
-
-          </div>
 
         }
 
@@ -915,18 +916,6 @@
         @if (offer()) {
 
           <div class="send-offer-summary">
-
-            <div class="summary-row">
-
-              <span>
-                Offer
-              </span>
-
-              <strong>
-                #{{ offer()!.id }}
-              </strong>
-
-            </div>
 
             <div class="summary-row">
 

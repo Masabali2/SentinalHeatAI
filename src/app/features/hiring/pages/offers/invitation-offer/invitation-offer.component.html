@@ -1,0 +1,157 @@
+<main class="invitation-page">
+  <section class="invitation-shell">
+    <div class="brand-mark">EMAS</div>
+
+    @if (isLoading()) {
+      <div class="state-content">
+        <div class="loading-spinner"></div>
+        <h1>Preparing your offer</h1>
+        <p>Please wait while we retrieve your secure offer link.</p>
+      </div>
+    } @else if (emailVerified()) {
+      <div class="state-content success-content">
+        <div class="state-icon">✓</div>
+        <span class="eyebrow">EMAIL VERIFIED</span>
+        <h1>Account verified successfully</h1>
+        <p>Your email has been verified and your account is ready. Click below to sign in.</p>
+        <button type="button" class="accept-button login-button" (click)="goToLogin()">Go to login</button>
+      </div>
+    } @else if (showVerification()) {
+      <div class="state-content verification-content">
+        <div class="state-icon">✉</div>
+        <span class="eyebrow">EMAIL VERIFICATION</span>
+        <h1>Check your email</h1>
+        <p>We sent a 6-digit verification code to {{ candidate()?.email }}. Enter it below to activate your account.</p>
+
+        <form class="verification-form" (ngSubmit)="verifyEmail()">
+          <label for="otp">Verification code</label>
+          <input
+            id="otp"
+            name="otp"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            autocomplete="one-time-code"
+            [(ngModel)]="otp"
+            placeholder="000000"
+            required
+          />
+
+          @if (verificationMessage()) {
+            <p class="verification-message">{{ verificationMessage() }}</p>
+          }
+
+          <button type="submit" class="accept-button" [disabled]="isVerifying()">
+            {{ isVerifying() ? 'Verifying...' : 'Verify email' }}
+          </button>
+        </form>
+
+        <button type="button" class="resend-button" [disabled]="isResending()" (click)="resendVerificationCode()">
+          {{ isResending() ? 'Sending...' : 'Resend code' }}
+        </button>
+      </div>
+    } @else if (registrationComplete()) {
+      <div class="state-content success-content">
+        <div class="state-icon">✓</div>
+        <span class="eyebrow">REGISTRATION COMPLETE</span>
+        <h1>Welcome to EMAS</h1>
+        <p>Your information has been submitted successfully. Please check your email for the next steps.</p>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="state-content">
+        <div class="state-icon error-icon">!</div>
+        <span class="eyebrow">LINK UNAVAILABLE</span>
+        <h1>Offer link unavailable</h1>
+        <p>{{ errorMessage() }}</p>
+      </div>
+    } @else if (response() === 'declined') {
+      <div class="state-content">
+        <div class="state-icon error-icon">×</div>
+        <span class="eyebrow">RESPONSE CONFIRMED</span>
+        <h1>Offer declined</h1>
+        <p>Your response has been recorded successfully.</p>
+      </div>
+    } @else if (response() === 'accepted' && !showRegistration()) {
+      <div class="state-content success-content">
+        <div class="state-icon">✓</div>
+        <span class="eyebrow">OFFER ACCEPTED</span>
+        <h1>Welcome to EMAS</h1>
+        <p>Your offer has been accepted. Register here to continue your onboarding.</p>
+        <button type="button" class="accept-button register-button" (click)="openRegistration()">Register here</button>
+      </div>
+    } @else if (candidate() && !showRegistration()) {
+      <div class="offer-content">
+        <span class="eyebrow">EMPLOYMENT OFFER</span>
+        <h1>Hello, {{ candidate()!.firstName || 'Candidate' }}</h1>
+        <p class="intro">You have received an employment offer from EMAS. Review the details before choosing your response.</p>
+
+        <section class="offer-summary">
+          <div class="summary-heading">
+            <span>Offer details</span>
+            <strong>{{ candidate()!.employmentType || 'Employment offer' }}</strong>
+          </div>
+          <div class="details-grid">
+            <div><span>Department</span><strong>{{ candidate()!.departmentName || 'Not specified' }}</strong></div>
+            <div><span>Designation</span><strong>{{ candidate()!.designationName || 'Not specified' }}</strong></div>
+            <div><span>Salary</span><strong>{{ candidate()!.salary !== null ? (candidate()!.salary | number:'1.0-2') : 'Not specified' }}</strong></div>
+            <div><span>Joining date</span><strong>{{ candidate()!.joiningDate ? (candidate()!.joiningDate | date:'dd MMM yyyy') : 'Not specified' }}</strong></div>
+            <div><span>Manager</span><strong>{{ candidate()!.managerName || 'Not assigned' }}</strong></div>
+            <div><span>Candidate email</span><strong>{{ candidate()!.email }}</strong></div>
+          </div>
+        </section>
+
+        <div class="offer-note">
+          <strong>Secure offer link</strong>
+          <p>This invitation expires {{ (candidate()!.invitationExpiresAt || candidate()!.offerExpiresAt) | date:'dd MMM yyyy, hh:mm a' }}.</p>
+        </div>
+
+        <div class="response-actions">
+          <button type="button" class="decline-button" [disabled]="isResponding()" (click)="respond(false)">Decline offer</button>
+          <button type="button" class="accept-button" [disabled]="isResponding()" (click)="respond(true)">Accept offer</button>
+        </div>
+      </div>
+    } @else if (candidate() && showRegistration()) {
+      <div class="offer-content registration-content">
+        <span class="eyebrow">WELCOME TO EMAS</span>
+        <h1>Complete your registration</h1>
+        <p class="intro">Your offer has been accepted. Register here to continue your onboarding.</p>
+
+        <form class="registration-form" (ngSubmit)="register()">
+          <div class="form-section">
+            <h2>Personal information</h2>
+            <div class="form-grid">
+              <label>First name<input name="firstName" [(ngModel)]="registration.firstName" required /></label>
+              <label>Last name<input name="lastName" [(ngModel)]="registration.lastName" required /></label>
+              <label>Date of birth<input name="dateOfBirth" type="date" [(ngModel)]="registration.dateOfBirth" required /></label>
+              <label>Phone<input name="phone" type="tel" [(ngModel)]="registration.phone" required /></label>
+              <label class="full-field">Address<input name="address" [(ngModel)]="registration.address" required /></label>
+              <label>City<input name="city" [(ngModel)]="registration.city" /></label>
+              <label>Postal code<input name="postalCode" [(ngModel)]="registration.postalCode" /></label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2>Emergency contact</h2>
+            <div class="form-grid">
+              <label>Contact name<input name="emergencyContactName" [(ngModel)]="registration.emergencyContactName" required /></label>
+              <label>Contact phone<input name="emergencyContactPhone" type="tel" [(ngModel)]="registration.emergencyContactPhone" required /></label>
+              <label>Relationship<input name="emergencyContactRelation" [(ngModel)]="registration.emergencyContactRelation" /></label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2>Account setup</h2>
+            <div class="form-grid">
+              <label>Password<input name="password" type="password" minlength="8" [(ngModel)]="registration.password" required /></label>
+              <label>Profile picture<input name="profilePicture" type="file" accept="image/*" (change)="onProfilePictureSelected($event)" /></label>
+            </div>
+          </div>
+
+          <div class="registration-actions">
+            <button type="submit" class="accept-button" [disabled]="isRegistering()">{{ isRegistering() ? 'Submitting...' : 'Complete registration' }}</button>
+          </div>
+        </form>
+      </div>
+    }
+  </section>
+</main>

@@ -1,0 +1,26 @@
+<section class="employee-workspace">
+  <header class="employee-workspace-header">
+    <div class="workspace-title">
+      <div class="workspace-mark" aria-hidden="true">E</div>
+      <div>
+        <span class="workspace-eyebrow">PEOPLE OPERATIONS</span>
+        <h1>Employee Directory</h1>
+        <p>Manage people, roles, and organization access in one place.</p>
+      </div>
+    </div>
+
+    <nav class="employee-navigation" aria-label="Employee navigation">
+      <a
+        routerLink="/employees"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span aria-hidden="true">▦</span>
+        Directory
+      </a>
+    </nav>
+  </header>
+
+  <div class="workspace-rule"></div>
+  <router-outlet></router-outlet>
+</section>
