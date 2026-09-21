@@ -1,7 +1,8 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component,OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
+import {Router}  from '@angular/router';
+import { finalize, interval, Subscription } from 'rxjs';
 
 import {
   Dashboard,
@@ -25,10 +26,12 @@ import { AuthStateService } from '../../../core/auth/auth-state.service';
 export class DashboardComponent implements OnInit {
   private readonly dashboardService = inject(DashboardService);
   private readonly authStateService = inject(AuthStateService);
-
+  private readonly router = inject(Router);
+  private greetingTimer?: Subscription;
   readonly dashboard = signal<Dashboard | null>(null);
   readonly isLoading = signal(false);
   readonly errorMessage = signal('');
+  readonly greeting = signal('Good morning');
 
   readonly chartColors = [
     '#2563eb',
@@ -38,9 +41,35 @@ export class DashboardComponent implements OnInit {
     '#db2777',
     '#0891b2'
   ];
+private updateGreeting(): void {
+  const hour = new Date().getHours();
 
+  if (hour < 12) {
+    this.greeting.set('Good morning');
+  } else if (hour < 18) {
+    this.greeting.set('Good afternoon');
+  } else {
+    this.greeting.set('Good evening');
+  }
+}
+openPriorityWork(route: string): void {
+  const urlTree = this.router.parseUrl(route);
+
+  urlTree.queryParams = {
+    ...urlTree.queryParams,
+    returnUrl: '/dashboard'
+  };
+
+  void this.router.navigateByUrl(urlTree);
+}
   ngOnInit(): void {
     this.loadDashboard();
+
+  this.greetingTimer = interval(60_000).subscribe(() => {
+    this.updateGreeting();
+  });
+
+    this.updateGreeting();
   }
 
   get firstName(): string {
@@ -138,4 +167,7 @@ export class DashboardComponent implements OnInit {
         }
       });
   }
+  ngOnDestroy(): void {
+  this.greetingTimer?.unsubscribe();
+}
 }

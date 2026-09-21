@@ -1,0 +1,272 @@
+.collaborators-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: #374151;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.section-header p {
+  margin: 5px 0 0;
+  color: #9ca3af;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.section-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.collaborator-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.collaborator-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+  background: #ffffff;
+}
+
+.collaborator-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.collaborator-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  gap: 3px;
+}
+
+.collaborator-name {
+  color: #374151;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.collaborator-meta {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.remove-collaborator-button,
+.add-collaborator-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.remove-collaborator-button {
+  border: 1px solid #fecaca;
+  background: #ffffff;
+  color: #dc2626;
+}
+
+.remove-collaborator-button:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+.add-collaborator-button {
+  border: 1px solid #111827;
+  background: #111827;
+  color: #ffffff;
+}
+
+.add-collaborator-button:hover:not(:disabled) {
+  background: #1f2937;
+}
+
+.remove-collaborator-button:disabled,
+.add-collaborator-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.collaborator-add-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f1f3;
+}
+
+.collaborator-add-header h3 {
+  margin: 0;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.collaborator-add-header p {
+  margin: 5px 0 0;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.collaborator-add-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.collaborator-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 240px;
+}
+
+.collaborator-input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  background: #ffffff;
+  color: #374151;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.collaborator-input:focus {
+  border-color: #9ca3af;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.06);
+}
+
+.collaborator-error {
+  padding: 11px 14px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 13px;
+}
+
+.collaborator-loading,
+.collaborator-loading-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.collaborator-loading-input {
+  min-height: 40px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+}
+
+.collaborator-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 28px;
+  border: 1px dashed #d1d5db;
+  border-radius: 9px;
+  background: #fafafa;
+  text-align: center;
+}
+
+.collaborator-empty strong {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.collaborator-empty span {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.button-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: collaborator-spin 0.7s linear infinite;
+}
+
+@keyframes collaborator-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .collaborator-card {
+    align-items: flex-start;
+  }
+
+  .remove-collaborator-button {
+    margin-left: auto;
+  }
+
+  .collaborator-add-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .collaborator-field {
+    width: 100%;
+  }
+
+  .add-collaborator-button {
+    width: 100%;
+  }
+}

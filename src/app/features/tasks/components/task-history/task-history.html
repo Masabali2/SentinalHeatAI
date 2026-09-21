@@ -1,0 +1,115 @@
+@if (canViewHistory()) {
+
+  <section class="task-history">
+
+    <header class="section-header">
+      <div>
+        <h3>Task History</h3>
+        <p>
+          Track changes and activities performed on this task.
+        </p>
+      </div>
+    </header>
+
+    @if (isLoading()) {
+
+      <div class="state-card">
+        <div class="spinner"></div>
+        <span>Loading task history...</span>
+      </div>
+
+    } @else if (errorMessage()) {
+
+      <div class="state-card error-state">
+        <strong>{{ errorMessage() }}</strong>
+      </div>
+
+    } @else if (history().length === 0) {
+
+      <div class="state-card empty-state">
+        <strong>No history available</strong>
+        <span>
+          No activity has been recorded for this task yet.
+        </span>
+      </div>
+
+    } @else {
+
+      <div class="history-list">
+
+        @for (item of history(); track item.id) {
+
+          <article class="history-item">
+
+            <div class="history-marker"></div>
+
+            <div class="history-content">
+
+              <div class="history-top">
+
+                <strong class="history-action">
+                  {{ item.action }}
+                </strong>
+
+                <time [attr.datetime]="item.createdAt">
+                  {{ item.createdAt | date:'medium' }}
+                </time>
+
+              </div>
+
+              <p class="changed-by">
+                Changed by
+                <strong>
+                  {{ item.changedByEmployeeName }}
+                </strong>
+              </p>
+
+              @if (item.oldValue || item.newValue) {
+
+                <div class="value-change">
+
+                  @if (item.oldValue) {
+
+                    <div class="value-block">
+                      <span class="value-label">
+                        Previous
+                      </span>
+
+                      <span class="value old-value">
+                        {{ item.oldValue }}
+                      </span>
+                    </div>
+
+                  }
+
+                  @if (item.newValue) {
+
+                    <div class="value-block">
+                      <span class="value-label">
+                        New
+                      </span>
+
+                      <span class="value new-value">
+                        {{ item.newValue }}
+                      </span>
+                    </div>
+
+                  }
+
+                </div>
+
+              }
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
+
+}

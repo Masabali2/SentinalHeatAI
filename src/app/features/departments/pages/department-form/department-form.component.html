@@ -1,0 +1,357 @@
+<section class="department-form-page">
+
+  <header class="page-header">
+
+<div class="page-header-content">
+
+  <button
+    type="button"
+    class="back-link"
+    (click)="cancel()"
+    [disabled]="isSubmitting()"
+  >
+    <span aria-hidden="true">←</span>
+    Departments
+  </button>
+
+  <h1>
+    {{ isEditMode() ? 'Edit Department' : 'Add Department' }}
+  </h1>
+
+  <p>
+    {{
+      isEditMode()
+        ? 'Update the department information and keep your organization structure accurate.'
+        : 'Create a new department for your organization.'
+    }}
+  </p>
+
+</div>
+
+
+  </header>
+
+@if (isLoading()) {
+
+
+<section
+  class="state-card"
+  aria-live="polite"
+>
+
+  <div
+    class="spinner"
+    aria-hidden="true"
+  ></div>
+
+  <strong>
+    Loading department...
+  </strong>
+
+  <span>
+    Please wait while the department information is being loaded.
+  </span>
+
+</section>
+
+
+} @else {
+<section class="form-card">
+
+  <div class="form-card-header">
+
+    <div>
+
+      <h2>
+        Department Information
+      </h2>
+
+      <p>
+        Enter the department details below.
+      </p>
+
+    </div>
+
+    <span class="required-note">
+      <span class="required">*</span>
+      Required fields
+    </span>
+
+  </div>
+
+
+  <form
+    [formGroup]="departmentForm"
+    (ngSubmit)="submit()"
+    novalidate
+  >
+
+    <div class="form-grid">
+
+
+      <!-- Department Name -->
+
+      <div class="form-group">
+
+        <label for="name">
+          Department Name
+          <span
+            class="required"
+            aria-hidden="true"
+          >
+            *
+          </span>
+        </label>
+
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="e.g. Engineering"
+          autocomplete="organization"
+          maxlength="100"
+          [class.invalid]="
+            name.invalid &&
+            name.touched
+          "
+          [attr.aria-invalid]="
+            name.invalid &&
+            name.touched
+          "
+          aria-describedby="name-error"
+        />
+
+        <span class="field-hint">
+          Enter the official name of the department.
+        </span>
+
+
+        @if (
+          name.invalid &&
+          name.touched
+        ) {
+
+          <div
+            id="name-error"
+            class="field-error"
+            role="alert"
+          >
+
+            @if (name.hasError('required')) {
+
+              <span>
+                Department name is required.
+              </span>
+
+            }
+
+            @if (name.hasError('maxlength')) {
+
+              <span>
+                Department name cannot exceed 100 characters.
+              </span>
+
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+
+      <!-- Department Code -->
+
+      <div class="form-group">
+
+        <label for="code">
+          Department Code
+          <span
+            class="required"
+            aria-hidden="true"
+          >
+            *
+          </span>
+        </label>
+
+        <input
+          id="code"
+          type="text"
+          formControlName="code"
+          placeholder="e.g. ENG"
+          autocomplete="off"
+          maxlength="20"
+          [class.invalid]="
+            code.invalid &&
+            code.touched
+          "
+          [attr.aria-invalid]="
+            code.invalid &&
+            code.touched
+          "
+          aria-describedby="code-error"
+        />
+
+        <span class="field-hint">
+          Use a short unique code for the department.
+        </span>
+
+
+        @if (
+          code.invalid &&
+          code.touched
+        ) {
+
+          <div
+            id="code-error"
+            class="field-error"
+            role="alert"
+          >
+
+            @if (code.hasError('required')) {
+
+              <span>
+                Department code is required.
+              </span>
+
+            }
+
+            @if (code.hasError('maxlength')) {
+
+              <span>
+                Department code cannot exceed 20 characters.
+              </span>
+
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+
+      <!-- Description -->
+
+      <div class="form-group full-width">
+
+        <label for="description">
+          Description
+        </label>
+
+        <textarea
+          id="description"
+          formControlName="description"
+          rows="5"
+          maxlength="500"
+          placeholder="Enter a short description of the department..."
+          [class.invalid]="
+            description.invalid &&
+            description.touched
+          "
+          [attr.aria-invalid]="
+            description.invalid &&
+            description.touched
+          "
+          aria-describedby="description-help description-error"
+        ></textarea>
+
+        <span
+          id="description-help"
+          class="field-hint"
+        >
+          Briefly describe the department's responsibilities or purpose.
+        </span>
+
+
+        @if (
+          description.invalid &&
+          description.touched
+        ) {
+
+          <div
+            id="description-error"
+            class="field-error"
+            role="alert"
+          >
+
+            @if (
+              description.hasError('maxlength')
+            ) {
+
+              <span>
+                Description cannot exceed 500 characters.
+              </span>
+
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+
+    <!-- Form Actions -->
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="cancel()"
+        [disabled]="isSubmitting()"
+      >
+        Cancel
+      </button>
+
+
+      <button
+        type="submit"
+        class="primary-button"
+        [disabled]="
+          isSubmitting()
+        "
+      >
+
+        @if (isSubmitting()) {
+
+          <span
+            class="button-spinner"
+            aria-hidden="true"
+          ></span>
+
+          <span>
+            {{
+              isEditMode()
+                ? 'Updating...'
+                : 'Creating...'
+            }}
+          </span>
+
+        } @else {
+
+          <span>
+            {{
+              isEditMode()
+                ? 'Update Department'
+                : 'Create Department'
+            }}
+          </span>
+
+        }
+
+      </button>
+
+    </div>
+
+  </form>
+
+</section>
+
+
+}
+
+</section>

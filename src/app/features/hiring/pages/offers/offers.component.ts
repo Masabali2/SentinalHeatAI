@@ -41,6 +41,12 @@ export class OffersComponent implements OnInit {
     signal<number | null>(null);
 
   readonly OfferStatus = OfferStatus;
+  private getReturnUrl(): string {
+  return (
+    this.route.snapshot.queryParamMap.get('returnUrl')
+    || '/hiring'
+  );
+}
 
   ngOnInit(): void {
     this.loadOnboardingId();
@@ -57,16 +63,26 @@ export class OffersComponent implements OnInit {
       return;
     }
 
-    this.router.navigate([
-      '/hiring/offers',
-      onboardingId,
-      'create'
-    ]);
+    this.router.navigate(
+  [
+    '/hiring/offers',
+    onboardingId,
+    'create'
+  ],
+  {
+    queryParams: {
+      returnUrl: this.getReturnUrl()
+    }
   }
+);
+  }
+backToHiring(): void {
+  const returnUrl =
+    this.route.snapshot.queryParamMap.get('returnUrl')
+    || '/hiring';
 
-  backToHiring(): void {
-    this.router.navigate(['/hiring']);
-  }
+  void this.router.navigateByUrl(returnUrl);
+}
 
   viewOffer(offerId: number): void {
     const onboardingId = this.onboardingId();
@@ -79,12 +95,19 @@ export class OffersComponent implements OnInit {
       return;
     }
 
-    this.router.navigate([
-      '/hiring/offers',
-      onboardingId,
-      'view',
-      offerId
-    ]);
+   this.router.navigate(
+  [
+    '/hiring/offers',
+    onboardingId,
+    'view',
+    offerId
+  ],
+  {
+    queryParams: {
+      returnUrl: this.getReturnUrl()
+    }
+  }
+);
   }
 
   continueOffer(offerId: number): void {
@@ -98,12 +121,19 @@ export class OffersComponent implements OnInit {
       return;
     }
 
-    this.router.navigate([
-      '/hiring/offers',
-      onboardingId,
-      'edit',
-      offerId
-    ]);
+    this.router.navigate(
+  [
+    '/hiring/offers',
+    onboardingId,
+    'edit',
+    offerId
+  ],
+  {
+    queryParams: {
+      returnUrl: this.getReturnUrl()
+    }
+  }
+);
   }
 
   private loadOnboardingId(): void {

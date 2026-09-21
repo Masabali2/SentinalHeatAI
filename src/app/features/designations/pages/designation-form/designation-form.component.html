@@ -1,0 +1,326 @@
+<div class="designation-form-page">
+
+  <!-- Page Header -->
+
+  <header class="page-header">
+
+    <div class="page-header-content">
+
+      <button
+        type="button"
+        class="back-link"
+        (click)="cancel()"
+      >
+        ← Designations
+      </button>
+
+      <h1>
+        {{ isEditMode() ? 'Edit Designation' : 'Create Designation' }}
+      </h1>
+
+      <p>
+        {{
+          isEditMode()
+            ? 'Update the designation information below.'
+            : 'Add a new designation to your organization.'
+        }}
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- Loading -->
+
+  @if (isLoading()) {
+
+    <section
+      class="state-card"
+      aria-live="polite"
+    >
+
+      <div
+        class="spinner"
+        aria-hidden="true"
+      ></div>
+
+      <strong>
+        Loading designation...
+      </strong>
+
+      <span>
+        Please wait while the designation information is loaded.
+      </span>
+
+    </section>
+
+  } @else {
+
+    <!-- Form -->
+
+    <form
+      class="form-card"
+      [formGroup]="designationForm"
+      (ngSubmit)="submit()"
+      novalidate
+    >
+
+      <!-- Form Header -->
+
+      <div class="form-card-header">
+
+        <div>
+
+          <h2>
+            Designation Information
+          </h2>
+
+          <p>
+            Enter the basic information for this designation.
+          </p>
+
+        </div>
+
+        <span class="required-note">
+          * Required
+        </span>
+
+      </div>
+
+
+      <!-- Form Body -->
+
+      <div class="form-body">
+
+        <!-- Name -->
+
+        <div class="form-group">
+
+          <label for="designation-name">
+            Designation Name
+            <span aria-hidden="true">*</span>
+          </label>
+
+          <input
+            id="designation-name"
+            type="text"
+            formControlName="name"
+            placeholder="e.g. Software Engineer"
+            autocomplete="off"
+            [attr.aria-invalid]="
+              name.invalid && name.touched
+            "
+            [attr.aria-describedby]="
+              name.invalid && name.touched
+                ? 'designation-name-error designation-name-hint'
+                : 'designation-name-hint'
+            "
+          />
+
+          <span
+            id="designation-name-hint"
+            class="field-hint"
+          >
+            Enter a clear and recognizable designation name.
+          </span>
+
+
+          @if (
+            name.invalid &&
+            name.touched
+          ) {
+
+            <div
+              id="designation-name-error"
+              class="field-error"
+              role="alert"
+            >
+
+              @if (name.errors?.['required']) {
+                <span>
+                  Designation name is required.
+                </span>
+              }
+
+              @if (name.errors?.['maxlength']) {
+                <span>
+                  Designation name cannot exceed 100 characters.
+                </span>
+              }
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- Code -->
+
+        <div class="form-group">
+
+          <label for="designation-code">
+            Designation Code
+            <span aria-hidden="true">*</span>
+          </label>
+
+          <input
+            id="designation-code"
+            type="text"
+            formControlName="code"
+            placeholder="e.g. SE"
+            autocomplete="off"
+            [attr.aria-invalid]="
+              code.invalid && code.touched
+            "
+            [attr.aria-describedby]="
+              code.invalid && code.touched
+                ? 'designation-code-error designation-code-hint'
+                : 'designation-code-hint'
+            "
+          />
+
+          <span
+            id="designation-code-hint"
+            class="field-hint"
+          >
+            Use a short unique code for this designation.
+          </span>
+
+
+          @if (
+            code.invalid &&
+            code.touched
+          ) {
+
+            <div
+              id="designation-code-error"
+              class="field-error"
+              role="alert"
+            >
+
+              @if (code.errors?.['required']) {
+                <span>
+                  Designation code is required.
+                </span>
+              }
+
+              @if (code.errors?.['maxlength']) {
+                <span>
+                  Designation code cannot exceed 20 characters.
+                </span>
+              }
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- Description -->
+
+        <div class="form-group">
+
+          <label for="designation-description">
+            Description
+          </label>
+
+          <textarea
+            id="designation-description"
+            rows="5"
+            formControlName="description"
+            placeholder="Enter a description for this designation..."
+            [attr.aria-invalid]="
+              description.invalid && description.touched
+            "
+            [attr.aria-describedby]="
+              description.invalid && description.touched
+                ? 'designation-description-error designation-description-hint'
+                : 'designation-description-hint'
+            "
+          ></textarea>
+
+          <span
+            id="designation-description-hint"
+            class="field-hint"
+          >
+            Optional. Describe the responsibilities or purpose of this designation.
+          </span>
+
+
+          @if (
+            description.invalid &&
+            description.touched
+          ) {
+
+            <div
+              id="designation-description-error"
+              class="field-error"
+              role="alert"
+            >
+
+              @if (description.errors?.['maxlength']) {
+                <span>
+                  Description cannot exceed 500 characters.
+                </span>
+              }
+
+            </div>
+
+          }
+
+        </div>
+
+      </div>
+
+
+      <!-- Form Footer -->
+
+      <div class="form-footer">
+
+        <button
+          type="button"
+          class="secondary-button"
+          [disabled]="isSubmitting()"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+
+
+        <button
+          type="submit"
+          class="primary-button"
+          [disabled]="isSubmitting()"
+        >
+
+          @if (isSubmitting()) {
+
+            <span
+              class="button-spinner"
+              aria-hidden="true"
+            ></span>
+
+            <span>
+              {{ isEditMode() ? 'Updating...' : 'Creating...' }}
+            </span>
+
+          } @else {
+
+            <span>
+              {{ isEditMode() ? 'Update Designation' : 'Create Designation' }}
+            </span>
+
+          }
+
+        </button>
+
+      </div>
+
+    </form>
+
+  }
+
+</div>

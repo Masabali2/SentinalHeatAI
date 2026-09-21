@@ -1,0 +1,83 @@
+<section class="task-summary" aria-label="Task summary">
+
+  <article class="summary-card">
+    <div class="summary-card__icon">▣</div>
+    <div class="summary-card__content">
+      <span class="summary-card__label">Total Tasks</span>
+      <strong class="summary-card__value">
+        {{ totalTasks() }}
+      </strong>
+    </div>
+  </article>
+
+  <article class="summary-card">
+    <div class="summary-card__icon">◷</div>
+    <div class="summary-card__content">
+      <span class="summary-card__label">Pending</span>
+      <strong class="summary-card__value">
+        {{ pendingTasks() }}
+      </strong>
+    </div>
+  </article>
+
+  <article class="summary-card">
+    <div class="summary-card__icon">↻</div>
+    <div class="summary-card__content">
+      <span class="summary-card__label">In Progress</span>
+      <strong class="summary-card__value">
+        {{ inProgressTasks() }}
+      </strong>
+    </div>
+  </article>
+
+  <article class="summary-card">
+    <div class="summary-card__icon">✓</div>
+    <div class="summary-card__content">
+      <span class="summary-card__label">Completed</span>
+      <strong class="summary-card__value">
+        {{ completedTasks() }}
+      </strong>
+    </div>
+  </article>
+
+  <article class="summary-card">
+    <div class="summary-card__icon">×</div>
+    <div class="summary-card__content">
+      <span class="summary-card__label">Cancelled</span>
+      <strong class="summary-card__value">
+        {{ cancelledTasks() }}
+      </strong>
+    </div>
+  </article>
+
+  <article class="summary-card">
+    <div class="summary-card__icon">!</div>
+    <div class="summary-card__content">
+      <span class="summary-card__label">Overdue</span>
+      <strong class="summary-card__value">
+        {{ overdueTasks() }}
+      </strong>
+    </div>
+  </article>
+
+  <article class="summary-card">
+    <div class="summary-card__icon">●</div>
+    <div class="summary-card__content">
+      <span class="summary-card__label">Active</span>
+      <strong class="summary-card__value">
+        {{ activeTasks() }}
+      </strong>
+    </div>
+  </article>
+
+  <article class="summary-card">
+    <div class="summary-card__icon">○</div>
+    <div class="summary-card__content">
+      <span class="summary-card__label">Inactive</span>
+      <strong class="summary-card__value">
+        {{ inactiveTasks() }}
+      </strong>
+    </div>
+  </article>
+
+</section>

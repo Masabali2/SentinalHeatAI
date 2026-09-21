@@ -15,7 +15,7 @@ import { Employee } from '../../../../models/employee.model';
   styleUrl: './employee-details.component.css'
 })
 export class EmployeeDetailsComponent implements OnInit {
-  private readonly route = inject(ActivatedRoute);
+
   private readonly router = inject(Router);
   private readonly employeeService = inject(EmployeeService);
   private readonly notificationService = inject(NotificationService);
@@ -24,6 +24,7 @@ export class EmployeeDetailsComponent implements OnInit {
   readonly subordinates = signal<Employee[]>([]);
   readonly isLoading = signal(false);
   readonly isBusy = signal(false);
+    readonly route = inject(ActivatedRoute);
 
   ngOnInit(): void {
     this.loadEmployee();
@@ -59,7 +60,14 @@ export class EmployeeDetailsComponent implements OnInit {
       )
     });
   }
+ goBack(): void {
+  const returnUrl =
+    this.route.snapshot.queryParamMap.get('returnUrl');
 
+  void this.router.navigateByUrl(
+    returnUrl || '/employees'
+  );
+}
   deleteEmployee(): void {
     const employee = this.employee();
     if (!employee || this.isBusy() || !window.confirm(`Delete ${this.employeeName(employee)}?`)) {

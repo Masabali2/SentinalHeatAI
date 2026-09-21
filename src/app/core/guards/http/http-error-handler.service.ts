@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { NotificationService } from '../../services/notification.service';
-import { ApiResponse } from '../../../models/api-response.model';
+import { ApiResponse, ValidationError } from '../../../models/api-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +31,7 @@ export class HttpErrorHandlerService {
     }
 
     switch (error.status) {
+
       case 400:
         return 'The request is invalid. Please check your information and try again.';
 
@@ -66,12 +67,58 @@ export class HttpErrorHandlerService {
     error: HttpErrorResponse
   ): ApiResponse<unknown> | null {
 
+    const response = error.error;
+
+    if (!response) {
+      return null;
+    }
+
+    /*
+     * ASP.NET Core currently returns PascalCase:
+     * Success, StatusCode, Message, Data, Errors
+     */
+
     if (
-      error.error &&
-      typeof error.error === 'object' &&
-      'message' in error.error
+      typeof response === 'object' &&
+      !Array.isArray(response)
     ) {
-      return error.error as ApiResponse<unknown>;
+      const body = response as Record<string, unknown>;
+
+      const message =
+        body['Message'] ??
+        body['message'];
+
+      if (
+        typeof message === 'string' &&
+        message.trim().length > 0
+      ) {
+        return {
+          success:
+            Boolean(
+              body['Success'] ??
+              body['success']
+            ),
+
+          statusCode:
+            Number(
+              body['StatusCode'] ??
+              body['statusCode'] ??
+              error.status
+            ),
+
+          message,
+
+          data:
+            (body['Data'] ??
+            body['data'] ??
+            null) as unknown,
+
+          errors:
+            (body['Errors'] ??
+            body['errors'] ??
+            null) as ValidationError[] | null
+        };
+      }
     }
 
     return null;

@@ -1,0 +1,260 @@
+<section class="task-form-page">
+
+  <header class="page-header">
+
+    <div class="page-header__content">
+      <button
+        type="button"
+        class="back-button"
+        (click)="onCancel()"
+      >
+        ← Back to Tasks
+      </button>
+
+      <h1 class="page-title">
+        {{ pageTitle() }}
+      </h1>
+
+      <p class="page-subtitle">
+        @if (isEditMode()) {
+          Update the task details below.
+        } @else {
+          Create a new task and assign it to an employee.
+        }
+      </p>
+    </div>
+
+  </header>
+
+  @if (isLoading()) {
+
+    <section class="state-card">
+      <div class="spinner"></div>
+
+      <strong>Loading task...</strong>
+
+      <span>
+        Please wait while the task details are being loaded.
+      </span>
+    </section>
+
+  } @else {
+
+    <form
+      class="task-form"
+      [formGroup]="taskForm"
+      (ngSubmit)="onSubmit()"
+      novalidate
+    >
+
+      @if (submitError()) {
+        <div
+          class="form-error"
+          role="alert"
+        >
+          {{ submitError() }}
+        </div>
+      }
+
+      <section class="form-section">
+
+        <header class="form-section__header">
+          <h2>Task Information</h2>
+
+          <p>
+            Enter the basic information for this task.
+          </p>
+        </header>
+
+        <div class="form-grid">
+
+          <div class="form-field form-field--full">
+
+            <label for="task-title">
+              Title
+              <span class="required">*</span>
+            </label>
+
+            <input
+              id="task-title"
+              type="text"
+              formControlName="title"
+              placeholder="Enter task title"
+              maxlength="200"
+              autocomplete="off"
+            />
+
+            @if (
+              taskForm.controls.title.touched &&
+              taskForm.controls.title.hasError('required')
+            ) {
+              <span class="field-error">
+                Task title is required.
+              </span>
+            }
+
+            @if (
+              taskForm.controls.title.touched &&
+              taskForm.controls.title.hasError('maxlength')
+            ) {
+              <span class="field-error">
+                Task title cannot exceed 200 characters.
+              </span>
+            }
+
+          </div>
+
+          <div class="form-field form-field--full">
+
+            <label for="task-description">
+              Description
+            </label>
+
+            <textarea
+              id="task-description"
+              formControlName="description"
+              placeholder="Describe the task..."
+              rows="5"
+              maxlength="2000"
+            ></textarea>
+
+            @if (
+              taskForm.controls.description.touched &&
+              taskForm.controls.description.hasError('maxlength')
+            ) {
+              <span class="field-error">
+                Description cannot exceed 2000 characters.
+              </span>
+            }
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <section class="form-section">
+
+        <header class="form-section__header">
+          <h2>Assignment & Schedule</h2>
+
+          <p>
+            Configure the employee assignment and due date.
+          </p>
+        </header>
+
+        <div class="form-grid">
+
+          <div class="form-field">
+
+            <label for="task-employee">
+              Assigned Employee
+              <span class="required">*</span>
+            </label>
+
+            <select
+              id="task-employee"
+              formControlName="assignedToEmployeeId"
+            >
+              <option [ngValue]="0">
+                Select an employee
+              </option>
+
+              <!--
+                Employee options will be connected
+                when the employee lookup source is integrated.
+              -->
+            </select>
+
+            @if (
+              taskForm.controls.assignedToEmployeeId.touched &&
+              taskForm.controls.assignedToEmployeeId.hasError('min')
+            ) {
+              <span class="field-error">
+                Please select an employee.
+              </span>
+            }
+
+            @if (isEditMode()) {
+              <span class="field-hint">
+                Assignment is managed separately through task reassignment.
+              </span>
+            }
+
+          </div>
+
+          <div class="form-field">
+
+            <label for="task-due-date">
+              Due Date
+            </label>
+
+            <input
+              id="task-due-date"
+              type="datetime-local"
+              formControlName="dueDate"
+            />
+
+            <span class="field-hint">
+              Leave empty if the task has no deadline.
+            </span>
+
+          </div>
+
+          <div class="form-field">
+
+            <label for="task-priority">
+              Priority
+              <span class="required">*</span>
+            </label>
+
+            <select
+              id="task-priority"
+              formControlName="priority"
+            >
+              @for (priority of priorities; track priority.value) {
+                <option [ngValue]="priority.value">
+                  {{ priority.label }}
+                </option>
+              }
+            </select>
+
+          </div>
+
+        </div>
+
+      </section>
+
+     <footer class="form-actions">
+
+  <button
+    type="button"
+    class="secondary-button"
+    (click)="onCancel()"
+    [disabled]="isSubmitting()"
+  >
+    Cancel
+  </button>
+
+  @if (canSubmit()) {
+    <button
+      type="submit"
+      class="primary-button"
+      [disabled]="isSubmitting()"
+    >
+      @if (isSubmitting()) {
+        <span class="button-spinner"></span>
+        Saving...
+      } @else {
+        {{ submitLabel() }}
+      }
+    </button>
+  }
+
+</footer>
+
+    </form>
+
+  }
+
+</section>

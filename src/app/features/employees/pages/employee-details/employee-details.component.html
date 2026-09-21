@@ -1,16 +1,309 @@
+
 <section class="details-page">
+
   @if (isLoading()) {
-    <section class="state-card"><div class="spinner"></div><strong>Loading employee profile...</strong></section>
-  } @else if (employee(); as current) {
-    <header class="page-header"><div><a routerLink="/employees" class="back-link">← Employees</a><span class="eyebrow">EMPLOYEE PROFILE</span><h1>{{ employeeName(current) }}</h1><p>{{ current.employeeCode }} · {{ current.email }}</p></div><span class="status" [class.active]="current.isActive">{{ current.isActive ? 'Active' : 'Inactive' }}</span></header>
-    <section class="profile-card">
-      <div class="profile-identity"><span class="large-avatar">{{ current.firstName.charAt(0) }}{{ current.lastName.charAt(0) }}</span><div><h2>{{ employeeName(current) }}</h2><p>{{ current.designationName }} · {{ current.departmentName }}</p></div></div>
-      <div class="profile-actions"><a class="secondary-button" [routerLink]="['/employees', current.id, 'edit']">Edit profile</a><button type="button" class="secondary-button" [disabled]="isBusy()" (click)="toggleStatus()">{{ current.isActive ? 'Deactivate' : 'Activate' }}</button><button type="button" class="danger-button" [disabled]="isBusy()" (click)="deleteEmployee()">Delete</button></div>
+
+    <section class="state-card">
+      <div class="spinner"></div>
+      <strong>Loading employee profile...</strong>
     </section>
+
+  } @else if (employee(); as current) {
+
+    <!-- Page Header -->
+    <header class="page-header">
+
+      <div>
+       <a
+  href=""
+  class="back-link"
+  (click)="$event.preventDefault(); goBack()"
+>
+  ← Back
+</a>
+
+        <span class="eyebrow">
+          EMPLOYEE PROFILE
+        </span>
+
+        <h1>
+          {{ employeeName(current) }}
+        </h1>
+
+        <p>
+          {{ current.employeeCode }} · {{ current.email }}
+        </p>
+      </div>
+
+      <span
+        class="status"
+        [class.active]="current.isActive">
+        {{ current.isActive ? 'Active' : 'Inactive' }}
+      </span>
+
+    </header>
+
+
+    <!-- Profile Summary -->
+    <section class="profile-card">
+
+      <div class="profile-identity">
+
+        <span class="large-avatar">
+          {{ current.firstName.charAt(0) }}{{ current.lastName.charAt(0) }}
+        </span>
+
+        <div>
+          <h2>
+            {{ employeeName(current) }}
+          </h2>
+
+          <p>
+            {{ current.designationName }} · {{ current.departmentName }}
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="profile-actions">
+
+        <a
+          class="secondary-button"
+          [routerLink]="['/employees', current.id, 'edit']"
+          [queryParams]="{
+    returnUrl: route.snapshot.queryParamMap.get('returnUrl') || '/employees'
+  }"
+          >
+          Edit profile
+        </a>
+
+        <button
+          type="button"
+          class="secondary-button"
+          [disabled]="isBusy()"
+          (click)="toggleStatus()">
+          {{ current.isActive ? 'Deactivate' : 'Activate' }}
+        </button>
+
+        <button
+          type="button"
+          class="danger-button"
+          [disabled]="isBusy()"
+          (click)="deleteEmployee()">
+          Delete
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- Employee Details -->
     <div class="details-grid">
-      <section class="content-card"><div class="card-heading"><span class="eyebrow">EMPLOYMENT</span><h2>Employment details</h2></div><dl><div><dt>Department</dt><dd>{{ current.departmentName }}</dd></div><div><dt>Designation</dt><dd>{{ current.designationName }}</dd></div><div><dt>Manager</dt><dd>{{ current.managerName || 'Not assigned' }}</dd></div><div><dt>Role</dt><dd>{{ current.role || 'Not assigned' }}</dd></div><div><dt>Salary</dt><dd>{{ current.salary | number:'1.0-2' }}</dd></div><div><dt>Joining date</dt><dd>{{ current.dateOfJoining ? (current.dateOfJoining | date:'dd MMM yyyy') : 'Not provided' }}</dd></div></dl></section>
-      <section class="content-card"><div class="card-heading"><span class="eyebrow">CONTACT</span><h2>Contact details</h2></div><dl><div><dt>Email</dt><dd>{{ current.email }}</dd></div><div><dt>Phone</dt><dd>{{ current.phone || 'Not provided' }}</dd></div><div><dt>Date of birth</dt><dd>{{ current.dateOfBirth ? (current.dateOfBirth | date:'dd MMM yyyy') : 'Not provided' }}</dd></div><div><dt>Account</dt><dd>{{ current.userId ? 'Linked identity account' : 'No identity account' }}</dd></div></dl></section>
+
+      <!-- Employment Details -->
+      <section class="content-card">
+
+        <div class="card-heading">
+          <span class="eyebrow">
+            EMPLOYMENT
+          </span>
+
+          <h2>
+            Employment details
+          </h2>
+        </div>
+
+        <dl>
+
+          <div>
+            <dt>Department</dt>
+            <dd>
+              {{ current.departmentName }}
+            </dd>
+          </div>
+
+          <div>
+            <dt>Designation</dt>
+            <dd>
+              {{ current.designationName }}
+            </dd>
+          </div>
+
+          <div>
+            <dt>Manager</dt>
+            <dd>
+              {{ current.managerName || 'Not assigned' }}
+            </dd>
+          </div>
+
+          <div>
+            <dt>Role</dt>
+            <dd>
+              {{ current.role || 'Not assigned' }}
+            </dd>
+          </div>
+
+          <div>
+            <dt>Salary</dt>
+            <dd>
+              {{ current.salary | number:'1.0-2' }}
+            </dd>
+          </div>
+
+          <div>
+            <dt>Joining date</dt>
+            <dd>
+              {{
+                current.dateOfJoining
+                  ? (current.dateOfJoining | date:'dd MMM yyyy')
+                  : 'Not provided'
+              }}
+            </dd>
+          </div>
+
+        </dl>
+
+      </section>
+
+
+      <!-- Contact Details -->
+      <section class="content-card">
+
+        <div class="card-heading">
+          <span class="eyebrow">
+            CONTACT
+          </span>
+
+          <h2>
+            Contact details
+          </h2>
+        </div>
+
+        <dl>
+
+          <div>
+            <dt>Email</dt>
+            <dd>
+              {{ current.email }}
+            </dd>
+          </div>
+
+          <div>
+            <dt>Phone</dt>
+            <dd>
+              {{ current.phone || 'Not provided' }}
+            </dd>
+          </div>
+
+          <div>
+            <dt>Date of birth</dt>
+            <dd>
+              {{
+                current.dateOfBirth
+                  ? (current.dateOfBirth | date:'dd MMM yyyy')
+                  : 'Not provided'
+              }}
+            </dd>
+          </div>
+
+          <div>
+  <dt>Account</dt>
+
+  <dd>
+    @if (current.account.isLinked) {
+      <span class="account-status linked">
+        Linked identity account
+      </span>
+    } @else {
+      <span class="account-status not-linked">
+        No identity account
+      </span>
+    }
+  </dd>
+</div>
+
+        </dl>
+
+      </section>
+
     </div>
-    <section class="content-card subordinate-card"><div class="card-heading"><span class="eyebrow">TEAM</span><h2>Direct reports</h2></div>@if (subordinates().length) {<div class="subordinate-list">@for (person of subordinates(); track person.id) {<a [routerLink]="['/employees', person.id]" class="subordinate"><span class="avatar">{{ person.firstName.charAt(0) }}{{ person.lastName.charAt(0) }}</span><span><strong>{{ employeeName(person) }}</strong><small>{{ person.designationName }} · {{ person.email }}</small></span></a>}</div>} @else {<p class="muted">No direct reports assigned.</p>}</section>
-  } @else { <section class="state-card"><strong>Employee not found.</strong><a routerLink="/employees" class="secondary-button">Back to employees</a></section> }
+
+
+    <!-- Direct Reports -->
+    <section class="content-card subordinate-card">
+
+      <div class="card-heading">
+        <span class="eyebrow">
+          TEAM
+        </span>
+
+        <h2>
+          Direct reports
+        </h2>
+      </div>
+
+
+      @if (subordinates().length) {
+
+        <div class="subordinate-list">
+
+          @for (person of subordinates(); track person.id) {
+
+            <a
+              [routerLink]="['/employees', person.id]"
+              class="subordinate">
+
+              <span class="avatar">
+                {{ person.firstName.charAt(0) }}{{ person.lastName.charAt(0) }}
+              </span>
+
+              <span>
+
+                <strong>
+                  {{ employeeName(person) }}
+                </strong>
+
+                <small>
+                  {{ person.designationName }} · {{ person.email }}
+                </small>
+
+              </span>
+
+            </a>
+
+          }
+
+        </div>
+
+      } @else {
+
+        <p class="muted">
+          No direct reports assigned.
+        </p>
+
+      }
+
+    </section>
+
+  } @else {
+
+    <!-- Employee Not Found -->
+    <section class="state-card">
+
+      <strong>
+        Employee not found.
+      </strong>
+
+      <a
+        routerLink="/employees"
+        class="secondary-button">
+        Back to employees
+      </a>
+
+    </section>
+
+  }
+
 </section>

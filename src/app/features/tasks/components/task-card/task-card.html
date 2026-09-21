@@ -1,0 +1,90 @@
+<article
+  class="task-card"
+  [class.task-card--inactive]="!task().isActive"
+  [class.task-card--overdue]="isOverdue()"
+>
+
+  <header class="task-card__header">
+
+    <div class="task-card__title-section">
+      <h3 class="task-card__title">
+        {{ task().title }}
+      </h3>
+
+      @if (!task().isActive) {
+        <span class="task-card__inactive-badge">
+          Inactive
+        </span>
+      }
+    </div>
+
+    <div class="task-card__priority">
+      <span class="priority-label">
+        {{ priorityLabel() }}
+      </span>
+    </div>
+
+  </header>
+
+  @if (task().description) {
+    <p class="task-card__description">
+      {{ task().description }}
+    </p>
+  }
+
+  <div class="task-card__meta">
+
+    <div class="task-card__meta-item">
+      <span class="meta-label">Assigned to</span>
+      <span class="meta-value">
+        {{ task().assignedToEmployeeName }}
+      </span>
+    </div>
+
+    <div class="task-card__meta-item">
+      <span class="meta-label">Assigned by</span>
+      <span class="meta-value">
+        {{ task().assignedByEmployeeName }}
+      </span>
+    </div>
+
+    <div class="task-card__meta-item">
+      <span class="meta-label">Due date</span>
+
+      <span
+        class="meta-value"
+        [class.meta-value--overdue]="isOverdue()"
+        [class.meta-value--due-soon]="isDueSoon()"
+      >
+        {{ formatDueDate(task().dueDate) }}
+
+        @if (isOverdue()) {
+          <span class="due-indicator">
+            Overdue
+          </span>
+        } @else if (isDueSoon()) {
+          <span class="due-indicator">
+            Due soon
+          </span>
+        }
+      </span>
+    </div>
+
+  </div>
+
+  <footer class="task-card__footer">
+
+    <span
+      class="task-status"
+      [attr.data-status]="task().status"
+    >
+      {{ statusLabel() }}
+    </span>
+
+    <span class="task-card__created">
+      Created {{ formatDueDate(task().createdAt) }}
+    </span>
+
+  </footer>
+
+</article>

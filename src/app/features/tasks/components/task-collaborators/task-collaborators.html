@@ -1,0 +1,195 @@
+<section class="collaborators-section">
+
+  <header class="section-header">
+    <div>
+      <h2>Collaborators</h2>
+      <p>
+        Employees working with the assigned employee on this task.
+      </p>
+    </div>
+
+    <span class="section-count">
+      {{ collaborators().length }}
+    </span>
+  </header>
+
+  @if (errorMessage()) {
+    <div class="collaborator-error" role="alert">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="collaborator-loading">
+      <span class="button-spinner"></span>
+      Loading collaborators...
+    </div>
+  } @else {
+
+    @if (collaborators().length > 0) {
+
+      <div class="collaborator-list">
+
+        @for (
+          collaborator of collaborators();
+          track collaborator.id
+        ) {
+
+          <article class="collaborator-card">
+
+            <div class="collaborator-avatar">
+              {{ collaborator.employeeName.charAt(0).toUpperCase() }}
+            </div>
+
+            <div class="collaborator-content">
+
+              <strong class="collaborator-name">
+                {{ collaborator.employeeName }}
+              </strong>
+
+              <span class="collaborator-meta">
+                Added by {{ collaborator.addedByEmployeeName }}
+                · {{ collaborator.addedAt | date:'mediumDate' }}
+              </span>
+
+            </div>
+
+            @if (
+              task().isActive &&
+              canManageCollaborators()
+            ) {
+
+              <button
+                type="button"
+                class="remove-collaborator-button"
+                [disabled]="
+                  removingEmployeeId() === collaborator.employeeId
+                "
+                (click)="removeCollaborator(collaborator)"
+              >
+
+                @if (
+                  removingEmployeeId() === collaborator.employeeId
+                ) {
+                  <span class="button-spinner"></span>
+                  Removing...
+                } @else {
+                  Remove
+                }
+
+              </button>
+            }
+
+          </article>
+        }
+
+      </div>
+
+    } @else {
+
+      <div class="collaborator-empty">
+        <strong>No collaborators</strong>
+        <span>
+          No additional employees are assigned to this task.
+        </span>
+      </div>
+
+    }
+
+  }
+
+  @if (
+    task().isActive &&
+    canManageCollaborators()
+  ) {
+
+    <div class="collaborator-add-panel">
+
+      <div class="collaborator-add-header">
+        <div>
+          <h3>Add Collaborator</h3>
+          <p>
+            Add another active employee to this task.
+          </p>
+        </div>
+      </div>
+
+      <div class="collaborator-add-form">
+
+        <div class="collaborator-field">
+
+          <label
+            for="collaboratorEmployee"
+            class="detail-label"
+          >
+            Employee
+          </label>
+
+          @if (isLoadingEmployees()) {
+
+            <div class="collaborator-loading-input">
+              <span class="button-spinner"></span>
+              Loading employees...
+            </div>
+
+          } @else {
+
+            <select
+              id="collaboratorEmployee"
+              class="collaborator-input"
+              [disabled]="isAdding()"
+              [value]="selectedEmployeeId() ?? ''"
+              (change)="
+                onEmployeeChange($any($event.target).value)
+              "
+            >
+
+              <option value="">
+                Select an employee
+              </option>
+
+              @for (
+                employee of availableEmployees();
+                track employee.id
+              ) {
+
+                <option [value]="employee.id">
+                  {{ employee.firstName }}
+                  {{ employee.lastName }}
+                </option>
+
+              }
+
+            </select>
+
+          }
+
+        </div>
+
+        <button
+          type="button"
+          class="add-collaborator-button"
+          [disabled]="
+            isAdding() ||
+            isLoadingEmployees() ||
+            selectedEmployeeId() === null
+          "
+          (click)="addCollaborator()"
+        >
+
+          @if (isAdding()) {
+            <span class="button-spinner"></span>
+            Adding...
+          } @else {
+            Add Collaborator
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  }
+
+</section>

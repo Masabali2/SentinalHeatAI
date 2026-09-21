@@ -6,3 +6,15 @@ export interface Designation {
   isActive: boolean;
   employeeCount: number;
 }
+
+export interface CreateDesignationRequest {
+  name: string;
+  code: string;
+  description?: string | null;
+}
+
+export interface UpdateDesignationRequest {
+  name: string;
+  code: string;
+  description?: string | null;
+}

@@ -1,0 +1,518 @@
+.designation-form-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+
+/* ================================
+   Page Header
+================================ */
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.page-header h1 {
+  margin: 8px 0 6px;
+  color: #0f172a;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.page-header p {
+  margin: 0;
+  max-width: 720px;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* ================================
+   Back Link
+================================ */
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #475569;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.back-link:hover:not(:disabled) {
+  color: #0f172a;
+}
+
+.back-link:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+
+/* ================================
+   Form Card
+================================ */
+
+.form-card {
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgb(15 23 42 / 5%);
+}
+
+
+/* ================================
+   Form Card Header
+================================ */
+
+.form-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 28px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.form-card-header h2 {
+  margin: 0 0 5px;
+  color: #0f172a;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.form-card-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.required-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  color: #64748b;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+
+/* ================================
+   Form
+================================ */
+
+.form-card form {
+  width: 100%;
+}
+
+
+/* ================================
+   Form Grid
+================================ */
+
+.form-body {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 24px;
+  padding: 28px;
+}
+
+
+/*
+   Description is the third field
+   and should occupy the full width.
+*/
+
+.form-group:last-child {
+  grid-column: 1 / -1;
+}
+
+
+/* ================================
+   Form Group
+================================ */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+
+/* ================================
+   Labels
+================================ */
+
+.form-group label {
+  margin-bottom: 8px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.form-group label span {
+  margin-left: 3px;
+  color: #dc2626;
+}
+
+
+/* ================================
+   Inputs & Textarea
+================================ */
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.form-group input {
+  height: 44px;
+  padding: 0 13px;
+}
+
+.form-group textarea {
+  min-height: 120px;
+  padding: 12px 13px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #94a3b8;
+}
+
+
+/* ================================
+   Focus
+================================ */
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #64748b;
+  box-shadow: 0 0 0 3px rgb(100 116 139 / 12%);
+}
+
+
+/* ================================
+   Invalid
+================================ */
+
+.form-group input[aria-invalid="true"],
+.form-group textarea[aria-invalid="true"] {
+  border-color: #ef4444;
+}
+
+.form-group input[aria-invalid="true"]:focus,
+.form-group textarea[aria-invalid="true"]:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgb(239 68 68 / 10%);
+}
+
+
+/* ================================
+   Field Hint
+================================ */
+
+.field-hint {
+  margin-top: 6px;
+  color: #94a3b8;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+
+/* ================================
+   Field Error
+================================ */
+
+.field-error {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 6px;
+  color: #dc2626;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+
+/* ================================
+   Form Footer
+================================ */
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 28px;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+
+/* ================================
+   Buttons
+================================ */
+
+.primary-button,
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    opacity 0.15s ease,
+    transform 0.1s ease;
+}
+
+.primary-button {
+  border: 1px solid #0f172a;
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.primary-button:hover:not(:disabled) {
+  border-color: #1e293b;
+  background: #1e293b;
+}
+
+.secondary-button {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+}
+
+.secondary-button:hover:not(:disabled) {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.primary-button:active:not(:disabled),
+.secondary-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.primary-button:disabled,
+.secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+
+/* ================================
+   Button Spinner
+================================ */
+
+.button-spinner {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  border: 2px solid rgb(255 255 255 / 35%);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+
+/* ================================
+   Loading State
+================================ */
+
+.state-card {
+  display: flex;
+  min-height: 260px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.state-card strong {
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.state-card > span {
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* ================================
+   Loading Spinner
+================================ */
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 4px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ================================
+   Responsive - Tablet
+================================ */
+
+@media (max-width: 768px) {
+
+  .designation-form-page {
+    padding: 18px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .form-card-header {
+    padding: 20px;
+  }
+
+  .form-body {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .form-group:last-child {
+    grid-column: auto;
+  }
+
+  .form-footer {
+    padding: 18px 20px;
+  }
+
+}
+
+
+/* ================================
+   Responsive - Mobile
+================================ */
+
+@media (max-width: 600px) {
+
+  .designation-form-page {
+    padding: 14px;
+  }
+
+  .form-card-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .required-note {
+    white-space: normal;
+  }
+
+  .form-footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+  }
+
+}
+
+
+/* ================================
+   Small Mobile
+================================ */
+
+@media (max-width: 480px) {
+
+  .designation-form-page {
+    padding: 12px;
+  }
+
+  .page-header {
+    margin-bottom: 18px;
+  }
+
+  .page-header h1 {
+    font-size: 22px;
+  }
+
+  .page-header p {
+    font-size: 13px;
+  }
+
+  .form-card-header {
+    padding: 18px;
+  }
+
+  .form-body {
+    padding: 18px;
+  }
+
+  .form-footer {
+    padding: 16px 18px;
+  }
+
+}

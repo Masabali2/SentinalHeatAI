@@ -9,6 +9,7 @@ import { AdminService } from '../../../../core/services/admin.service';
 import { EmployeeService } from '../../../../core/services/employee.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { RoleService } from '../../../../core/services/role.service';
+
 import { Department } from '../../../../models/department.model';
 import { Designation } from '../../../../models/designation.model';
 import { CreateEmployeeRequest, Employee } from '../../../../models/employee.model';
@@ -22,6 +23,7 @@ import { Role } from '../../../../models/role.model';
   styleUrl: './employee-edit.component.css'
 })
 export class EmployeeEditComponent implements OnInit {
+
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly employeeService = inject(EmployeeService);
@@ -65,13 +67,36 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const employeeId = Number(this.route.snapshot.paramMap.get('id'));
+    const employeeId = Number(
+      this.route.snapshot.paramMap.get('id')
+    );
+
     this.isEditMode.set(!!employeeId);
+
     this.loadLookups(employeeId);
   }
 
   cancel(): void {
-    void this.router.navigate(['/employees']);
+    const employeeId = this.employee()?.id;
+
+    const returnUrl =
+      this.route.snapshot.queryParamMap.get('returnUrl')
+      || '/employees';
+
+    if (this.isEditMode() && employeeId) {
+      void this.router.navigate(
+        ['/employees', employeeId],
+        {
+          queryParams: {
+            returnUrl
+          }
+        }
+      );
+
+      return;
+    }
+
+    void this.router.navigateByUrl(returnUrl);
   }
 
   save(): void {
@@ -93,57 +118,106 @@ export class EmployeeEditComponent implements OnInit {
     };
 
     const employeeId = this.employee()?.id;
+
     const request$ = employeeId
       ? this.employeeService.update(employeeId, request)
       : this.employeeService.create(request);
 
     this.isSaving.set(true);
-    request$.pipe(finalize(() => this.isSaving.set(false))).subscribe({
-      next: response => {
-        if (!response.success || !response.data) {
-          this.notificationService.error(response.message || 'Unable to save employee.');
-          return;
-        }
 
-        const updatedEmployee = response.data;
-
-        if (employeeId && updatedEmployee.userId && this.role) {
-          this.adminService.changeUserRole(updatedEmployee.userId, { role: this.role })
-            .subscribe({
-              next: roleResponse => {
-                if (!roleResponse.success) {
-                  this.notificationService.error(roleResponse.message || 'Employee saved, but role update failed.');
-                  return;
-                }
-
-                this.finishSave(response.message || 'Employee updated successfully.', updatedEmployee.id);
-              },
-              error: error => this.notificationService.error(
-                error?.error?.message || error?.error?.Message || 'Employee saved, but role update failed.'
-              )
-            });
-          return;
-        }
-
-        this.finishSave(
-          response.message || (employeeId ? 'Employee updated successfully.' : 'Employee created successfully.'),
-          updatedEmployee.id
-        );
-      },
-      error: error => this.notificationService.error(
-        error?.error?.message || error?.error?.Message || 'Unable to save employee.'
+    request$
+      .pipe(
+        finalize(() => this.isSaving.set(false))
       )
-    });
+      .subscribe({
+        next: response => {
+
+          if (!response.success || !response.data) {
+            this.notificationService.error(
+              response.message || 'Unable to save employee.'
+            );
+            return;
+          }
+
+          const updatedEmployee = response.data;
+
+          if (
+            employeeId &&
+            updatedEmployee.userId &&
+            this.role
+          ) {
+            this.adminService
+              .changeUserRole(
+                updatedEmployee.userId,
+                {
+                  role: this.role
+                }
+              )
+              .subscribe({
+                next: roleResponse => {
+
+                  if (!roleResponse.success) {
+                    this.notificationService.error(
+                      roleResponse.message ||
+                      'Employee saved, but role update failed.'
+                    );
+                    return;
+                  }
+
+                  this.finishSave(
+                    response.message ||
+                    'Employee updated successfully.',
+                    updatedEmployee.id
+                  );
+                },
+
+                error: error =>
+                  this.notificationService.error(
+                    error?.error?.message ||
+                    error?.error?.Message ||
+                    'Employee saved, but role update failed.'
+                  )
+              });
+
+            return;
+          }
+
+          this.finishSave(
+            response.message ||
+            (
+              employeeId
+                ? 'Employee updated successfully.'
+                : 'Employee created successfully.'
+            ),
+            updatedEmployee.id
+          );
+        },
+
+        error: error =>
+          this.notificationService.error(
+            error?.error?.message ||
+            error?.error?.Message ||
+            'Unable to save employee.'
+          )
+      });
   }
 
   private isValid(): boolean {
-    if (!this.firstName.trim() || !this.lastName.trim() || !this.email.trim()) {
-      this.notificationService.error('First name, last name, and email are required.');
+    if (
+      !this.firstName.trim() ||
+      !this.lastName.trim() ||
+      !this.email.trim()
+    ) {
+      this.notificationService.error(
+        'First name, last name, and email are required.'
+      );
       return false;
     }
 
     if (!this.departmentId || !this.designationId) {
-      this.notificationService.error('Department and designation are required.');
+      this.notificationService.error(
+        'Department and designation are required.'
+      );
       return false;
     }
 
@@ -152,38 +226,68 @@ export class EmployeeEditComponent implements OnInit {
 
   private loadLookups(employeeId: number): void {
     this.isLoading.set(true);
+
     forkJoin({
       departments: this.departmentService.getAll(),
       designations: this.designationService.getAll(),
       managers: this.employeeService.getManagers(),
       roles: this.roleService.getAll(),
+
       employee: employeeId
         ? this.employeeService.getById(employeeId)
         : of(null)
     })
-      .pipe(finalize(() => this.isLoading.set(false)))
+      .pipe(
+        finalize(() => this.isLoading.set(false))
+      )
       .subscribe({
         next: lookups => {
-          this.departments.set(lookups.departments.data || []);
-          this.designations.set(lookups.designations.data || []);
-          this.managers.set(lookups.managers.data || []);
-          this.roles.set(lookups.roles.data || []);
+
+          this.departments.set(
+            lookups.departments.data || []
+          );
+
+          this.designations.set(
+            lookups.designations.data || []
+          );
+
+          this.managers.set(
+            lookups.managers.data || []
+          );
+
+          this.roles.set(
+            lookups.roles.data || []
+          );
 
           if (employeeId) {
-            if (!lookups.employee?.success || !lookups.employee.data) {
+
+            if (
+              !lookups.employee?.success ||
+              !lookups.employee.data
+            ) {
               this.notificationService.error(
-                lookups.employee?.message || 'Unable to load employee.'
+                lookups.employee?.message ||
+                'Unable to load employee.'
               );
               return;
             }
 
-            this.employee.set(lookups.employee.data);
-            this.populateForm(lookups.employee.data);
+            this.employee.set(
+              lookups.employee.data
+            );
+
+            this.populateForm(
+              lookups.employee.data
+            );
           }
         },
-        error: error => this.notificationService.error(
-          error?.error?.message || error?.error?.Message || 'Unable to load employee form.'
-        )
+
+        error: error =>
+          this.notificationService.error(
+            error?.error?.message ||
+            error?.error?.Message ||
+            'Unable to load employee form.'
+          )
       });
   }
 
@@ -195,18 +299,41 @@ export class EmployeeEditComponent implements OnInit {
     this.departmentId = employee.departmentId;
     this.designationId = employee.designationId;
     this.salary = employee.salary;
-    this.dateOfBirth = this.toDateInput(employee.dateOfBirth);
-    this.dateOfJoining = this.toDateInput(employee.dateOfJoining);
+    this.dateOfBirth = this.toDateInput(
+      employee.dateOfBirth
+    );
+    this.dateOfJoining = this.toDateInput(
+      employee.dateOfJoining
+    );
     this.managerId = employee.managerId;
     this.role = employee.role || '';
   }
 
-  private finishSave(message: string, employeeId: number): void {
+  private finishSave(
+    message: string,
+    employeeId: number
+  ): void {
     this.notificationService.success(message);
-    void this.router.navigate(['/employees', employeeId]);
+
+    const returnUrl =
+      this.route.snapshot.queryParamMap.get('returnUrl')
+      || '/employees';
+
+    void this.router.navigate(
+      ['/employees', employeeId],
+      {
+        queryParams: {
+          returnUrl
+        }
+      }
+    );
   }
 
-  private toDateInput(value: string | null): string {
-    return value ? new Date(value).toISOString().slice(0, 10) : '';
+  private toDateInput(
+    value: string | null
+  ): string {
+    return value
+      ? new Date(value).toISOString().slice(0, 10)
+      : '';
   }
 }

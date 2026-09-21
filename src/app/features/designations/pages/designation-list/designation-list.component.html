@@ -1,0 +1,509 @@
+<div class="designations-page">
+
+  <header class="page-header">
+
+    <div>
+      <h1>Designations</h1>
+
+      <p>
+        Manage employee designations and view employee distribution.
+      </p>
+    </div>
+
+
+    <div class="header-actions">
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="toggleFilters()"
+      >
+        <span aria-hidden="true">☰</span>
+        Filter
+      </button>
+
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="addDesignation()"
+      >
+        + Add Designation
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- Filters -->
+
+  @if (showFilters()) {
+
+    <section class="filter-card">
+
+      <div class="filter-group">
+
+        <label for="designation-search">
+          Search
+        </label>
+
+        <input
+          id="designation-search"
+          type="text"
+          placeholder="Search by designation name or code..."
+          [value]="searchTerm()"
+          (input)="
+            setSearchTerm(
+              $any($event.target).value
+            )
+          "
+        />
+
+      </div>
+
+
+      <div class="filter-group">
+
+        <label for="designation-status">
+          Status
+        </label>
+
+        <select
+          id="designation-status"
+          [value]="statusFilter()"
+          (change)="
+            setStatusFilter(
+              $any($event.target).value
+            )
+          "
+        >
+
+          <option value="all">
+            All
+          </option>
+
+          <option value="active">
+            Active
+          </option>
+
+          <option value="inactive">
+            Inactive
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="clear-filter-button"
+        (click)="clearFilters()"
+      >
+        Clear Filters
+      </button>
+
+    </section>
+
+  }
+
+
+  <!-- Loading -->
+
+  @if (isLoading()) {
+
+    <section
+      class="state-card"
+      aria-live="polite"
+    >
+
+      <div
+        class="spinner"
+        aria-hidden="true"
+      ></div>
+
+      <strong>
+        Loading designations...
+      </strong>
+
+      <span>
+        Please wait while designations are being loaded.
+      </span>
+
+    </section>
+
+  } @else {
+
+
+    <!-- Summary -->
+
+    <section class="summary-card">
+
+      <div
+        class="summary-icon"
+        aria-hidden="true"
+      >
+        💼
+      </div>
+
+
+      <div class="summary-content">
+
+        <span>
+          Total Designations
+        </span>
+
+        <strong>
+          {{ designations().length }}
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    <!-- Designation Table -->
+
+    @if (filteredDesignations().length > 0) {
+
+      <section class="table-card">
+
+        <div class="card-header">
+
+          <div>
+
+            <h2>
+              All Designations
+            </h2>
+
+            <p>
+              Designations currently configured in EMAS.
+            </p>
+
+          </div>
+
+
+          <span class="card-count">
+            {{ filteredDesignations().length }}
+          </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Designation
+                </th>
+
+                <th>
+                  Code
+                </th>
+
+                <th>
+                  Employees
+                </th>
+
+                <th>
+                  Status
+                </th>
+
+                <th class="actions-column">
+                  Actions
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                designation of filteredDesignations();
+                track designation.id
+              ) {
+
+                <tr>
+
+                  <!-- Designation -->
+
+                  <td>
+
+                    <div class="designation-info">
+
+                      <div
+                        class="designation-icon"
+                        aria-hidden="true"
+                      >
+                        💼
+                      </div>
+
+
+                      <div>
+
+                        <strong>
+                          {{ designation.name }}
+                        </strong>
+
+
+                        @if (designation.description) {
+
+                          <span>
+                            {{ designation.description }}
+                          </span>
+
+                        }
+
+                      </div>
+
+                    </div>
+
+                  </td>
+
+
+                  <!-- Code -->
+
+                  <td>
+
+                    <span class="designation-code">
+                      {{ designation.code }}
+                    </span>
+
+                  </td>
+
+
+                  <!-- Employees -->
+
+                  <td>
+
+                    <span class="employee-count">
+                      {{ designation.employeeCount }}
+                    </span>
+
+                  </td>
+
+
+                  <!-- Status -->
+
+                  <td>
+
+                    @if (designation.isActive) {
+
+                      <span class="status-badge active">
+                        Active
+                      </span>
+
+                    } @else {
+
+                      <span class="status-badge inactive">
+                        Inactive
+                      </span>
+
+                    }
+
+                  </td>
+
+
+                  <!-- Actions -->
+
+                  <td class="actions-column">
+
+                    <div class="action-menu-container">
+
+                      <button
+                        type="button"
+                        class="action-button"
+                        aria-label="Designation actions"
+                        [attr.aria-expanded]="
+                          openMenuId() === designation.id
+                        "
+                        (click)="
+                          toggleActionMenu(
+                            designation.id
+                          )
+                        "
+                      >
+                        ⋮
+                      </button>
+
+
+                      @if (
+                        openMenuId() === designation.id
+                      ) {
+
+                        <div class="action-menu">
+
+                          <!-- Edit -->
+
+                          <button
+                            type="button"
+                            class="action-menu-item"
+                            (click)="
+                              editDesignation(
+                                designation
+                              )
+                            "
+                          >
+
+                            <span aria-hidden="true">
+                              ✏
+                            </span>
+
+                            <span>
+                              Edit
+                            </span>
+
+                          </button>
+
+
+                          <!-- Activate / Deactivate -->
+
+                          <button
+                            type="button"
+                            class="action-menu-item"
+                            (click)="
+                              toggleDesignationStatus(
+                                designation
+                              )
+                            "
+                          >
+
+                            @if (
+                              designation.isActive
+                            ) {
+
+                              <span aria-hidden="true">
+                                ⏸
+                              </span>
+
+                              <span>
+                                Deactivate
+                              </span>
+
+                            } @else {
+
+                              <span aria-hidden="true">
+                                ▶
+                              </span>
+
+                              <span>
+                                Activate
+                              </span>
+
+                            }
+
+                          </button>
+
+
+                          <!-- Delete -->
+
+                          <button
+                            type="button"
+                            class="action-menu-item danger"
+                            (click)="
+                              deleteDesignation(
+                                designation
+                              )
+                            "
+                          >
+
+                            <span aria-hidden="true">
+                              🗑
+                            </span>
+
+                            <span>
+                              Delete
+                            </span>
+
+                          </button>
+
+                        </div>
+
+                      }
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+    } @else {
+
+
+      <!-- Empty / Filtered State -->
+
+      <section class="state-card">
+
+        <div
+          class="empty-icon"
+          aria-hidden="true"
+        >
+          💼
+        </div>
+
+
+        @if (designations().length > 0) {
+
+          <strong>
+            No designations match your filters
+          </strong>
+
+          <span>
+            Try changing your search or status filter.
+          </span>
+
+
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="clearFilters()"
+          >
+            Clear Filters
+          </button>
+
+        } @else {
+
+          <strong>
+            No designations found
+          </strong>
+
+          <span>
+            Create your first designation to get started.
+          </span>
+
+
+          <button
+            type="button"
+            class="primary-button"
+            (click)="addDesignation()"
+          >
+            + Add Designation
+          </button>
+
+        }
+
+      </section>
+
+    }
+
+  }
+
+</div>

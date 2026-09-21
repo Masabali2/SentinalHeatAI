@@ -6,3 +6,15 @@ export interface Department {
   isActive: boolean;
   employeeCount: number;
 }
+
+export interface CreateDepartmentRequest {
+  name: string;
+  code: string;
+  description?: string | null;
+}
+
+export interface UpdateDepartmentRequest {
+  name: string;
+  code: string;
+  description?: string | null;
+}

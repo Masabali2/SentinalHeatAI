@@ -1,0 +1,199 @@
+<section class="comments-section">
+
+  @if (canViewComments()) {
+
+    <header class="section-header">
+      <div>
+        <h2>Comments</h2>
+        <p>
+          Discussion and updates related to this task.
+        </p>
+      </div>
+
+      <span class="section-count">
+        {{ comments().length }}
+      </span>
+    </header>
+
+    @if (errorMessage()) {
+      <div
+        class="comment-error"
+        role="alert"
+      >
+        {{ errorMessage() }}
+      </div>
+    }
+
+    @if (isLoading()) {
+
+      <div class="comment-loading">
+        <span class="button-spinner"></span>
+        Loading comments...
+      </div>
+
+    } @else {
+
+      @if (comments().length > 0) {
+
+        <div class="comment-list">
+
+          @for (
+            comment of comments();
+            track comment.id
+          ) {
+
+            <article class="comment-card">
+
+              <div class="comment-avatar">
+                {{
+                  comment.employeeName
+                    .charAt(0)
+                    .toUpperCase()
+                }}
+              </div>
+
+              <div class="comment-content">
+
+                <div class="comment-header">
+
+                  <div class="comment-author">
+
+                    <strong>
+                      {{ comment.employeeName }}
+                    </strong>
+
+                    <span class="comment-date">
+                      {{ comment.createdAt | date:'medium' }}
+                    </span>
+
+                  </div>
+
+                </div>
+
+                <p class="comment-text">
+                  {{ comment.comment }}
+                </p>
+
+                @if (comment.updatedAt) {
+                  <span class="comment-updated">
+                    Edited
+                    {{ comment.updatedAt | date:'medium' }}
+                  </span>
+                }
+
+              </div>
+
+            </article>
+
+          }
+
+        </div>
+
+      } @else {
+
+        <div class="comment-empty">
+
+          <div class="comment-empty__icon">
+            💬
+          </div>
+
+          <strong>
+            No comments yet
+          </strong>
+
+          <span>
+            Start the discussion by adding the first comment.
+          </span>
+
+        </div>
+
+      }
+
+    }
+
+  }
+
+  @if (canAddComment()) {
+
+    @if (task().isActive) {
+
+      <div class="comment-add-panel">
+
+        <div class="comment-add-header">
+
+          <div>
+            <h3>Add Comment</h3>
+            <p>
+              Add an update or message about this task.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="comment-form">
+
+          <div class="comment-field">
+
+            <label
+              for="taskComment"
+              class="detail-label"
+            >
+              Comment
+            </label>
+
+            <textarea
+              id="taskComment"
+              class="comment-input"
+              rows="4"
+              placeholder="Write a comment..."
+              [disabled]="isAdding()"
+              [value]="commentText()"
+              (input)="
+                onCommentChange(
+                  $any($event.target).value
+                )
+              "
+            ></textarea>
+
+          </div>
+
+          <div class="comment-form-actions">
+
+            <button
+              type="button"
+              class="add-comment-button"
+              [disabled]="
+                isAdding() ||
+                !commentText().trim()
+              "
+              (click)="addComment()"
+            >
+
+              @if (isAdding()) {
+                <span class="button-spinner"></span>
+                Adding...
+              } @else {
+                Add Comment
+              }
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    } @else {
+
+      <div class="comment-inactive">
+        <span>
+          Comments cannot be added because this task is inactive.
+        </span>
+      </div>
+
+    }
+
+  }
+
+</section>

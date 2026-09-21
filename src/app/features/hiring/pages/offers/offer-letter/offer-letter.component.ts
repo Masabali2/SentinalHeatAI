@@ -72,6 +72,12 @@ export class OfferLetterComponent implements OnInit {
 
   onboardingId = 0;
   offerId = 0;
+  private getReturnUrl(): string {
+  return (
+    this.route.snapshot.queryParamMap.get('returnUrl')
+    || '/hiring'
+  );
+}
 
   salary = 0;
   departmentName = '';
@@ -106,20 +112,17 @@ export class OfferLetterComponent implements OnInit {
     }
   }
 
-  back(): void {
+ back(): void {
+  const returnUrl = this.getReturnUrl();
 
-    this.router.navigate([
-      '/hiring/offers',
-      this.onboardingId
-    ]);
-  }
+  void this.router.navigateByUrl(returnUrl);
+}
 
   goToHiringDashboard(): void {
-
-    this.router.navigate([
-      '/hiring'
-    ]);
-  }
+  void this.router.navigateByUrl(
+    this.getReturnUrl()
+  );
+}
 
   createOffer(): void {
 
@@ -337,14 +340,11 @@ export class OfferLetterComponent implements OnInit {
             'Offer email queued successfully.'
           );
 
-          setTimeout(() => {
-
-            this.router.navigate([
-              '/hiring/offers',
-              this.onboardingId
-            ]);
-
-          }, 1000);
+         setTimeout(() => {
+  void this.router.navigateByUrl(
+    this.getReturnUrl()
+  );
+}, 1000);
 
         }
 

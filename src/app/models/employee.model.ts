@@ -22,7 +22,14 @@ export interface Employee {
 
   userId: string | null;
   role: string | null;
+  account :EmployeeAccount;
 }
+export interface EmployeeAccount {
+  isLinked: boolean;
+  userId: string | null;
+  isActive: boolean | null;
+}
+
 
 export interface CreateEmployeeRequest {
   firstName: string;

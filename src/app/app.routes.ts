@@ -14,7 +14,16 @@ import { EmployeeComponent } from './features/employees/employee.component';
 import { EmployeeListComponent } from './features/employees/pages/employee-list/employee-list.component';
 import { EmployeeDetailsComponent } from './features/employees/pages/employee-details/employee-details.component';
 import { EmployeeEditComponent } from './features/employees/pages/employee-edit/employee-edit.component';
+import {DepartmentListComponent} from './features/departments/pages/department-list/department-list.component';
+import { DepartmentFormComponent } from './features/departments/pages/department-form/department-form.component';
+import { DesignationListComponent } from './features/designations/pages/designation-list/designation-list.component';
+import { DesignationFormComponent } from './features/designations/pages/designation-form/designation-form.component';
+import { TaskDashboard } from './features/tasks/pages/task-dashboard/task-dashboard';
+import { TaskDetails } from './features/tasks/pages/task-details/task-details';
+import { TaskForm } from './features/tasks/pages/task-form/task-form';
 
+import { permissionGuard } from './core/guards/permission.guard';
+import { PERMISSIONS } from './core/authorization/permission.constants';
 export const routes: Routes = [
   {
     path: 'login',
@@ -55,6 +64,34 @@ export const routes: Routes = [
         component: SingleHiringComponent
       },
       {
+  path: 'tasks',
+  component: TaskDashboard,
+  canActivate: [
+    permissionGuard(PERMISSIONS.Task.View)
+  ]
+},
+{
+  path: 'tasks/create',
+  component: TaskForm,
+  canActivate: [
+    permissionGuard(PERMISSIONS.Task.Create)
+  ]
+},
+{
+  path: 'tasks/:taskId/edit',
+  component: TaskForm,
+  canActivate: [
+    permissionGuard(PERMISSIONS.Task.Update)
+  ]
+},
+{
+  path: 'tasks/:taskId',
+  component: TaskDetails,
+  canActivate: [
+    permissionGuard(PERMISSIONS.Task.View)
+  ]
+},
+      {
   path: 'hiring/offers/:onboardingId',
   component: OffersComponent
 },
@@ -66,6 +103,30 @@ export const routes: Routes = [
   path: 'hiring/offers/:onboardingId/edit/:offerId',
   component: OfferLetterComponent
 },
+{
+  path: 'departments',
+  component: DepartmentListComponent
+},
+{
+  path: 'departments/create',
+  component: DepartmentFormComponent
+},
+{
+  path: 'departments/:id/edit',
+  component: DepartmentFormComponent
+},
+   {
+      path: 'designations',
+      component: DesignationListComponent
+    },
+    {
+      path: 'designations/create',
+      component: DesignationFormComponent
+    },
+    {
+      path: 'designations/:id/edit',
+      component: DesignationFormComponent
+    },
 {
   path: 'hiring/offers/:onboardingId/view/:offerId',
   component: ViewOfferComponent

@@ -1,4 +1,5 @@
 <section class="employee-page">
+
   <header class="page-header">
     <div>
       <span class="eyebrow">PEOPLE OPERATIONS</span>
@@ -7,46 +8,203 @@
     </div>
   </header>
 
+
   <section class="toolbar">
+
     <label class="search-field">
       <span aria-hidden="true">⌕</span>
-      <input [(ngModel)]="search" placeholder="Search by name, email, department..." />
+
+      <input
+        [(ngModel)]="search"
+        placeholder="Search by name, email, department..."
+      />
     </label>
-    <div class="status-filter" role="group" aria-label="Employee status filter">
-      <button type="button" [class.selected]="statusFilter === 'all'" (click)="statusFilter = 'all'">All</button>
-      <button type="button" [class.selected]="statusFilter === 'active'" (click)="statusFilter = 'active'">Active</button>
-      <button type="button" [class.selected]="statusFilter === 'inactive'" (click)="statusFilter = 'inactive'">Inactive</button>
+
+
+    <div
+      class="status-filter"
+      role="group"
+      aria-label="Employee status filter"
+    >
+      <button
+        type="button"
+        [class.selected]="statusFilter === 'all'"
+        (click)="statusFilter = 'all'"
+      >
+        All
+      </button>
+
+      <button
+        type="button"
+        [class.selected]="statusFilter === 'active'"
+        (click)="statusFilter = 'active'"
+      >
+        Active
+      </button>
+
+      <button
+        type="button"
+        [class.selected]="statusFilter === 'inactive'"
+        (click)="statusFilter = 'inactive'"
+      >
+        Inactive
+      </button>
     </div>
+
   </section>
 
+
   @if (errorMessage()) {
+
     <section class="state-card error-state">
-      <strong>{{ errorMessage() }}</strong>
-      <button type="button" class="secondary-button" (click)="loadEmployees()">Try again</button>
+
+      <strong>
+        {{ errorMessage() }}
+      </strong>
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="loadEmployees()"
+      >
+        Try again
+      </button>
+
     </section>
+
   } @else if (isLoading()) {
-    <section class="state-card"><div class="spinner"></div><strong>Loading employees...</strong></section>
+
+    <section class="state-card">
+
+      <div class="spinner"></div>
+
+      <strong>
+        Loading employees...
+      </strong>
+
+    </section>
+
   } @else if (filteredEmployees.length === 0) {
-    <section class="state-card"><span class="empty-icon">◎</span><strong>No employees found</strong><p>Try changing your search or add a new employee.</p></section>
+
+    <section class="state-card">
+
+      <span class="empty-icon">◎</span>
+
+      <strong>
+        No employees found
+      </strong>
+
+      <p>
+        Try changing your search or add a new employee.
+      </p>
+
+    </section>
+
   } @else {
+
     <section class="table-card">
+
       <div class="table-summary">
-        <strong>{{ filteredEmployees.length }} employees</strong>
-        <span>Employee directory</span>
+        <strong>
+          {{ filteredEmployees.length }} employees
+        </strong>
+
+        <span>
+          Employee directory
+        </span>
       </div>
+
+
       <div class="table-wrapper">
+
         <table>
-          <thead><tr><th>Employee</th><th>Department</th><th>Designation</th><th>Role</th><th>Status</th><th class="action-cell">Actions</th></tr></thead>
+
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Department</th>
+              <th>Designation</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th class="action-cell">Actions</th>
+            </tr>
+          </thead>
+
+
           <tbody>
-            @for (employee of filteredEmployees; track employee.id) {
+
+            @for (
+              employee of filteredEmployees;
+              track employee.id
+            ) {
+
               <tr>
-                <td><a class="employee-cell" [routerLink]="['/employees', employee.id]"><span class="avatar">{{ employee.firstName.charAt(0) }}{{ employee.lastName.charAt(0) }}</span><span><strong>{{ employeeName(employee) }}</strong><small>{{ employee.email }}</small></span></a></td>
-                <td>{{ employee.departmentName }}</td>
-                <td>{{ employee.designationName }}</td>
-                <td><span class="role-badge">{{ employee.role || 'Not assigned' }}</span></td>
-                <td><span class="status" [class.active]="employee.isActive">{{ employee.isActive ? 'Active' : 'Inactive' }}</span></td>
+
+                <td>
+
+                  <a
+                    class="employee-cell"
+                    [routerLink]="['/employees', employee.id]"
+                    [queryParams]="{ returnUrl: '/employees' }"
+                  >
+
+                    <span class="avatar">
+                      {{ employee.firstName.charAt(0) }}
+                      {{ employee.lastName.charAt(0) }}
+                    </span>
+
+                    <span>
+
+                      <strong>
+                        {{ employeeName(employee) }}
+                      </strong>
+
+                      <small>
+                        {{ employee.email }}
+                      </small>
+
+                    </span>
+
+                  </a>
+
+                </td>
+
+
+                <td>
+                  {{ employee.departmentName }}
+                </td>
+
+
+                <td>
+                  {{ employee.designationName }}
+                </td>
+
+
+                <td>
+
+                  <span class="role-badge">
+                    {{ employee.role || 'Not assigned' }}
+                  </span>
+
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="status"
+                    [class.active]="employee.isActive"
+                  >
+                    {{ employee.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+
+                </td>
+
+
                 <td class="action-cell">
+
                   <div class="action-menu">
+
                     <button
                       type="button"
                       class="menu-button"
@@ -58,21 +216,88 @@
                       <span aria-hidden="true">•••</span>
                     </button>
 
+
                     @if (openActionMenu() === employee.id) {
+
                       <div class="action-dropdown">
-                        <a [routerLink]="['/employees', employee.id]" (click)="closeActionMenu()"><span>◉</span> View</a>
-                        <a [routerLink]="['/employees', employee.id, 'edit']" (click)="closeActionMenu()"><span>✎</span> Edit</a>
-                        <button type="button" (click)="toggleStatus(employee)"><span>{{ employee.isActive ? '⊘' : '✓' }}</span> {{ employee.isActive ? 'Deactivate' : 'Activate' }}</button>
-                        <button type="button" class="danger-action" (click)="deleteEmployee(employee)"><span>⌫</span> Delete</button>
+
+                        <!-- View -->
+
+                        <a
+                          [routerLink]="['/employees', employee.id]"
+                          [queryParams]="{ returnUrl: '/employees' }"
+                          (click)="closeActionMenu()"
+                        >
+                          <span>◉</span>
+                          View
+                        </a>
+
+
+                        <!-- Edit -->
+
+                        <a
+                          [routerLink]="[
+                            '/employees',
+                            employee.id,
+                            'edit'
+                          ]"
+                          [queryParams]="{ returnUrl: '/employees' }"
+                          (click)="closeActionMenu()"
+                        >
+                          <span>✎</span>
+                          Edit
+                        </a>
+
+
+                        <!-- Activate / Deactivate -->
+
+                        <button
+                          type="button"
+                          (click)="toggleStatus(employee)"
+                        >
+                          <span>
+                            {{ employee.isActive ? '⊘' : '✓' }}
+                          </span>
+
+                          {{
+                            employee.isActive
+                              ? 'Deactivate'
+                              : 'Activate'
+                          }}
+                        </button>
+
+
+                        <!-- Delete -->
+
+                        <button
+                          type="button"
+                          class="danger-action"
+                          (click)="deleteEmployee(employee)"
+                        >
+                          <span>⌫</span>
+                          Delete
+                        </button>
+
                       </div>
+
                     }
+
                   </div>
+
                 </td>
+
               </tr>
+
             }
+
           </tbody>
+
         </table>
+
       </div>
+
     </section>
+
   }
+
 </section>

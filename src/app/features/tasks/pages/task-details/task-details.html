@@ -1,0 +1,652 @@
+<section class="task-details-page">
+
+  @if (isLoading()) {
+
+    <section class="state-card">
+
+      <div class="spinner"></div>
+
+      <strong>Loading task...</strong>
+
+      <span>
+        Please wait while the task details are being loaded.
+      </span>
+
+    </section>
+
+  } @else if (errorMessage()) {
+
+    <section class="state-card state-card--error">
+
+      <div class="state-card__icon">
+        !
+      </div>
+
+      <strong>Unable to load task</strong>
+
+      <span>
+        {{ errorMessage() }}
+      </span>
+
+      <div class="state-card__actions">
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="onBack()"
+        >
+          Back to Tasks
+        </button>
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="reload()"
+        >
+          Try Again
+        </button>
+
+      </div>
+
+    </section>
+
+  } @else if (task(); as currentTask) {
+
+    <!-- Page Header -->
+
+    <header class="page-header">
+
+      <div class="page-header__content">
+
+        <button
+          type="button"
+          class="back-button"
+          (click)="onBack()"
+        >
+          ← Back to Tasks
+        </button>
+
+        <div class="title-row">
+
+          <div class="title-content">
+
+            <div class="title-meta">
+
+              <span
+                class="task-status"
+                [attr.data-status]="currentTask.status"
+              >
+                {{ statusLabel() }}
+              </span>
+
+             @if (currentTask.isActive && canReassign()) {
+
+                <span class="inactive-badge">
+                  Inactive
+                </span>
+
+              }
+
+            </div>
+
+            <h1 class="page-title">
+              {{ currentTask.title }}
+            </h1>
+
+          </div>
+
+          <div class="page-header__actions">
+
+            <button
+              type="button"
+              class="secondary-button"
+              (click)="reload()"
+            >
+              ↻ Refresh
+            </button>
+@if (canEdit()) {
+
+  <button
+    type="button"
+    class="primary-button"
+    (click)="onEdit()"
+  >
+    Edit Task
+  </button>
+
+}
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- Main Content -->
+
+    <main class="details-content">
+
+      <!-- Task Information -->
+
+      <section class="details-section">
+
+        <header class="section-header">
+
+          <div>
+
+            <h2>Task Information</h2>
+
+            <p>
+              Basic information and current state of the task.
+            </p>
+
+          </div>
+
+        </header>
+
+        <div class="details-grid">
+
+          <div class="detail-item detail-item--full">
+
+            <span class="detail-label">
+              Description
+            </span>
+
+            <p class="detail-value detail-description">
+
+              @if (currentTask.description) {
+
+                {{ currentTask.description }}
+
+              } @else {
+
+                <span class="muted">
+                  No description provided.
+                </span>
+
+              }
+
+            </p>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Priority
+            </span>
+
+            <span class="priority-badge">
+              {{ priorityLabel() }}
+            </span>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Status
+            </span>
+
+            <span
+              class="task-status"
+              [attr.data-status]="currentTask.status"
+            >
+              {{ statusLabel() }}
+            </span>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Task State
+            </span>
+
+            <span
+              class="state-badge"
+              [class.state-badge--active]="currentTask.isActive"
+              [class.state-badge--inactive]="!currentTask.isActive"
+            >
+              {{ currentTask.isActive ? 'Active' : 'Inactive' }}
+            </span>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Due Date
+            </span>
+
+            <span
+              class="detail-value"
+              [class.detail-value--overdue]="isOverdue()"
+            >
+
+              {{ formatDate(currentTask.dueDate) }}
+
+              @if (isOverdue()) {
+
+                <span class="due-indicator">
+                  Overdue
+                </span>
+
+              }
+
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- Status Management -->
+
+      <section class="details-section status-section">
+
+        <header class="section-header">
+
+          <div>
+
+            <h2>Status Management</h2>
+
+            <p>
+              Update the current status of this task.
+            </p>
+
+          </div>
+
+        </header>
+
+
+        @if (statusError()) {
+
+          <div
+            class="status-error"
+            role="alert"
+          >
+            {{ statusError() }}
+          </div>
+
+        }
+
+@if (canUpdateStatus()) {
+
+  @if (availableStatuses().length > 0) {
+
+    <div class="status-actions">
+
+      @for (
+        statusAction of availableStatuses();
+        track statusAction.value
+      ) {
+
+        <button
+          type="button"
+          class="status-action-button"
+          [disabled]="isUpdatingStatus()"
+          [attr.data-status]="statusAction.value"
+          (click)="updateStatus(statusAction.value)"
+        >
+
+          @if (isUpdatingStatus()) {
+
+            <span class="button-spinner"></span>
+
+          } @else {
+
+            @if (
+              statusAction.value === TaskStatus.InProgress
+            ) {
+
+              ▶
+
+            } @else if (
+              statusAction.value === TaskStatus.Completed
+            ) {
+
+              ✓
+
+            } @else if (
+              statusAction.value === TaskStatus.Cancelled
+            ) {
+
+              ×
+
+            }
+
+          }
+
+          {{ statusAction.label }}
+
+        </button>
+
+      }
+
+    </div>
+
+  } @else {
+
+    <div class="no-status-actions">
+
+      <span>
+        No status changes are available for this task.
+      </span>
+
+    </div>
+
+  }
+
+}
+
+      </section>
+
+
+      <!-- Assignment -->
+
+      <section class="details-section">
+
+        <header class="section-header">
+
+          <div>
+
+            <h2>Assignment</h2>
+
+            <p>
+              Employees responsible for this task.
+            </p>
+
+          </div>
+
+        </header>
+
+
+        <div class="assignment-grid">
+
+          <!-- Assigned To -->
+
+          <article class="person-card">
+
+            <div class="person-avatar">
+
+              {{
+                currentTask.assignedToEmployeeName
+                  .charAt(0)
+                  .toUpperCase()
+              }}
+
+            </div>
+
+            <div class="person-content">
+
+              <span class="person-label">
+                Assigned To
+              </span>
+
+              <strong class="person-name">
+                {{ currentTask.assignedToEmployeeName }}
+              </strong>
+
+            </div>
+
+          </article>
+
+
+          <!-- Assigned By -->
+
+          <article class="person-card">
+
+            <div class="person-avatar">
+
+              {{
+                currentTask.assignedByEmployeeName
+                  .charAt(0)
+                  .toUpperCase()
+              }}
+
+            </div>
+
+            <div class="person-content">
+
+              <span class="person-label">
+                Assigned By
+              </span>
+
+              <strong class="person-name">
+                {{ currentTask.assignedByEmployeeName }}
+              </strong>
+
+            </div>
+
+          </article>
+
+        </div>
+
+
+        <!-- Reassignment -->
+
+        @if (currentTask.isActive) {
+
+          <div class="reassignment-panel">
+
+            <div class="reassignment-header">
+
+              <div>
+
+                <h3>Reassign Task</h3>
+
+                <p>
+                  Assign this task to another active employee.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            @if (reassignError()) {
+
+              <div
+                class="reassign-error"
+                role="alert"
+              >
+                {{ reassignError() }}
+              </div>
+
+            }
+
+
+            <div class="reassignment-form">
+
+              <div class="reassignment-field">
+
+                <label
+                  for="reassignEmployee"
+                  class="detail-label"
+                >
+                  Employee
+                </label>
+
+
+                @if (isLoadingEmployees()) {
+
+                  <div class="reassignment-loading">
+
+                    <span class="button-spinner"></span>
+
+                    Loading employees...
+
+                  </div>
+
+                } @else {
+
+                  <select
+                    id="reassignEmployee"
+                    class="reassignment-input"
+                    [disabled]="isReassigning()"
+                    [value]="reassignEmployeeId() ?? ''"
+                    (change)="
+                      onReassignEmployeeChange(
+                        $any($event.target).value
+                      )
+                    "
+                  >
+
+                    <option value="">
+                      Select an employee
+                    </option>
+
+                    @for (
+                      employee of availableEmployees();
+                      track employee.id
+                    ) {
+
+                      <option [value]="employee.id">
+
+                        {{ employee.firstName }}
+                        {{ employee.lastName }}
+
+                      </option>
+
+                    }
+
+                  </select>
+
+                }
+
+              </div>
+
+
+              <button
+                type="button"
+                class="reassign-button"
+                [disabled]="
+                  isReassigning() ||
+                  isLoadingEmployees() ||
+                  reassignEmployeeId() === null
+                "
+                (click)="reassignTask()"
+              >
+
+                @if (isReassigning()) {
+
+                  <span class="button-spinner"></span>
+
+                  Reassigning...
+
+                } @else {
+
+                  Reassign Task
+
+                }
+
+              </button>
+
+            </div>
+
+          </div>
+
+        }
+
+      </section>
+
+
+      <!-- Collaborators -->
+
+      <app-task-collaborators
+        [task]="currentTask"
+      />
+
+
+      <!-- Task Timeline -->
+
+      <section class="details-section">
+
+        <header class="section-header">
+
+          <div>
+
+            <h2>Task Timeline</h2>
+
+            <p>
+              Important dates related to this task.
+            </p>
+
+          </div>
+
+        </header>
+
+
+        <div class="timeline-grid">
+
+          <div class="timeline-item">
+
+            <span class="detail-label">
+              Created
+            </span>
+
+            <span class="detail-value">
+              {{ formatDate(currentTask.createdAt) }}
+            </span>
+
+          </div>
+
+
+          <div class="timeline-item">
+
+            <span class="detail-label">
+              Last Updated
+            </span>
+
+            <span class="detail-value">
+              {{ formatDate(currentTask.updatedAt) }}
+            </span>
+
+          </div>
+
+
+          <div class="timeline-item">
+
+            <span class="detail-label">
+              Completed
+            </span>
+
+            <span class="detail-value">
+              {{ formatDate(currentTask.completedAt) }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- Comments will be added here -->
+                            
+                    <app-task-comments
+                    [task]="currentTask"
+                    />
+
+      <!-- Task History -->
+
+<app-task-history
+  [taskId]="currentTask.id"
+/>
+
+
+    </main>
+
+  }
+
+</section>

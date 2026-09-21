@@ -64,20 +64,43 @@ export class ViewOfferComponent implements OnInit {
         }
       });
   }
+back(): void {
+  const returnUrl =
+    this.route.snapshot.queryParamMap.get('returnUrl');
 
-  back(): void {
-    if (this.onboardingId) {
-      this.router.navigate(['/hiring/offers', this.onboardingId]);
-      return;
-    }
-
-    this.router.navigate(['/hiring']);
+  if (returnUrl) {
+    void this.router.navigateByUrl(returnUrl);
+    return;
   }
 
+  if (this.onboardingId) {
+    void this.router.navigate([
+      '/hiring/offers',
+      this.onboardingId
+    ]);
+    return;
+  }
+
+  void this.router.navigate(['/hiring']);
+} 
   editOffer(): void {
     const offer = this.offer();
     if (offer?.status === OfferStatus.Draft) {
-      this.router.navigate(['/hiring/offers', this.onboardingId, 'edit', offer.id]);
+      void this.router.navigate(
+  [
+    '/hiring/offers',
+    this.onboardingId,
+    'edit',
+    offer.id
+  ],
+  {
+    queryParams: {
+      returnUrl:
+        this.route.snapshot.queryParamMap.get('returnUrl')
+        || `/hiring/offers/${this.onboardingId}`
+    }
+  }
+);
     }
   }
 

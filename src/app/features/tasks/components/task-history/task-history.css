@@ -1,0 +1,171 @@
+.task-history {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.section-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.section-header p {
+  margin: 0.35rem 0 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.state-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 120px;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  color: #6b7280;
+  text-align: center;
+}
+
+.error-state {
+  color: #b91c1c;
+}
+
+.empty-state {
+  flex-direction: column;
+}
+
+.empty-state strong {
+  color: #374151;
+}
+
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #d1d5db;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-item {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+}
+
+.history-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: 1.25rem;
+  bottom: 0;
+  left: 0.3rem;
+  width: 1px;
+  background: #e5e7eb;
+}
+
+.history-marker {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 0.625rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  margin-top: 0.35rem;
+  border-radius: 50%;
+  background: #374151;
+}
+
+.history-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.history-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.history-action {
+  color: #111827;
+}
+
+.history-top time {
+  flex-shrink: 0;
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.changed-by {
+  margin: 0.35rem 0 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.changed-by strong {
+  color: #374151;
+}
+
+.value-change {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.value-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 180px;
+}
+
+.value-label {
+  color: #6b7280;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.value {
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background: #f9fafb;
+  color: #374151;
+  font-size: 0.8rem;
+  word-break: break-word;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .history-top {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .value-block {
+    width: 100%;
+  }
+}

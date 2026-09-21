@@ -1,0 +1,462 @@
+<div class="departments-page">
+
+  <header class="page-header">
+
+    <div>
+      <h1>Departments</h1>
+
+      <p>
+        Manage organization departments and view employee distribution.
+      </p>
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="toggleFilters()"
+      >
+        ☰ Filter
+      </button>
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="addDepartment()"
+      >
+        + Add Department
+      </button>
+
+    </div>
+
+  </header>
+
+
+  @if (showFilters()) {
+
+    <section class="filter-card">
+
+      <div class="filter-group">
+
+        <label for="department-search">
+          Search
+        </label>
+
+        <input
+          id="department-search"
+          type="text"
+          placeholder="Search by department name or code..."
+          [value]="searchTerm()"
+          (input)="
+            setSearchTerm(
+              $any($event.target).value
+            )
+          "
+        />
+
+      </div>
+
+
+      <div class="filter-group">
+
+        <label for="department-status">
+          Status
+        </label>
+
+        <select
+          id="department-status"
+          [value]="statusFilter()"
+          (change)="
+            setStatusFilter(
+              $any($event.target).value
+            )
+          "
+        >
+
+          <option value="all">
+            All
+          </option>
+
+          <option value="active">
+            Active
+          </option>
+
+          <option value="inactive">
+            Inactive
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="clear-filter-button"
+        (click)="clearFilters()"
+      >
+        Clear Filters
+      </button>
+
+    </section>
+
+  }
+
+
+  @if (isLoading()) {
+
+    <section class="state-card">
+
+      <div class="spinner"></div>
+
+      <strong>
+        Loading departments...
+      </strong>
+
+      <span>
+        Please wait while departments are being loaded.
+      </span>
+
+    </section>
+
+  }
+
+  @else {
+
+    <section class="summary-card">
+
+      <div class="summary-icon">
+        🏢
+      </div>
+
+      <div class="summary-content">
+
+        <span>
+          Total Departments
+        </span>
+
+        <strong>
+          {{ departments().length }}
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    @if (filteredDepartments().length > 0) {
+
+      <section class="table-card">
+
+        <div class="card-header">
+
+          <div>
+
+            <h2>
+              All Departments
+            </h2>
+
+            <p>
+              Departments currently configured in EMAS.
+            </p>
+
+          </div>
+
+          <span class="card-count">
+            {{ filteredDepartments().length }}
+          </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Department
+                </th>
+
+                <th>
+                  Code
+                </th>
+
+                <th>
+                  Employees
+                </th>
+
+                <th>
+                  Status
+                </th>
+
+                <th class="actions-column">
+                  Actions
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                department of filteredDepartments();
+                track department.id
+              ) {
+
+                <tr>
+
+                  <td>
+
+                    <div class="department-info">
+
+                      <div class="department-icon">
+                        🏢
+                      </div>
+
+                      <div>
+
+                        <strong>
+                          {{ department.name }}
+                        </strong>
+
+                        @if (department.description) {
+
+                          <span>
+                            {{ department.description }}
+                          </span>
+
+                        }
+
+                      </div>
+
+                    </div>
+
+                  </td>
+
+
+                  <td>
+
+                    <span class="department-code">
+                      {{ department.code }}
+                    </span>
+
+                  </td>
+
+
+                  <td>
+
+                    <span class="employee-count">
+                      {{ department.employeeCount }}
+                    </span>
+
+                  </td>
+
+
+                  <td>
+
+                    @if (department.isActive) {
+
+                      <span class="status-badge active">
+                        Active
+                      </span>
+
+                    } @else {
+
+                      <span class="status-badge inactive">
+                        Inactive
+                      </span>
+
+                    }
+
+                  </td>
+
+
+                  <td class="actions-column">
+
+                    <div class="action-menu-container">
+
+                      <button
+                        type="button"
+                        class="action-button"
+                        aria-label="Department actions"
+                        [attr.aria-expanded]="
+                          openMenuId() === department.id
+                        "
+                        (click)="
+                          toggleActionMenu(
+                            department.id
+                          )
+                        "
+                      >
+                        ⋮
+                      </button>
+
+
+                      @if (
+                        openMenuId() === department.id
+                      ) {
+
+                        <div class="action-menu">
+
+                          <button
+                            type="button"
+                            class="action-menu-item"
+                            (click)="
+                              editDepartment(
+                                department
+                              )
+                            "
+                          >
+
+                            <span aria-hidden="true">
+                              ✏
+                            </span>
+
+                            <span>
+                              Edit
+                            </span>
+
+                          </button>
+
+
+                          <button
+                            type="button"
+                            class="action-menu-item"
+                            (click)="
+                              toggleDepartmentStatus(
+                                department
+                              )
+                            "
+                          >
+
+                            @if (
+                              department.isActive
+                            ) {
+
+                              <span aria-hidden="true">
+                                ⏸
+                              </span>
+
+                              <span>
+                                Deactivate
+                              </span>
+
+                            } @else {
+
+                              <span aria-hidden="true">
+                                ▶
+                              </span>
+
+                              <span>
+                                Activate
+                              </span>
+
+                            }
+
+                          </button>
+
+
+                          <button
+                            type="button"
+                            class="action-menu-item danger"
+                            (click)="
+                              deleteDepartment(
+                                department
+                              )
+                            "
+                          >
+
+                            <span aria-hidden="true">
+                              🗑
+                            </span>
+
+                            <span>
+                              Delete
+                            </span>
+
+                          </button>
+
+                        </div>
+
+                      }
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+    }
+
+    @else {
+
+      <section class="state-card">
+
+        <div class="empty-icon">
+          🏢
+        </div>
+
+        @if (
+          departments().length > 0
+        ) {
+
+          <strong>
+            No departments match your filters
+          </strong>
+
+          <span>
+            Try changing your search or status filter.
+          </span>
+
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="clearFilters()"
+          >
+            Clear Filters
+          </button>
+
+        } @else {
+
+          <strong>
+            No departments found
+          </strong>
+
+          <span>
+            Create your first department to get started.
+          </span>
+
+          <button
+            type="button"
+            class="primary-button"
+            (click)="addDepartment()"
+          >
+            + Add Department
+          </button>
+
+        }
+
+      </section>
+
+    }
+
+  }
+
+</div>

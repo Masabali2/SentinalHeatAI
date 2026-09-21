@@ -1,0 +1,118 @@
+<section class="task-filters" aria-label="Task filters">
+
+  <div class="filter-row">
+
+    <!-- Search -->
+    <div class="filter-field filter-field--search">
+      <label for="task-search">Search</label>
+
+      <input
+        id="task-search"
+        type="search"
+        placeholder="Search tasks..."
+        (input)="onSearch($any($event.target).value)"
+      />
+    </div>
+
+    <!-- Status -->
+    <div class="filter-field">
+      <label for="task-status">Status</label>
+
+      <select
+        id="task-status"
+        (change)="onStatusChange($any($event.target).value)"
+      >
+        <option value="">All Statuses</option>
+
+        @for (status of statuses; track status.value) {
+          <option [value]="status.value">
+            {{ status.label }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <!-- Priority -->
+    <div class="filter-field">
+      <label for="task-priority">Priority</label>
+
+      <select
+        id="task-priority"
+        (change)="onPriorityChange($any($event.target).value)"
+      >
+        <option value="">All Priorities</option>
+
+        @for (priority of priorities; track priority.value) {
+          <option [value]="priority.value">
+            {{ priority.label }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <!-- Active -->
+    <div class="filter-field">
+      <label for="task-active">State</label>
+
+      <select
+        id="task-active"
+        (change)="onActiveChange($any($event.target).value)"
+      >
+        <option value="">All Tasks</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+    </div>
+
+    <!-- Employee -->
+    <div class="filter-field">
+      <label for="task-employee">Employee</label>
+
+      <select
+        id="task-employee"
+        (change)="onEmployeeChange($any($event.target).value)"
+      >
+        <option value="">All Employees</option>
+
+        @for (employee of employees(); track employee.id) {
+          <option [value]="employee.id">
+            {{ employee.name }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <!-- Due -->
+    <div class="filter-field">
+      <label for="task-due">Due</label>
+
+      <select
+        id="task-due"
+        (change)="onDueFilterChange($any($event.target).value)"
+      >
+        <option value="">Any Due Date</option>
+
+        @for (dueFilter of dueFilters; track dueFilter.value) {
+          <option [value]="dueFilter.value">
+            {{ dueFilter.label }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <!-- Clear -->
+    <div class="filter-actions">
+      @if (hasActiveFilters()) {
+        <button
+          type="button"
+          class="clear-button"
+          (click)="clearFilters()"
+        >
+          Clear Filters
+        </button>
+      }
+    </div>
+
+  </div>
+
+</section>

@@ -1,10 +1,275 @@
 <section class="form-page">
-  <header class="page-header"><div><button type="button" class="back-link" (click)="cancel()">← Employees</button><span class="eyebrow">PEOPLE OPERATIONS</span><h1>{{ isEditMode() ? 'Edit employee' : 'Add employee' }}</h1><p>{{ isEditMode() ? 'Keep the employee record and reporting details current.' : 'Create a complete employee record for your organization.' }}</p></div></header>
-  @if (isLoading()) { <section class="state-card"><div class="spinner"></div><strong>Loading employee details...</strong></section> } @else {
-    <form class="form-card" (ngSubmit)="save()">
-      <section class="form-section"><div class="section-heading"><span class="eyebrow">IDENTITY</span><h2>Personal information</h2></div><div class="form-grid"><label>First name<input name="firstName" [(ngModel)]="firstName" required /></label><label>Last name<input name="lastName" [(ngModel)]="lastName" required /></label><label>Email<input name="email" type="email" [(ngModel)]="email" required /></label><label>Phone<input name="phone" type="tel" [(ngModel)]="phone" /></label><label>Date of birth<input name="dateOfBirth" type="date" [(ngModel)]="dateOfBirth" /></label><label>Date of joining<input name="dateOfJoining" type="date" [(ngModel)]="dateOfJoining" /></label></div></section>
-      <section class="form-section"><div class="section-heading"><span class="eyebrow">EMPLOYMENT</span><h2>Role and reporting</h2></div><div class="form-grid"><label>Department<select name="departmentId" [(ngModel)]="departmentId" required><option [ngValue]="null">Select department</option>@for (department of departments(); track department.id) {<option [ngValue]="department.id">{{ department.name }}</option>}</select></label><label>Designation<select name="designationId" [(ngModel)]="designationId" required><option [ngValue]="null">Select designation</option>@for (designation of designations(); track designation.id) {<option [ngValue]="designation.id">{{ designation.name }}</option>}</select></label><label>System role<select name="role" [(ngModel)]="role" (ngModelChange)="onRoleChange($event)" [disabled]="!isEditMode()"><option value="">Select role</option>@for (availableRole of roles(); track availableRole.id) {<option [value]="availableRole.name">{{ availableRole.name }}</option>}</select><small class="field-hint">Role changes apply to the linked account.</small></label>@if (isEmployeeRole()) {<label>Manager<select name="managerId" [(ngModel)]="managerId"><option [ngValue]="null">No manager</option>@for (manager of managers(); track manager.id) {<option [ngValue]="manager.id">{{ manager.firstName }} {{ manager.lastName }}</option>}</select></label>}<label>Salary<input name="salary" type="number" min="0" step="100" [(ngModel)]="salary" /></label></div></section>
-      <footer class="form-actions"><button type="button" class="secondary-button" (click)="cancel()">Cancel</button><button type="submit" class="primary-button" [disabled]="isSaving()">{{ isSaving() ? 'Saving...' : (isEditMode() ? 'Save changes' : 'Create employee') }}</button></footer>
+
+  <header class="page-header">
+    <div>
+      <button
+        type="button"
+        class="back-link"
+        (click)="cancel()"
+      >
+        ← Back
+      </button>
+
+      <span class="eyebrow">PEOPLE OPERATIONS</span>
+
+      <h1>
+        {{ isEditMode() ? 'Edit employee' : 'Add employee' }}
+      </h1>
+
+      <p>
+        {{
+          isEditMode()
+            ? 'Keep the employee record and reporting details current.'
+            : 'Create a complete employee record for your organization.'
+        }}
+      </p>
+    </div>
+  </header>
+
+  @if (isLoading()) {
+
+    <section class="state-card">
+      <div class="spinner"></div>
+      <strong>Loading employee details...</strong>
+    </section>
+
+  } @else {
+
+    <form
+      class="form-card"
+      (ngSubmit)="save()"
+    >
+
+      <section class="form-section">
+
+        <div class="section-heading">
+          <span class="eyebrow">IDENTITY</span>
+          <h2>Personal information</h2>
+        </div>
+
+        <div class="form-grid">
+
+          <label>
+            First name
+            <input
+              name="firstName"
+              [(ngModel)]="firstName"
+              required
+            />
+          </label>
+
+          <label>
+            Last name
+            <input
+              name="lastName"
+              [(ngModel)]="lastName"
+              required
+            />
+          </label>
+
+          <label>
+            Email
+            <input
+              name="email"
+              type="email"
+              [(ngModel)]="email"
+              required
+            />
+          </label>
+
+          <label>
+            Phone
+            <input
+              name="phone"
+              type="tel"
+              [(ngModel)]="phone"
+            />
+          </label>
+
+          <label>
+            Date of birth
+            <input
+              name="dateOfBirth"
+              type="date"
+              [(ngModel)]="dateOfBirth"
+            />
+          </label>
+
+          <label>
+            Date of joining
+            <input
+              name="dateOfJoining"
+              type="date"
+              [(ngModel)]="dateOfJoining"
+            />
+          </label>
+
+        </div>
+
+      </section>
+
+
+      <section class="form-section">
+
+        <div class="section-heading">
+          <span class="eyebrow">EMPLOYMENT</span>
+          <h2>Role and reporting</h2>
+        </div>
+
+        <div class="form-grid">
+
+          <label>
+            Department
+
+            <select
+              name="departmentId"
+              [(ngModel)]="departmentId"
+              required
+            >
+              <option [ngValue]="null">
+                Select department
+              </option>
+
+              @for (
+                department of departments();
+                track department.id
+              ) {
+                <option [ngValue]="department.id">
+                  {{ department.name }}
+                </option>
+              }
+            </select>
+          </label>
+
+
+          <label>
+            Designation
+
+            <select
+              name="designationId"
+              [(ngModel)]="designationId"
+              required
+            >
+              <option [ngValue]="null">
+                Select designation
+              </option>
+
+              @for (
+                designation of designations();
+                track designation.id
+              ) {
+                <option [ngValue]="designation.id">
+                  {{ designation.name }}
+                </option>
+              }
+            </select>
+          </label>
+
+
+          <label>
+            System role
+
+            <select
+              name="role"
+              [(ngModel)]="role"
+              (ngModelChange)="onRoleChange($event)"
+              [disabled]="!isEditMode()"
+            >
+              <option value="">
+                Select role
+              </option>
+
+              @for (
+                availableRole of roles();
+                track availableRole.id
+              ) {
+                <option [value]="availableRole.name">
+                  {{ availableRole.name }}
+                </option>
+              }
+            </select>
+
+            <small class="field-hint">
+              Role changes apply to the linked account.
+            </small>
+          </label>
+
+
+          @if (isEmployeeRole()) {
+
+            <label>
+              Manager
+
+              <select
+                name="managerId"
+                [(ngModel)]="managerId"
+              >
+                <option [ngValue]="null">
+                  No manager
+                </option>
+
+                @for (
+                  manager of managers();
+                  track manager.id
+                ) {
+                  <option [ngValue]="manager.id">
+                    {{ manager.firstName }}
+                    {{ manager.lastName }}
+                  </option>
+                }
+              </select>
+            </label>
+
+          }
+
+
+          <label>
+            Salary
+
+            <input
+              name="salary"
+              type="number"
+              min="0"
+              step="100"
+              [(ngModel)]="salary"
+            />
+          </label>
+
+        </div>
+
+      </section>
+
+
+      <footer class="form-actions">
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="primary-button"
+          [disabled]="isSaving()"
+        >
+          {{
+            isSaving()
+              ? 'Saving...'
+              : (
+                  isEditMode()
+                    ? 'Save changes'
+                    : 'Create employee'
+                )
+          }}
+        </button>
+
+      </footer>
+
     </form>
+
   }
+
 </section>

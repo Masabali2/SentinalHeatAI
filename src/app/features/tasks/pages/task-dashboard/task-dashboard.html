@@ -1,0 +1,94 @@
+<section class="task-dashboard">
+
+  <header class="page-header">
+    <div class="page-header__content">
+      <h1 class="page-title">Tasks</h1>
+
+      <p class="page-subtitle">
+        Manage and track employee tasks.
+      </p>
+    </div>
+
+    <div class="page-header__actions">
+      <button
+        type="button"
+        class="refresh-button"
+        (click)="reload()"
+        [disabled]="isLoading()"
+      >
+        ↻ Refresh
+      </button>
+    </div>
+  </header>
+
+  @if (isLoading()) {
+
+    <section class="state-card">
+      <div class="spinner"></div>
+
+      <strong>Loading tasks...</strong>
+
+      <span>
+        Please wait while your tasks are being loaded.
+      </span>
+    </section>
+
+  } @else {
+
+    <app-task-summary
+      [tasks]="filteredTasks()"
+    />
+
+    <app-task-filters
+      [tasks]="tasks()"
+      (filtersChanged)="onFiltersChanged($event)"
+    />
+
+    @if (hasTasks()) {
+
+      <section class="task-list-section">
+
+        <header class="section-header">
+          <div>
+            <h2 class="section-title">Task List</h2>
+
+            <span class="task-count">
+              {{ filteredTasks().length }}
+              {{ filteredTasks().length === 1 ? 'task' : 'tasks' }}
+            </span>
+          </div>
+        </header>
+
+        <div class="task-list">
+
+          @for (task of filteredTasks(); track task.id) {
+            <app-task-card
+              [task]="task"
+            />
+          }
+
+        </div>
+
+      </section>
+
+    } @else {
+
+      <section class="empty-state">
+
+        <div class="empty-state__icon">
+          ✓
+        </div>
+
+        <h2>No tasks found</h2>
+
+        <p>
+          There are no tasks matching your current filters.
+        </p>
+
+      </section>
+
+    }
+
+  }
+
+</section>
