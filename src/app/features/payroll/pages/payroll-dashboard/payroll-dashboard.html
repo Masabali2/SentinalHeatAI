@@ -1,0 +1,75 @@
+<section class="payroll-dashboard">
+
+  <app-payroll-header
+    (generatePayroll)="navigateToGenerate()">
+  </app-payroll-header>
+
+  @if (errorMessage()) {
+
+    <div
+      class="error-state"
+      role="alert">
+
+      {{ errorMessage() }}
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="loadPayrolls()">
+        Retry
+      </button>
+
+    </div>
+
+  }
+
+  <section class="statistics-grid">
+
+    <app-payroll-stat-card
+      label="Total Payrolls"
+      [value]="totalPayrolls()"
+      description="All payroll records" />
+
+    <app-payroll-stat-card
+      label="Draft"
+      [value]="draftPayrolls()"
+      description="Awaiting processing" />
+
+    <app-payroll-stat-card
+      label="Processed"
+      [value]="processedPayrolls()"
+      description="Ready for payment" />
+
+    <app-payroll-stat-card
+      label="Paid"
+      [value]="paidPayrolls()"
+      description="Payment confirmed" />
+
+  </section>
+
+  <app-payroll-filter
+    (filterChange)="applyFilters($event)"
+    (clear)="clearFilters()">
+  </app-payroll-filter>
+
+  @if (isLoading()) {
+
+    <div
+      class="loading-state"
+      role="status">
+      <span class="spinner"></span>
+      <span>Loading payroll records...</span>
+    </div>
+
+  } @else {
+
+    <app-payroll-table
+      [payrolls]="filteredPayrolls()"
+      (view)="viewPayroll($event)"
+      (process)="processPayroll($event)"
+      (markAsPaid)="markAsPaid($event)">
+    </app-payroll-table>
+
+  }
+
+</section>

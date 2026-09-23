@@ -1,0 +1,200 @@
+<section class="details-card">
+
+  <header class="details-header">
+
+    <div>
+      <span class="eyebrow">Payroll Details</span>
+
+      <h2>
+        {{ payroll().employeeName }}
+      </h2>
+
+      <p>
+        Employee #{{ payroll().employeeId }}
+      </p>
+    </div>
+
+    <app-payroll-status-badge
+      [status]="payroll().status">
+    </app-payroll-status-badge>
+
+  </header>
+
+  <div class="details-section">
+
+    <h3>Payroll Information</h3>
+
+    <div class="information-grid">
+
+      <div class="information-item">
+        <span class="label">Employee</span>
+        <strong>{{ payroll().employeeName }}</strong>
+      </div>
+
+      <div class="information-item">
+        <span class="label">Payroll Period</span>
+        <strong>
+          {{ formatMonth(payroll().month) }} {{ payroll().year }}
+        </strong>
+      </div>
+
+      <div class="information-item">
+        <span class="label">Basic Salary</span>
+        <strong>
+          {{ formatCurrency(payroll().basicSalary) }}
+        </strong>
+      </div>
+
+      <div class="information-item">
+        <span class="label">Processed At</span>
+        <strong>
+          {{ formatDate(payroll().processedAt) }}
+        </strong>
+      </div>
+
+      <div class="information-item">
+        <span class="label">Paid At</span>
+        <strong>
+          {{ formatDate(payroll().paidAt) }}
+        </strong>
+      </div>
+
+      <div class="information-item">
+        <span class="label">Paid By</span>
+        <strong>
+          {{ payroll().paidByUserId || '—' }}
+        </strong>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="details-section">
+
+    <h3>Allowances</h3>
+
+    @if (payroll().allowances.length === 0) {
+
+      <div class="empty-section">
+        No allowances added.
+      </div>
+
+    } @else {
+
+      <div class="item-list">
+
+        @for (allowance of payroll().allowances; track allowance.id) {
+
+          <div class="item-row">
+
+            <div>
+              <strong>{{ allowance.name }}</strong>
+              <span>{{ allowance.code }}</span>
+            </div>
+
+            <strong>
+              {{ formatCurrency(allowance.amount) }}
+            </strong>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+    <div class="total-row">
+      <span>Total Allowances</span>
+      <strong>
+        {{ formatCurrency(payroll().totalAllowance) }}
+      </strong>
+    </div>
+
+  </div>
+
+  <div class="details-section">
+
+    <h3>Deductions</h3>
+
+    @if (payroll().deductions.length === 0) {
+
+      <div class="empty-section">
+        No deductions added.
+      </div>
+
+    } @else {
+
+      <div class="item-list">
+
+        @for (deduction of payroll().deductions; track deduction.id) {
+
+          <div class="item-row">
+
+            <div>
+              <strong>{{ deduction.name }}</strong>
+              <span>{{ deduction.code }}</span>
+            </div>
+
+            <strong>
+              {{ formatCurrency(deduction.amount) }}
+            </strong>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+    <div class="total-row">
+      <span>Total Deductions</span>
+      <strong>
+        {{ formatCurrency(payroll().totalDeduction) }}
+      </strong>
+    </div>
+
+  </div>
+
+  <div class="salary-summary">
+
+    <div class="summary-row">
+      <span>Basic Salary</span>
+      <strong>
+        {{ formatCurrency(payroll().basicSalary) }}
+      </strong>
+    </div>
+
+    <div class="summary-row">
+      <span>Total Allowances</span>
+      <strong>
+        {{ formatCurrency(payroll().totalAllowance) }}
+      </strong>
+    </div>
+
+    <div class="summary-row">
+      <span>Gross Salary</span>
+      <strong>
+        {{ formatCurrency(payroll().grossSalary) }}
+      </strong>
+    </div>
+
+    <div class="summary-row">
+      <span>Total Deductions</span>
+      <strong>
+        {{ formatCurrency(payroll().totalDeduction) }}
+      </strong>
+    </div>
+
+    <div class="summary-row net-salary">
+      <span>Net Salary</span>
+      <strong>
+        {{ formatCurrency(payroll().netSalary) }}
+      </strong>
+    </div>
+
+  </div>
+
+</section>

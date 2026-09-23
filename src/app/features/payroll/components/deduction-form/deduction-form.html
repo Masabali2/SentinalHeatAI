@@ -1,0 +1,95 @@
+<form
+  class="deduction-form"
+  (ngSubmit)="submitForm()">
+
+  <header class="form-header">
+    <span class="eyebrow">Payroll Setup</span>
+
+    <h2>Create Deduction</h2>
+
+    <p>
+      Add a reusable deduction that can be applied to employee payrolls.
+    </p>
+  </header>
+
+  <div class="form-grid">
+
+    <div class="form-group">
+
+      <label for="deduction-name">
+        Name
+      </label>
+
+      <input
+        id="deduction-name"
+        name="name"
+        type="text"
+        [(ngModel)]="name"
+        placeholder="e.g. Income Tax"
+        maxlength="100"
+        required />
+
+    </div>
+
+    <div class="form-group">
+
+      <label for="deduction-code">
+        Code
+      </label>
+
+      <input
+        id="deduction-code"
+        name="code"
+        type="text"
+        [(ngModel)]="code"
+        placeholder="e.g. TAX"
+        maxlength="50"
+        required />
+
+    </div>
+
+  </div>
+
+  <div class="form-group">
+
+    <label for="deduction-description">
+      Description
+    </label>
+
+    <textarea
+      id="deduction-description"
+      name="description"
+      [(ngModel)]="description"
+      placeholder="Describe this deduction..."
+      rows="4"
+      maxlength="500">
+    </textarea>
+
+  </div>
+
+  <footer class="form-actions">
+
+    <button
+      type="button"
+      class="secondary-button"
+      (click)="cancel.emit()"
+      [disabled]="isSubmitting()">
+      Cancel
+    </button>
+
+    <button
+      type="submit"
+      class="primary-button"
+      [disabled]="!isValid() || isSubmitting()">
+
+      @if (isSubmitting()) {
+        Creating...
+      } @else {
+        Create Deduction
+      }
+
+    </button>
+
+  </footer>
+
+</form>

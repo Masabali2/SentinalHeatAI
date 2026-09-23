@@ -1,0 +1,95 @@
+<form
+  class="allowance-form"
+  (ngSubmit)="submitForm()">
+
+  <header class="form-header">
+    <span class="eyebrow">Payroll Setup</span>
+
+    <h2>Create Allowance</h2>
+
+    <p>
+      Add a reusable allowance that can be assigned to employee payrolls.
+    </p>
+  </header>
+
+  <div class="form-grid">
+
+    <div class="form-group">
+
+      <label for="allowance-name">
+        Name
+      </label>
+
+      <input
+        id="allowance-name"
+        name="name"
+        type="text"
+        [(ngModel)]="name"
+        placeholder="e.g. Transport Allowance"
+        maxlength="100"
+        required />
+
+    </div>
+
+    <div class="form-group">
+
+      <label for="allowance-code">
+        Code
+      </label>
+
+      <input
+        id="allowance-code"
+        name="code"
+        type="text"
+        [(ngModel)]="code"
+        placeholder="e.g. TRANSPORT"
+        maxlength="50"
+        required />
+
+    </div>
+
+  </div>
+
+  <div class="form-group">
+
+    <label for="allowance-description">
+      Description
+    </label>
+
+    <textarea
+      id="allowance-description"
+      name="description"
+      [(ngModel)]="description"
+      placeholder="Describe this allowance..."
+      rows="4"
+      maxlength="500">
+    </textarea>
+
+  </div>
+
+  <footer class="form-actions">
+
+    <button
+      type="button"
+      class="secondary-button"
+      (click)="cancel.emit()"
+      [disabled]="isSubmitting()">
+      Cancel
+    </button>
+
+    <button
+      type="submit"
+      class="primary-button"
+      [disabled]="!isValid() || isSubmitting()">
+
+      @if (isSubmitting()) {
+        Creating...
+      } @else {
+        Create Allowance
+      }
+
+    </button>
+
+  </footer>
+
+</form>

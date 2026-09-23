@@ -1,0 +1,94 @@
+<section class="filter-card">
+
+  <div class="filter-header">
+    <div>
+      <h2>Payroll Records</h2>
+      <p>Search and filter payroll records.</p>
+    </div>
+  </div>
+
+  <div class="filter-grid">
+
+    <div class="form-group search-group">
+      <label for="payroll-search">Search Employee</label>
+
+      <input
+        id="payroll-search"
+        type="text"
+        [(ngModel)]="filter.search"
+        placeholder="Search by employee name..." />
+    </div>
+
+    <div class="form-group">
+      <label for="payroll-year">Year</label>
+
+      <input
+        id="payroll-year"
+        type="number"
+        [(ngModel)]="filter.year"
+        placeholder="e.g. 2026"
+        min="2000"
+        max="2100" />
+    </div>
+
+    <div class="form-group">
+      <label for="payroll-month">Month</label>
+
+      <select
+        id="payroll-month"
+        [(ngModel)]="filter.month">
+
+        <option [ngValue]="null">
+          All Months
+        </option>
+
+        @for (month of months; track month.value) {
+          <option [ngValue]="month.value">
+            {{ month.label }}
+          </option>
+        }
+
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="payroll-status">Status</label>
+
+      <select
+        id="payroll-status"
+        [(ngModel)]="filter.status">
+
+        <option [ngValue]="null">
+          All Statuses
+        </option>
+
+        @for (status of statuses; track status.value) {
+          <option [ngValue]="status.value">
+            {{ status.label }}
+          </option>
+        }
+
+      </select>
+    </div>
+
+  </div>
+
+  <div class="filter-actions">
+
+    <button
+      type="button"
+      class="secondary-button"
+      (click)="clearFilters()">
+      Clear
+    </button>
+
+    <button
+      type="button"
+      class="primary-button"
+      (click)="applyFilters()">
+      Apply Filters
+    </button>
+
+  </div>
+
+</section>

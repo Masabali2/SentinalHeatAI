@@ -1,0 +1,449 @@
+<form class="payroll-form" (ngSubmit)="submitForm()">
+
+  <section class="form-section">
+
+    <header class="section-header">
+      <div>
+        <span class="section-eyebrow">Payroll Setup</span>
+        <h2>Payroll Information</h2>
+        <p>
+          Select the employee and define the payroll period.
+        </p>
+      </div>
+    </header>
+
+    <div class="form-grid">
+
+      <div class="form-group employee-field">
+        <label for="employee">
+          Employee
+          <span class="required-mark">*</span>
+        </label>
+
+        <select
+          id="employee"
+          name="employeeId"
+          [(ngModel)]="employeeId"
+          [disabled]="isLoadingEmployees() || isSubmitting()"
+          required>
+
+          <option [ngValue]="null">
+            {{
+              isLoadingEmployees()
+                ? 'Loading employees...'
+                : 'Select employee'
+            }}
+          </option>
+
+          @for (employee of employees(); track employee.id) {
+            <option [ngValue]="employee.id">
+              {{ employee.firstName }} {{ employee.lastName }}
+            </option>
+          }
+
+        </select>
+
+        <span class="field-hint">
+          Choose the employee whose payroll you want to generate.
+        </span>
+
+        @if (employeeError()) {
+          <span class="field-error">
+            {{ employeeError() }}
+          </span>
+        }
+      </div>
+
+    </div>
+
+    <div class="period-section">
+
+      <div class="period-header">
+        <div>
+          <span class="section-eyebrow">Payroll Period</span>
+
+          <h3>Salary Period</h3>
+
+          <p>
+            Select the month and year this payroll belongs to.
+          </p>
+        </div>
+      </div>
+
+      <div class="period-grid">
+
+        <div class="form-group">
+
+          <label for="month">
+            Month
+            <span class="required-mark">*</span>
+          </label>
+
+          <select
+            id="month"
+            name="month"
+            [(ngModel)]="month"
+            [disabled]="isSubmitting()"
+            required>
+
+            <option [ngValue]="null">
+              Select month
+            </option>
+
+            @for (item of months; track item.value) {
+              <option [ngValue]="item.value">
+                {{ item.label }}
+              </option>
+            }
+
+          </select>
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="year">
+            Year
+            <span class="required-mark">*</span>
+          </label>
+
+          <select
+            id="year"
+            name="year"
+            [(ngModel)]="year"
+            [disabled]="isSubmitting()"
+            required>
+
+            <option [ngValue]="null">
+              Select year
+            </option>
+
+            @for (item of years; track item) {
+              <option [ngValue]="item">
+                {{ item }}
+              </option>
+            }
+
+          </select>
+
+        </div>
+
+      </div>
+
+      <div class="period-info">
+        <span class="info-icon">i</span>
+
+        <span>
+          This payroll will be recorded for the selected month and year.
+          The system prevents duplicate payroll records for the same
+          employee and payroll period.
+        </span>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <section class="form-section">
+
+    <header class="section-header section-header-with-action">
+
+      <div>
+        <span class="section-eyebrow">Earnings</span>
+
+        <h2>Allowances</h2>
+
+        <p>
+          Add additional earnings applicable to this employee.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="addAllowance()"
+        [disabled]="isSubmitting()">
+        <span class="button-icon">+</span>
+        Add Allowance
+      </button>
+
+    </header>
+
+    @if (allowanceItems.length === 0) {
+
+      <div class="empty-section">
+
+        <div class="empty-icon">+</div>
+
+        <strong>No allowances added</strong>
+
+        <span>
+          Add housing, transport, bonus, or other applicable allowances.
+        </span>
+
+      </div>
+
+    } @else {
+
+      <div class="item-list">
+
+        @for (
+          item of allowanceItems;
+          track $index;
+          let index = $index
+        ) {
+
+          <div class="item-row">
+
+            <div class="item-number">
+              {{ index + 1 }}
+            </div>
+
+            <div class="form-group">
+
+              <label [for]="'allowance-' + index">
+                Allowance
+              </label>
+
+              <select
+                [id]="'allowance-' + index"
+                [name]="'allowance-' + index"
+                [(ngModel)]="item.allowanceId"
+                [disabled]="isSubmitting()">
+
+                <option [ngValue]="null">
+                  Select allowance
+                </option>
+
+                @for (
+                  allowance of allowances();
+                  track allowance.id
+                ) {
+
+                  <option [ngValue]="allowance.id">
+                    {{ allowance.name }}
+                    ({{ allowance.code }})
+                  </option>
+
+                }
+
+              </select>
+
+            </div>
+
+            <div class="form-group amount-field">
+
+              <label [for]="'allowance-amount-' + index">
+                Amount
+              </label>
+
+              <div class="amount-input">
+
+                <span class="currency-prefix">
+                  PKR
+                </span>
+
+                <input
+                  [id]="'allowance-amount-' + index"
+                  [name]="'allowance-amount-' + index"
+                  type="number"
+                  [(ngModel)]="item.amount"
+                  [disabled]="isSubmitting()"
+                  min="0.01"
+                  step="0.01"
+                  placeholder="0.00" />
+
+              </div>
+
+            </div>
+
+            <button
+              type="button"
+              class="remove-button"
+              (click)="removeAllowance(index)"
+              [disabled]="isSubmitting()"
+              [attr.aria-label]="'Remove allowance ' + (index + 1)">
+              Remove
+            </button>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
+
+
+  <section class="form-section">
+
+    <header class="section-header section-header-with-action">
+
+      <div>
+        <span class="section-eyebrow">Deductions</span>
+
+        <h2>Deductions</h2>
+
+        <p>
+          Add taxes, loans, penalties, or other applicable deductions.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="addDeduction()"
+        [disabled]="isSubmitting()">
+        <span class="button-icon">+</span>
+        Add Deduction
+      </button>
+
+    </header>
+
+    @if (deductionItems.length === 0) {
+
+      <div class="empty-section">
+
+        <div class="empty-icon">−</div>
+
+        <strong>No deductions added</strong>
+
+        <span>
+          Add any deductions that should be applied to this payroll.
+        </span>
+
+      </div>
+
+    } @else {
+
+      <div class="item-list">
+
+        @for (
+          item of deductionItems;
+          track $index;
+          let index = $index
+        ) {
+
+          <div class="item-row">
+
+            <div class="item-number">
+              {{ index + 1 }}
+            </div>
+
+            <div class="form-group">
+
+              <label [for]="'deduction-' + index">
+                Deduction
+              </label>
+
+              <select
+                [id]="'deduction-' + index"
+                [name]="'deduction-' + index"
+                [(ngModel)]="item.deductionId"
+                [disabled]="isSubmitting()">
+
+                <option [ngValue]="null">
+                  Select deduction
+                </option>
+
+                @for (
+                  deduction of deductions();
+                  track deduction.id
+                ) {
+
+                  <option [ngValue]="deduction.id">
+                    {{ deduction.name }}
+                    ({{ deduction.code }})
+                  </option>
+
+                }
+
+              </select>
+
+            </div>
+
+            <div class="form-group amount-field">
+
+              <label [for]="'deduction-amount-' + index">
+                Amount
+              </label>
+
+              <div class="amount-input">
+
+                <span class="currency-prefix">
+                  PKR
+                </span>
+
+                <input
+                  [id]="'deduction-amount-' + index"
+                  [name]="'deduction-amount-' + index"
+                  type="number"
+                  [(ngModel)]="item.amount"
+                  [disabled]="isSubmitting()"
+                  min="0.01"
+                  step="0.01"
+                  placeholder="0.00" />
+
+              </div>
+
+            </div>
+
+            <button
+              type="button"
+              class="remove-button"
+              (click)="removeDeduction(index)"
+              [disabled]="isSubmitting()"
+              [attr.aria-label]="'Remove deduction ' + (index + 1)">
+              Remove
+            </button>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
+
+
+  <footer class="form-actions">
+
+    <div class="form-action-info">
+      <span class="required-mark">*</span>
+      Required fields
+    </div>
+
+    <div class="action-buttons">
+
+      <button
+        type="button"
+        class="cancel-button"
+        (click)="cancel.emit()"
+        [disabled]="isSubmitting()">
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        class="primary-button"
+        [disabled]="!isValid() || isSubmitting()">
+
+        @if (isSubmitting()) {
+          <span class="button-spinner"></span>
+          Generating...
+        } @else {
+          Generate Payroll
+        }
+
+      </button>
+
+    </div>
+
+  </footer>
+
+</form>

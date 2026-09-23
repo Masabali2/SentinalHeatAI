@@ -37,12 +37,12 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     icon: '✓',
     permission: PERMISSIONS.Task.View
   },
-  {
-    label: 'Payroll',
-    route: '/payroll',
-    icon: '$',
-    permission: PERMISSIONS.Payroll.View
-  },
+ {
+  label: 'Payroll',
+  route: '/payroll',
+  icon: '$',
+  permission: PERMISSIONS.Payroll.View
+},
   {
     label: 'Administration',
     route: '/administration/dashboard',

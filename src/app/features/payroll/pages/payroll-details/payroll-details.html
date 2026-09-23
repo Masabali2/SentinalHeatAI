@@ -1,0 +1,66 @@
+<section class="payroll-details-page">
+
+  <header class="page-header">
+
+    <div>
+
+      <button
+        type="button"
+        class="back-button"
+        (click)="goBack()">
+        ← Payroll
+      </button>
+
+      <span class="eyebrow">Payroll Management</span>
+
+      <h1>Payroll Details</h1>
+
+      <p>
+        Review the employee payroll, allowances, deductions,
+        and payment information.
+      </p>
+
+    </div>
+
+  </header>
+
+  @if (isLoading()) {
+
+    <div
+      class="loading-state"
+      role="status">
+
+      <span class="spinner"></span>
+
+      <span>
+        Loading payroll details...
+      </span>
+
+    </div>
+
+  } @else if (errorMessage()) {
+
+    <div
+      class="error-state"
+      role="alert">
+
+      <span>{{ errorMessage() }}</span>
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="retry()">
+        Retry
+      </button>
+
+    </div>
+
+  } @else if (payroll(); as currentPayroll) {
+
+    <app-payroll-details
+      [payroll]="currentPayroll">
+    </app-payroll-details>
+
+  }
+
+</section>

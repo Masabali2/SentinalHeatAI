@@ -29,6 +29,11 @@ import { SystemSettings } from './features/administration/pages/system-settings/
 import { AccessControl } from './features/administration/pages/access-control/access-control';
 import { permissionGuard } from './core/guards/permission.guard';
 import { PERMISSIONS } from './core/authorization/permission.constants';
+import { PayrollDashboard } from './features/payroll/pages/payroll-dashboard/payroll-dashboard';
+import { GeneratePayroll } from './features/payroll/pages/generate-payroll/generate-payroll';
+import { Allowances } from './features/payroll/pages/allowances/allowances';
+import { Deductions } from './features/payroll/pages/deductions/deductions';
+import { PayrollDetails } from './features/payroll/pages/payroll-details/payroll-details';
 export const routes: Routes = [
   {
     path: 'login',
@@ -102,6 +107,26 @@ export const routes: Routes = [
         path: 'hiring/single',
         component: SingleHiringComponent
       },
+      {
+  path: 'payroll',
+  component: PayrollDashboard
+},
+{
+  path: 'payroll/generate',
+  component: GeneratePayroll
+},
+{
+  path: 'payroll/allowances',
+  component: Allowances
+},
+{
+  path: 'payroll/deductions',
+  component: Deductions
+},
+{
+  path: 'payroll/:payrollId',
+  component: PayrollDetails
+},
       {
   path: 'tasks',
   component: TaskDashboard,

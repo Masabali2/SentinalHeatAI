@@ -1,0 +1,67 @@
+<section class="generate-payroll-page">
+
+  <header class="page-header">
+
+    <div>
+      <button
+        type="button"
+        class="back-button"
+        (click)="cancel()">
+        ← Payroll
+      </button>
+
+      <span class="eyebrow">Payroll Management</span>
+
+      <h1>Generate Payroll</h1>
+
+      <p>
+        Create a payroll record for an employee and configure
+        applicable allowances and deductions.
+      </p>
+    </div>
+
+  </header>
+
+  @if (errorMessage()) {
+
+    <div
+      class="error-state"
+      role="alert">
+
+      <span>{{ errorMessage() }}</span>
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="retry()">
+        Retry
+      </button>
+
+    </div>
+
+  }
+
+  @if (isLoading()) {
+
+    <div
+      class="loading-state"
+      role="status">
+
+      <span class="spinner"></span>
+      <span>Loading payroll options...</span>
+
+    </div>
+
+  } @else {
+
+    <app-payroll-form
+      [allowances]="allowances()"
+      [deductions]="deductions()"
+      [isSubmitting]="isSubmitting()"
+      (submit)="generatePayroll($event)"
+      (cancel)="cancel()">
+    </app-payroll-form>
+
+  }
+
+</section>

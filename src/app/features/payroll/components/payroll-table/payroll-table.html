@@ -1,0 +1,119 @@
+<section class="table-card">
+
+  @if (payrolls().length === 0) {
+
+    <div class="empty-state" role="status">
+      <strong>No payroll records found.</strong>
+      <span>Try adjusting your search or filter criteria.</span>
+    </div>
+
+  } @else {
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th scope="col">Employee</th>
+            <th scope="col">Period</th>
+            <th scope="col">Basic Salary</th>
+            <th scope="col">Gross Salary</th>
+            <th scope="col">Net Salary</th>
+            <th scope="col">Status</th>
+            <th scope="col" class="actions-column">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (payroll of payrolls(); track payroll.id) {
+
+            <tr>
+
+              <td>
+                <div class="employee-cell">
+                  <strong>{{ payroll.employeeName }}</strong>
+                  <span>Employee #{{ payroll.employeeId }}</span>
+                </div>
+              </td>
+
+              <td>
+                <span class="period">
+                  {{ formatMonth(payroll.month) }} {{ payroll.year }}
+                </span>
+              </td>
+
+              <td>
+                {{ formatCurrency(payroll.basicSalary) }}
+              </td>
+
+              <td>
+                {{ formatCurrency(payroll.grossSalary) }}
+              </td>
+
+              <td>
+                <strong>
+                  {{ formatCurrency(payroll.netSalary) }}
+                </strong>
+              </td>
+
+              <td>
+                <app-payroll-status-badge
+                  [status]="payroll.status">
+                </app-payroll-status-badge>
+              </td>
+
+              <td class="actions-column">
+
+                <div class="row-actions">
+
+                  <button
+                    type="button"
+                    class="action-button"
+                    (click)="view.emit(payroll.id)"
+                    [attr.aria-label]="'View payroll for ' + payroll.employeeName">
+                    View
+                  </button>
+
+                  @if (payroll.status === PayrollStatus.Draft) {
+
+                    <button
+                      type="button"
+                      class="action-button"
+                      (click)="process.emit(payroll.id)"
+                      [attr.aria-label]="'Process payroll for ' + payroll.employeeName">
+                      Process
+                    </button>
+
+                  }
+
+                  @if (payroll.status === PayrollStatus.Processed) {
+
+                    <button
+                      type="button"
+                      class="action-button"
+                      (click)="markAsPaid.emit(payroll.id)"
+                      [attr.aria-label]="'Mark payroll as paid for ' + payroll.employeeName">
+                      Mark as Paid
+                    </button>
+
+                  }
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  }
+
+</section>

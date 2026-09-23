@@ -1,0 +1,30 @@
+@if (items().length === 0) {
+
+  <div class="empty-state">
+    {{ emptyMessage() }}
+  </div>
+
+} @else {
+
+  <div class="item-list">
+
+    @for (item of items(); track item.id) {
+
+      <div class="item-row">
+
+        <div class="item-info">
+          <strong>{{ item.name }}</strong>
+          <span>{{ item.code }}</span>
+        </div>
+
+        <strong class="item-amount">
+          {{ formatCurrency(item.amount) }}
+        </strong>
+
+      </div>
+
+    }
+
+  </div>
+
+}

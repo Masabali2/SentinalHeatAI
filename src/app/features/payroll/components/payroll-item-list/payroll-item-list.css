@@ -1,0 +1,42 @@
+.item-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.item-row:last-child {
+  border-bottom: 0;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.item-info strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.item-info span {
+  font-size: 11px;
+}
+
+.item-amount {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.empty-state {
+  padding: 14px 0;
+  font-size: 13px;
+}

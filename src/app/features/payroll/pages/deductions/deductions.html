@@ -1,0 +1,157 @@
+<section class="deductions-page">
+
+  <header class="page-header">
+
+    <div>
+      <span class="eyebrow">Payroll Setup</span>
+
+      <h1>Deductions</h1>
+
+      <p>
+        Manage reusable deduction definitions used when generating payroll.
+      </p>
+    </div>
+
+    @if (!showForm()) {
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="openCreateForm()">
+        + Add Deduction
+      </button>
+
+    }
+
+  </header>
+
+  @if (errorMessage()) {
+
+    <div
+      class="error-state"
+      role="alert">
+
+      <span>{{ errorMessage() }}</span>
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="loadDeductions()">
+        Retry
+      </button>
+
+    </div>
+
+  }
+
+  @if (showForm()) {
+
+    <app-deduction-form
+      [isSubmitting]="isSubmitting()"
+      (submit)="createDeduction($event)"
+      (cancel)="closeCreateForm()">
+    </app-deduction-form>
+
+  }
+
+  <section class="deduction-list-card">
+
+    <header class="list-header">
+
+      <div>
+        <h2>Deduction Definitions</h2>
+
+        <p>
+          {{ deductions().length }} deduction(s) configured.
+        </p>
+      </div>
+
+    </header>
+
+    @if (isLoading()) {
+
+      <div
+        class="loading-state"
+        role="status">
+
+        <span class="spinner"></span>
+        <span>Loading deductions...</span>
+
+      </div>
+
+    } @else if (deductions().length === 0) {
+
+      <div class="empty-state">
+
+        <strong>No deductions configured.</strong>
+
+        <span>
+          Create a deduction to use it when generating payroll.
+        </span>
+
+      </div>
+
+    } @else {
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Code</th>
+              <th scope="col">Description</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            @for (deduction of deductions(); track deduction.id) {
+
+              <tr>
+
+                <td>
+                  <strong>{{ deduction.name }}</strong>
+                </td>
+
+                <td>
+                  <span class="code">
+                    {{ deduction.code }}
+                  </span>
+                </td>
+
+                <td>
+                  {{ deduction.description || '—' }}
+                </td>
+
+                <td>
+
+                  @if (deduction.isActive) {
+                    <span class="active-status">
+                      Active
+                    </span>
+                  } @else {
+                    <span class="inactive-status">
+                      Inactive
+                    </span>
+                  }
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    }
+
+  </section>
+
+</section>
