@@ -1,0 +1,79 @@
+<section class="administration-dashboard">
+
+  <header class="page-header">
+    <div>
+      <h1>Administration</h1>
+      <p>
+        Manage roles, permissions, and system access.
+      </p>
+    </div>
+  </header>
+
+  @if (isLoading()) {
+    <section class="state-card">
+      <div class="spinner"></div>
+      <span>Loading administration...</span>
+    </section>
+  } @else if (errorMessage()) {
+    <section class="state-card error-state">
+      {{ errorMessage() }}
+    </section>
+  } @else {
+
+    <section class="statistics-grid">
+
+      <app-administration-stat-card
+        title="Total Roles"
+        [value]="totalRoles()"
+        description="Roles configured in the system"
+        icon="🛡"
+        variant="green"
+      />
+
+      <app-administration-stat-card
+        title="Total Permissions"
+        [value]="totalPermissions()"
+        description="Permissions available in the system"
+        icon="🔐"
+        variant="green"
+      />
+
+    </section>
+<section class="administration-grid">
+
+  <app-administration-card
+    title="Role Management"
+    description="Create, update, and manage system roles."
+    route="/administration/roles"
+    icon="🛡"
+    actionLabel="Manage"
+  />
+
+  <app-administration-card
+    title="Permission Management"
+    description="Create and manage available permissions."
+    route="/administration/permissions"
+    icon="🔐"
+    actionLabel="Manage"
+  />
+
+  <app-administration-card
+    title="Access Control"
+    description="Control which permissions each role can access."
+    route="/administration/access-control"
+    icon="🔒"
+    actionLabel="Configure"
+  />
+
+  <app-administration-card
+    title="System Settings"
+    description="Configure application-wide system settings."
+    route="/administration/system-settings"
+    icon="⚙"
+    actionLabel="Configure"
+  />
+
+</section>
+  }
+
+</section>

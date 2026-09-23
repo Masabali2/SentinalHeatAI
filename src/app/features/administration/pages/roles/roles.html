@@ -1,0 +1,59 @@
+<section class="roles-page">
+
+  <header class="page-header">
+    <div>
+      <a
+        routerLink="/administration/dashboard"
+        class="back-link"
+      >
+        ← Administration
+      </a>
+
+      <h1>Roles</h1>
+
+      <p>
+        Manage system roles and their access permissions.
+      </p>
+    </div>
+
+    <a
+      routerLink="/administration/roles/create"
+      class="primary-button"
+    >
+      + Create Role
+    </a>
+  </header>
+
+  @if (isLoading()) {
+
+    <section class="state-card">
+      <div class="spinner"></div>
+      <strong>Loading roles...</strong>
+    </section>
+
+  } @else if (errorMessage()) {
+
+    <section class="state-card error-state">
+      <strong>{{ errorMessage() }}</strong>
+    </section>
+
+  } @else if (roles().length === 0) {
+
+    <section class="state-card">
+      <strong>No roles found.</strong>
+      <p>Create a role to get started.</p>
+    </section>
+
+  } @else {
+
+  <section class="roles-list">
+
+  @for (role of roles(); track role.id) {
+    <app-role-card [role]="role" />
+  }
+
+</section>
+
+  }
+
+</section>

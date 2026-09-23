@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { ApiResponse } from '../../../core/models/api-response.model';
+import { ApiResponse } from '../../models/api-response.model';
 
 import {
   AddTaskCommentRequest,
@@ -16,7 +16,7 @@ import {
   ReassignEmployeeTaskRequest,
   UpdateEmployeeTaskRequest,
   UpdateTaskStatusRequest
-} from '../models/task.model';
+} from '../../models/task.model';
 
 @Injectable({
   providedIn: 'root'

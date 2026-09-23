@@ -151,20 +151,24 @@
               Assigned Employee
               <span class="required">*</span>
             </label>
+<select
+  id="task-employee"
+  formControlName="assignedToEmployeeId"
+>
+  <option [ngValue]="0">
+    @if (isLoadingEmployees()) {
+      Loading employees...
+    } @else {
+      Select an employee
+    }
+  </option>
 
-            <select
-              id="task-employee"
-              formControlName="assignedToEmployeeId"
-            >
-              <option [ngValue]="0">
-                Select an employee
-              </option>
-
-              <!--
-                Employee options will be connected
-                when the employee lookup source is integrated.
-              -->
-            </select>
+  @for (employee of employees(); track employee.id) {
+    <option [ngValue]="employee.id">
+      {{ employee.firstName }} {{ employee.lastName }}
+    </option>
+  }
+</select>
 
             @if (
               taskForm.controls.assignedToEmployeeId.touched &&

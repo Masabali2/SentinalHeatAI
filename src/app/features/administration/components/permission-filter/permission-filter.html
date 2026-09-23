@@ -1,0 +1,50 @@
+<section class="permission-filter">
+
+  <div class="filter-field search-field">
+    <label for="permission-search">
+      Search permissions
+    </label>
+
+    <div class="search-input-wrapper">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+
+      <input
+        id="permission-search"
+        type="text"
+        placeholder="Search by name or description..."
+        [ngModel]="searchTerm"
+        (ngModelChange)="onSearchChange($event)"
+      />
+    </div>
+  </div>
+
+  <div class="filter-field group-field">
+    <label for="permission-group">
+      Permission group
+    </label>
+
+    <select
+      id="permission-group"
+      [ngModel]="selectedGroup"
+      (ngModelChange)="onGroupChange($event)"
+    >
+      <option value="">All Groups</option>
+
+      @for (group of groups; track group) {
+        <option [value]="group">
+          {{ group }}
+        </option>
+      }
+    </select>
+  </div>
+
+  @if (hasActiveFilters) {
+    <button
+      type="button"
+      class="clear-button"
+      (click)="clearFilters()">
+      Clear Filters
+    </button>
+  }
+
+</section>

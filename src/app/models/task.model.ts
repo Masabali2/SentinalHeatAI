@@ -12,7 +12,14 @@ export enum TaskStatus {
   Completed = 3,
   Cancelled = 4
 }
-
+export interface TaskFilterState {
+  search: string;
+  status: TaskStatus | null;
+  priority: TaskPriority | null;
+  isActive: boolean | null;
+  employeeId: number | null;
+  dueFilter: 'today' | 'week' | 'overdue' | null;
+}
 export interface EmployeeTask {
   id: number;
   title: string;
@@ -21,8 +28,8 @@ export interface EmployeeTask {
   assignedToEmployeeId: number;
   assignedToEmployeeName: string;
 
-  assignedByEmployeeId: number;
-  assignedByEmployeeName: string;
+  assignedByUserId: string;
+  assignedByUserName: string;
 
   dueDate: string | null;
   completedAt: string | null;
@@ -67,8 +74,8 @@ export interface EmployeeTaskCollaborator {
 
   addedAt: string;
 
-  addedByEmployeeId: number;
-  addedByEmployeeName: string;
+  addedByUserId: string;
+  addedByUserName: string;
 }
 
 export interface AssignTaskCollaboratorRequest {
@@ -78,8 +85,8 @@ export interface AssignTaskCollaboratorRequest {
 export interface EmployeeTaskComment {
   id: number;
   employeeTaskId: number;
-  employeeId: number;
-  employeeName: string;
+  createdByUserId: string;
+  createdByUserName: string;
 
   comment: string;
 

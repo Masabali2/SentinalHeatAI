@@ -7,19 +7,21 @@ import {
   signal
 } from '@angular/core';
 
+import { Router } from '@angular/router';
+
 import { AuthStateService } from '../../../../core/auth/auth-state.service';
+import { PermissionService } from '../../../../core/authorization/permission.service';
+import { PERMISSIONS } from '../../../../core/authorization/permission.constants';
 import { EmployeeTaskService } from '../../../../core/services/employee-task.service';
+
 import {
   EmployeeTask,
-  TaskPriority,
+  TaskFilterState,
   TaskStatus
 } from '../../../../models/task.model';
 
-import {
-  TaskFilterState,
-  TaskFilters
-} from '../../components/task-filters/task-filters';
-import {TaskCard}  from '../../components/task-card/task-card';
+import { TaskFilters } from '../../components/task-filters/task-filters';
+import { TaskCard } from '../../components/task-card/task-card';
 import { TaskSummary } from '../../components/task-summary/task-summary';
 
 @Component({
@@ -37,6 +39,8 @@ export class TaskDashboard implements OnInit {
 
   private readonly authStateService = inject(AuthStateService);
   private readonly taskService = inject(EmployeeTaskService);
+  private readonly router = inject(Router);
+  private readonly permissionService = inject(PermissionService);
 
   readonly tasks = signal<EmployeeTask[]>([]);
   readonly isLoading = signal(false);
@@ -47,6 +51,12 @@ export class TaskDashboard implements OnInit {
 
   readonly currentRole = computed(() =>
     this.getTaskRole()
+  );
+
+  readonly canCreateTask = computed(() =>
+    this.permissionService.hasPermission(
+      PERMISSIONS.Task.Create
+    )
   );
 
   readonly filteredTasks = computed(() =>
@@ -90,6 +100,17 @@ export class TaskDashboard implements OnInit {
       }
     });
   }
+
+  onCreateTask(): void {
+    if (!this.canCreateTask()) {
+      return;
+    }
+
+    this.router.navigate(['/tasks/create']);
+  }
+  onViewDetails(taskId: number): void {
+  this.router.navigate(['/tasks', taskId]);
+}
 
   onFiltersChanged(filters: TaskFilterState): void {
     this.filters.set(filters);
@@ -193,6 +214,7 @@ export class TaskDashboard implements OnInit {
       );
 
       const endOfWeek = new Date(startOfToday);
+
       endOfWeek.setDate(
         startOfToday.getDate() + 7
       );

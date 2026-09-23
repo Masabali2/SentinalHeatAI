@@ -10,15 +10,26 @@
     </div>
 
     <div class="page-header__actions">
-      <button
-        type="button"
-        class="refresh-button"
-        (click)="reload()"
-        [disabled]="isLoading()"
-      >
-        ↻ Refresh
-      </button>
-    </div>
+
+  @if (canCreateTask()) {
+    <button
+      type="button"
+      class="primary-button"
+      (click)="onCreateTask()"
+    >
+      + Assign New Task
+    </button>
+  }
+
+  <button
+    type="button"
+    class="refresh-button"
+    (click)="reload()"
+    [disabled]="isLoading()"
+  >
+    ↻ Refresh
+  </button>
+</div>
   </header>
 
   @if (isLoading()) {
@@ -61,12 +72,12 @@
 
         <div class="task-list">
 
-          @for (task of filteredTasks(); track task.id) {
-            <app-task-card
-              [task]="task"
-            />
-          }
-
+        @for (task of filteredTasks(); track task.id) {
+  <app-task-card
+    [task]="task"
+    (viewDetails)="onViewDetails($event)"
+  />
+}
         </div>
 
       </section>

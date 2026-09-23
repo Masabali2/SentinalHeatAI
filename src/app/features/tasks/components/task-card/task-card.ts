@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input
+  input,output
 } from '@angular/core';
 
 import {
@@ -37,7 +37,7 @@ export class TaskCard {
   readonly isDueSoon = computed(() =>
     this.checkIsDueSoon(this.task())
   );
-
+readonly viewDetails = output<number>();
   private getStatusLabel(status: TaskStatus): string {
     switch (status) {
       case TaskStatus.Pending:
@@ -68,8 +68,8 @@ export class TaskCard {
       case TaskPriority.High:
         return 'High';
 
-      case TaskPriority.Urgent:
-        return 'Urgent';
+      case TaskPriority.Critical:
+        return 'Critical';
 
       default:
         return 'Unknown';

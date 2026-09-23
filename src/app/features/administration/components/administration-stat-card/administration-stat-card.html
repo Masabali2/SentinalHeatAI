@@ -1,0 +1,25 @@
+<article class="stat-card">
+
+  <div class="stat-content">
+    <span class="stat-title">
+      {{ title }}
+    </span>
+
+    <strong class="stat-value">
+      {{ value }}
+    </strong>
+
+    @if (description) {
+      <span class="stat-description">
+        {{ description }}
+      </span>
+    }
+  </div>
+
+  @if (icon) {
+    <div class="stat-icon" aria-hidden="true">
+      {{ icon }}
+    </div>
+  }
+
+</article>

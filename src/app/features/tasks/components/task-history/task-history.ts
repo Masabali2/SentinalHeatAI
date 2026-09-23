@@ -14,7 +14,7 @@ import { PermissionService } from '../../../../core/authorization/permission.ser
 import { PERMISSIONS } from '../../../../core/authorization/permission.constants';
 import { EmployeeTaskService } from '../../../../core/services/employee-task.service';
 
-import { EmployeeTaskHistory } from '../../models/employee-task.models';
+import { EmployeeTaskHistory } from '../../../../models/task.model';
 
 @Component({
   selector: 'app-task-history',

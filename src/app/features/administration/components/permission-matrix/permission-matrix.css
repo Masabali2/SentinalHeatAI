@@ -1,0 +1,333 @@
+.permission-matrix {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ================================
+   Matrix Header
+   ================================ */
+
+.matrix-header {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 4px;
+}
+
+.matrix-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.header-content {
+  min-width: 0;
+}
+
+.header-content h2 {
+  margin: 0 0 6px;
+  color: #111827;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.header-content p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ================================
+   Save Button
+   ================================ */
+
+.save-button {
+  height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 8px;
+  background: #16a34a;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.save-button:hover:not(:disabled) {
+  background: #15803d;
+}
+
+.save-button:active:not(:disabled) {
+  background: #166534;
+}
+
+.save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ================================
+   Permission Filter
+   ================================ */
+
+.matrix-filter {
+  width: 100%;
+}
+
+.matrix-filter app-permission-filter {
+  display: block;
+  width: 100%;
+}
+
+/* ================================
+   Success Message
+   ================================ */
+
+.success-message {
+  padding: 12px 16px;
+  border: 1px solid #a7f3d0;
+  border-radius: 8px;
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* ================================
+   Permission Matrix
+   ================================ */
+
+.matrix-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.permission-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.permission-table th,
+.permission-table td {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* ================================
+   Table Header
+   ================================ */
+
+.permission-table thead th {
+  padding: 16px;
+  background: #f9fafb;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.permission-column {
+  width: 45%;
+  text-align: left;
+}
+
+.role-column {
+  width: 13.75%;
+  min-width: 110px;
+  text-align: center;
+}
+
+/* ================================
+   Permission Groups
+   ================================ */
+
+.group-row td {
+  padding: 11px 16px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ================================
+   Permission Rows
+   ================================ */
+
+.permission-row {
+  transition: background-color 0.15s ease;
+}
+
+.permission-row:hover {
+  background: #fafafa;
+}
+
+.permission-row:last-child td {
+  border-bottom: none;
+}
+
+/* ================================
+   Permission Information
+   ================================ */
+
+.permission-cell {
+  padding: 14px 16px;
+  vertical-align: middle;
+}
+
+.permission-name {
+  color: #111827;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.permission-description {
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* ================================
+   Role Assignment
+   ================================ */
+
+.role-cell {
+  padding: 14px 16px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.role-cell input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #111827;
+}
+
+.role-cell input:focus-visible {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}
+
+/* ================================
+   State Cards
+   ================================ */
+
+.state-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 160px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.error-state {
+  color: #b91c1c;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+/* ================================
+   Loading Spinner
+   ================================ */
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border: 2px solid #d1d5db;
+  border-top-color: #111827;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================================
+   Unsaved Changes
+   ================================ */
+
+.unsaved-indicator {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #fff7ed;
+  color: #c2410c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ================================
+   Tablet
+   ================================ */
+
+@media (max-width: 900px) {
+  .matrix-header-top {
+    align-items: stretch;
+  }
+
+  .save-button {
+    flex-shrink: 0;
+  }
+}
+
+/* ================================
+   Mobile
+   ================================ */
+
+@media (max-width: 768px) {
+  .matrix-header-top {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .save-button {
+    width: 100%;
+  }
+
+  .permission-table {
+    min-width: 700px;
+  }
+
+  .permission-cell {
+    padding: 12px;
+  }
+
+  .role-cell {
+    padding: 12px 8px;
+  }
+
+  .permission-table thead th {
+    padding: 13px 12px;
+  }
+
+  .group-row td {
+    padding: 10px 12px;
+  }
+}

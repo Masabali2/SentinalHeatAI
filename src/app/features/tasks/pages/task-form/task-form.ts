@@ -18,6 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PermissionService } from '../../../../core/authorization/permission.service';
 import { PERMISSIONS } from '../../../../core/authorization/permission.constants';
 import { EmployeeTaskService } from '../../../../core/services/employee-task.service';
+import { EmployeeService } from '../../../../core/services/employee.service';
 
 import {
   CreateEmployeeTaskRequest,
@@ -25,6 +26,8 @@ import {
   TaskPriority,
   UpdateEmployeeTaskRequest
 } from '../../../../models/task.model';
+
+import { Employee } from '../../../../models/employee.model';
 
 @Component({
   selector: 'app-task-form',
@@ -42,12 +45,14 @@ export class TaskForm implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly permissionService = inject(PermissionService);
-
+private readonly employeeService = inject(EmployeeService);
   readonly isLoading = signal(false);
   readonly isSubmitting = signal(false);
   readonly submitError = signal<string | null>(null);
 
   readonly task = signal<EmployeeTask | null>(null);
+  readonly employees = signal<Employee[]>([]);
+readonly isLoadingEmployees = signal(false);
 
   readonly isEditMode = computed(() =>
     this.task() !== null
@@ -137,16 +142,33 @@ export class TaskForm implements OnInit {
       ]
     ]
   });
+  
+  private loadEmployees(): void {
+  this.isLoadingEmployees.set(true);
 
-  ngOnInit(): void {
-    const taskId = this.getTaskId();
-
-    if (taskId === null) {
-      return;
+  this.employeeService.getAll().subscribe({
+    next: response => {
+      this.employees.set(response.data ?? []);
+      this.isLoadingEmployees.set(false);
+    },
+    error: () => {
+      this.employees.set([]);
+      this.isLoadingEmployees.set(false);
     }
+  });
+}
 
-    this.loadTask(taskId);
+ ngOnInit(): void {
+  this.loadEmployees();
+
+  const taskId = this.getTaskId();
+
+  if (taskId === null) {
+    return;
   }
+
+  this.loadTask(taskId);
+}
 
   onSubmit(): void {
     if (!this.canSubmit()) {

@@ -323,7 +323,7 @@ updateStatus(status: TaskStatus): void {
       .subscribe({
         next: response => {
           this.employees.set(
-            response.data
+            response.data ?? []
           );
 
           this.isLoadingEmployees.set(false);

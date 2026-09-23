@@ -38,18 +38,6 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     permission: PERMISSIONS.Task.View
   },
   {
-    label: 'Attendance',
-    route: '/attendance',
-    icon: '◷',
-    permission: PERMISSIONS.Attendance.View
-  },
-  {
-    label: 'Leave',
-    route: '/leave',
-    icon: '◌',
-    permission: PERMISSIONS.Leave.View
-  },
-  {
     label: 'Payroll',
     route: '/payroll',
     icon: '$',
@@ -57,7 +45,7 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
   },
   {
     label: 'Administration',
-    route: '/administration',
+    route: '/administration/dashboard',
     icon: '⚙',
     permission: PERMISSIONS.User.View
   }

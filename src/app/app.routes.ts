@@ -21,7 +21,12 @@ import { DesignationFormComponent } from './features/designations/pages/designat
 import { TaskDashboard } from './features/tasks/pages/task-dashboard/task-dashboard';
 import { TaskDetails } from './features/tasks/pages/task-details/task-details';
 import { TaskForm } from './features/tasks/pages/task-form/task-form';
-
+import { AdministrationDashboard } from './features/administration/pages/administration-dashboard/administration-dashboard';
+import { Roles } from './features/administration/pages/roles/roles';
+import { RoleDetails } from './features/administration/pages/role-details/role-details';
+import { Permissions } from './features/administration/pages/permissions/permissions';
+import { SystemSettings } from './features/administration/pages/system-settings/system-settings';
+import { AccessControl } from './features/administration/pages/access-control/access-control';
 import { permissionGuard } from './core/guards/permission.guard';
 import { PERMISSIONS } from './core/authorization/permission.constants';
 export const routes: Routes = [
@@ -58,6 +63,40 @@ export const routes: Routes = [
           { path: ':id', component: EmployeeDetailsComponent }
         ]
       },
+      {
+  path: 'administration',
+  children: [
+    {
+      path: '',
+      pathMatch: 'full',
+      redirectTo: 'dashboard'
+    },
+    {
+      path: 'dashboard',
+      component: AdministrationDashboard
+    },
+    {
+      path: 'roles',
+      component: Roles
+    },
+    {
+      path: 'roles/:roleId',
+      component: RoleDetails
+    },
+    {
+      path: 'permissions',
+      component: Permissions
+    },
+    {
+  path: 'access-control',
+  component: AccessControl
+},
+    {
+      path: 'system-settings',
+      component: SystemSettings
+    }
+  ]
+},
 
       {
         path: 'hiring/single',

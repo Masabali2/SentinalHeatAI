@@ -1,0 +1,127 @@
+<form
+  class="permission-form"
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+>
+
+  <header class="form-header">
+
+    <div>
+      <h2>
+        {{ isEditMode ? 'Edit Permission' : 'Create Permission' }}
+      </h2>
+
+      <p>
+        {{
+          isEditMode
+            ? 'Update the permission details.'
+            : 'Create a new permission for the access control system.'
+        }}
+      </p>
+    </div>
+
+  </header>
+
+  <div class="form-group">
+
+    <label for="permission-name">
+      Permission Name
+    </label>
+
+    <input
+      id="permission-name"
+      type="text"
+      formControlName="name"
+      placeholder="e.g. Employee.View"
+    />
+
+    @if (
+      form.controls.name.invalid &&
+      form.controls.name.touched
+    ) {
+
+      <small class="field-error">
+
+        @if (
+          form.controls.name.hasError('required')
+        ) {
+          Permission name is required.
+        }
+
+        @else if (
+          form.controls.name.hasError('maxlength')
+        ) {
+          Permission name cannot exceed 100 characters.
+        }
+
+      </small>
+
+    }
+
+    <small class="field-hint">
+      Use the format Module.Action, for example Employee.View.
+    </small>
+
+  </div>
+
+  <div class="form-group">
+
+    <label for="permission-description">
+      Description
+    </label>
+
+    <textarea
+      id="permission-description"
+      rows="4"
+      formControlName="description"
+      placeholder="Describe what this permission allows."
+    ></textarea>
+
+    @if (
+      form.controls.description.hasError('maxlength')
+    ) {
+
+      <small class="field-error">
+        Description cannot exceed 500 characters.
+      </small>
+
+    }
+
+  </div>
+
+  @if (errorMessage) {
+
+    <div class="form-error">
+      {{ errorMessage }}
+    </div>
+
+  }
+
+  <div class="form-actions">
+
+    <button
+      type="button"
+      class="secondary-button"
+      [disabled]="isSubmitting"
+      (click)="onCancel()"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="submit"
+      class="primary-button"
+      [disabled]="isSubmitting"
+    >
+
+      @if (isSubmitting) {
+        Saving...
+      } @else {
+        {{ isEditMode ? 'Update Permission' : 'Create Permission' }}
+      }
+
+    </button>
+
+  </div>
+
+</form>

@@ -1,0 +1,190 @@
+<section class="permission-matrix">
+<header class="matrix-header">
+
+  <div class="matrix-header-top">
+
+    <div class="header-content">
+      <h2>Access Control</h2>
+
+      <p>
+        Manage which permissions are available to each role.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="save-button"
+      [disabled]="isSaving() || isLoading()"
+      (click)="saveChanges()">
+
+      @if (isSaving()) {
+        Saving...
+      } @else {
+        Save Changes
+      }
+
+    </button>
+
+  </div>
+
+  <div class="matrix-filter">
+
+    <app-permission-filter
+      [groups]="permissionGroups()"
+      (filterChanged)="onFilterChanged($event)"
+    ></app-permission-filter>
+
+  </div>
+
+</header>
+
+  @if (successMessage()) {
+    <div class="success-message">
+      {{ successMessage() }}
+    </div>
+  }
+
+  @if (isLoading()) {
+
+    <section class="state-card">
+      <div class="spinner"></div>
+      <span>Loading access control...</span>
+    </section>
+
+  } @else if (errorMessage()) {
+
+    <section class="state-card error-state">
+      {{ errorMessage() }}
+    </section>
+
+  } @else if (roles().length === 0) {
+
+    <section class="state-card">
+      No roles are available.
+    </section>
+
+  } @else if (permissions().length === 0) {
+
+    <section class="state-card">
+      No permissions are available.
+    </section>
+
+  } @else if (filteredPermissions().length === 0) {
+
+    <section class="state-card">
+      No permissions match the current filters.
+    </section>
+
+  } @else {
+
+    <div class="matrix-wrapper">
+
+      <table class="permission-table">
+
+        <thead>
+          <tr>
+
+            <th class="permission-column">
+              Permission
+            </th>
+
+            @for (role of roles(); track role.id) {
+
+              <th class="role-column">
+                {{ role.name }}
+              </th>
+
+            }
+
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (
+            group of filteredPermissionGroups();
+            track group
+          ) {
+
+            <tr class="group-row">
+
+              <td
+                class="group-title"
+                [attr.colspan]="roles().length + 1">
+
+                {{ group }}
+
+              </td>
+
+            </tr>
+
+            @for (
+              row of getPermissionsForGroup(group);
+              track row.permission.id
+            ) {
+
+              <tr class="permission-row">
+
+                <td class="permission-cell">
+
+                  <div class="permission-name">
+                    {{ row.permission.name }}
+                  </div>
+
+                  @if (row.permission.description) {
+
+                    <div class="permission-description">
+                      {{ row.permission.description }}
+                    </div>
+
+                  }
+
+                </td>
+
+                @for (
+                  role of roles();
+                  track role.id
+                ) {
+
+                  <td class="role-cell">
+
+                    <input
+                      type="checkbox"
+                      [checked]="
+                        isPermissionAssigned(
+                          role.id,
+                          row.permission.id
+                        )
+                      "
+                      [attr.aria-label]="
+                        role.name +
+                        ' - ' +
+                        row.permission.name
+                      "
+                      (change)="
+                        togglePermission(
+                          role.id,
+                          row.permission.id
+                        )
+                      "
+                    />
+
+                  </td>
+
+                }
+
+              </tr>
+
+            }
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  }
+
+</section>

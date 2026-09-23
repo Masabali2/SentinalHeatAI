@@ -1,0 +1,66 @@
+<div class="permission-group">
+
+  <div class="group-header">
+
+    <div class="group-title">
+      <h3>{{ groupName }}</h3>
+
+      <span>
+        {{ permissions.length }} permissions
+      </span>
+    </div>
+
+    <label class="select-all">
+
+      <input
+        type="checkbox"
+        [checked]="isGroupFullySelected"
+        [indeterminate]="isGroupPartiallySelected"
+        (change)="toggleGroup($event)"
+      />
+
+      <span>Select all</span>
+
+    </label>
+
+  </div>
+
+  <div class="permission-list">
+
+    @for (permission of permissions; track permission.id) {
+
+      <label class="permission-item">
+
+        <input
+          type="checkbox"
+          [checked]="isSelected(permission.id)"
+          (change)="togglePermission(permission.id)"
+        />
+
+        <div class="permission-content">
+
+          <strong>
+            {{ permission.name }}
+          </strong>
+
+          @if (permission.description) {
+            <span>
+              {{ permission.description }}
+            </span>
+          }
+
+        </div>
+
+      </label>
+
+    } @empty {
+
+      <div class="empty-state">
+        No permissions available in this group.
+      </div>
+
+    }
+
+  </div>
+
+</div>

@@ -1,0 +1,173 @@
+<section class="permissions-page">
+
+  <header class="page-header">
+
+    <div>
+      <a
+        routerLink="/administration/dashboard"
+        class="back-link"
+      >
+        ← Administration
+      </a>
+
+      <h1>Permissions</h1>
+
+      <p>
+        Manage the permission catalog used by the
+        application's access control system.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="primary-button"
+      (click)="startCreating()"
+    >
+      + Create Permission
+    </button>
+
+  </header>
+
+  @if (successMessage()) {
+    <div class="success-message">
+      {{ successMessage() }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (isFormVisible()) {
+
+    <section class="form-card">
+
+     
+
+     <app-permission-form
+  [permission]="editingPermission()"
+  [isSubmitting]="isSubmitting()"
+  [errorMessage]="errorMessage()"
+  (submitted)="savePermission($event)"
+  (cancelled)="cancelForm()"
+></app-permission-form>
+
+    </section>
+
+  }
+
+  @if (isLoading()) {
+
+    <section class="state-card">
+
+      <div class="spinner"></div>
+
+      <span>
+        Loading permissions...
+      </span>
+
+    </section>
+
+  } @else if (permissions().length === 0) {
+
+    <section class="state-card">
+
+      <strong>
+        No permissions found.
+      </strong>
+
+      <span>
+        Create your first permission to configure
+        access control.
+      </span>
+
+    </section>
+
+  } @else {
+
+    <section class="permission-groups">
+
+      @for (
+        group of getPermissionGroups();
+        track group
+      ) {
+
+        <article class="permission-group">
+
+          <header class="group-header">
+
+            <div>
+              <h2>
+                {{ group }}
+              </h2>
+
+              <span>
+                {{
+                  getPermissionsForGroup(group).length
+                }}
+                permissions
+              </span>
+            </div>
+
+          </header>
+
+          <div class="permission-list">
+
+            @for (
+              permission of getPermissionsForGroup(group);
+              track permission.id
+            ) {
+
+              <article class="permission-card">
+
+                <div class="permission-info">
+
+                  <h3>
+                    {{ permission.name }}
+                  </h3>
+
+                  @if (permission.description) {
+                    <p>
+                      {{ permission.description }}
+                    </p>
+                  }
+
+                </div>
+
+                <div class="permission-actions">
+
+                  <button
+                    type="button"
+                    class="secondary-button"
+                    (click)="startEditing(permission)"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    type="button"
+                    class="danger-button"
+                    (click)="deletePermission(permission)"
+                  >
+                    Delete
+                  </button>
+
+                </div>
+
+              </article>
+
+            }
+
+          </div>
+
+        </article>
+
+      }
+
+    </section>
+
+  }
+
+</section>

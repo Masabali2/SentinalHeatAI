@@ -100,7 +100,7 @@ export class TaskCollaborators implements OnInit {
 
     this.employeeService.getAll().subscribe({
       next: response => {
-        this.employees.set(response.data);
+        this.employees.set(response.data ?? []);
         this.isLoadingEmployees.set(false);
       },
       error: error => {

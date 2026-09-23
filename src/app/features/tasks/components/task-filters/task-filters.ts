@@ -12,14 +12,7 @@ import {
   TaskStatus
 } from '../../../../models/task.model';
 
-export interface TaskFilterState {
-  search: string;
-  status: TaskStatus | null;
-  priority: TaskPriority | null;
-  isActive: boolean | null;
-  employeeId: number | null;
-  dueFilter: 'today' | 'week' | 'overdue' | null;
-}
+import {TaskFilterState} from '../../../../models/task.model';
 
 @Component({
   selector: 'app-task-filters',
@@ -35,7 +28,7 @@ export class TaskFilters {
   readonly filtersChanged = output<TaskFilterState>();
 
   readonly hasActiveFilters = computed(() => {
-    const filters = this.filters();
+    const filters = this.filters;
 
     return (
       filters.search.trim().length > 0 ||

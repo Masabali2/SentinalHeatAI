@@ -1,0 +1,24 @@
+<article class="role-card">
+
+  <div class="role-content">
+    <div class="role-icon" aria-hidden="true">
+      ◉
+    </div>
+
+    <div class="role-information">
+      <h2>{{ role.name }}</h2>
+
+      <p>
+        Manage this role and its assigned permissions.
+      </p>
+    </div>
+  </div>
+
+  <a
+    class="manage-button"
+    [routerLink]="['/administration/roles', role.id]"
+  >
+    Manage
+  </a>
+
+</article>

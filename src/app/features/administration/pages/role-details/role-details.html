@@ -1,0 +1,381 @@
+<section class="role-details-page">
+
+  <header class="page-header">
+
+    <div>
+
+      <a
+        routerLink="/administration/roles"
+        class="back-link"
+      >
+        ← Roles
+      </a>
+
+      <h1>Role Details</h1>
+
+      <p>
+        View and manage role configuration.
+      </p>
+
+    </div>
+
+    @if (role() && !isEditing()) {
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="startEditing()"
+      >
+        Edit Role
+      </button>
+
+    }
+
+  </header>
+
+
+  @if (isLoading()) {
+
+    <section class="state-card">
+
+      <div class="spinner"></div>
+
+      <strong>
+        Loading role...
+      </strong>
+
+    </section>
+
+  }
+
+
+  @else if (
+    errorMessage() &&
+    !role()
+  ) {
+
+    <section class="state-card error-state">
+
+      {{ errorMessage() }}
+
+    </section>
+
+  }
+
+
+  @else if (role(); as currentRole) {
+
+    @if (successMessage()) {
+
+      <div class="success-message">
+        {{ successMessage() }}
+      </div>
+
+    }
+
+
+    @if (!isEditing()) {
+
+      <!-- ================================
+           Role Information
+           ================================ -->
+
+      <section class="role-info-card">
+
+        <div
+          class="role-icon"
+          aria-hidden="true"
+        >
+          ⚙
+        </div>
+
+        <div class="role-info">
+
+          <h2>
+            {{ currentRole.name }}
+          </h2>
+
+          <p>
+            {{
+              currentRole.description ||
+              'No description provided.'
+            }}
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================================
+           Permissions
+           ================================ -->
+
+      <section class="permissions-card">
+
+        <header class="permissions-header">
+
+          <div>
+
+            <h2>
+              Permissions
+            </h2>
+
+            <p>
+              Manage the permissions assigned
+              to this role.
+            </p>
+
+          </div>
+
+          @if (!isManagingPermissions()) {
+
+            <button
+              type="button"
+              class="secondary-button"
+              (click)="startManagingPermissions()"
+            >
+              Manage Permissions
+            </button>
+
+          }
+
+        </header>
+
+
+        @if (permissionErrorMessage()) {
+
+          <div class="error-message">
+
+            {{ permissionErrorMessage() }}
+
+          </div>
+
+        }
+
+
+        @if (isLoadingPermissions()) {
+
+          <section class="state-card">
+
+            <div class="spinner"></div>
+
+            <strong>
+              Loading permissions...
+            </strong>
+
+          </section>
+
+        }
+
+
+        @else if (
+          permissionGroups().length === 0
+        ) {
+
+          <section class="state-card">
+
+            No permissions are available.
+
+          </section>
+
+        }
+
+
+        @else {
+
+          <div class="permission-groups">
+
+            @for (
+              group of permissionGroups();
+              track group.name
+            ) {
+
+              <section
+                class="permission-group"
+              >
+
+                <header
+                  class="permission-group-header"
+                >
+
+                  <h3>
+                    {{ group.name }}
+                  </h3>
+
+                  <span>
+                    {{ group.permissions.length }}
+                    permissions
+                  </span>
+
+                </header>
+
+
+                <div class="permission-list">
+
+                  @for (
+                    permission of group.permissions;
+                    track permission.id
+                  ) {
+
+                    <label
+                      class="permission-item"
+                      [class.permission-item-editable]="
+                        isManagingPermissions()
+                      "
+                    >
+
+                      <input
+                        type="checkbox"
+                        [checked]="
+                          isPermissionAssigned(
+                            permission.id
+                          )
+                        "
+                        [disabled]="
+                          !isManagingPermissions() ||
+                          isSavingPermissions()
+                        "
+                        (change)="
+                          togglePermission(
+                            permission.id
+                          )
+                        "
+                      />
+
+
+                      <span
+                        class="permission-content"
+                      >
+
+                        <span
+                          class="permission-name"
+                        >
+                          {{ permission.name }}
+                        </span>
+
+
+                        @if (
+                          permission.description
+                        ) {
+
+                          <span
+                            class="permission-description"
+                          >
+                            {{
+                              permission.description
+                            }}
+                          </span>
+
+                        }
+
+                      </span>
+
+                    </label>
+
+                  }
+
+                </div>
+
+              </section>
+
+            }
+
+          </div>
+
+
+          @if (isManagingPermissions()) {
+
+            <footer
+              class="permissions-actions"
+            >
+
+              <button
+                type="button"
+                class="cancel-button"
+                [disabled]="
+                  isSavingPermissions()
+                "
+                (click)="
+                  cancelManagingPermissions()
+                "
+              >
+                Cancel
+              </button>
+
+
+              <button
+                type="button"
+                class="primary-button"
+                [disabled]="
+                  isSavingPermissions()
+                "
+                (click)="savePermissions()"
+              >
+
+                @if (
+                  isSavingPermissions()
+                ) {
+
+                  Saving...
+
+                } @else {
+
+                  Save Permissions
+
+                }
+
+              </button>
+
+            </footer>
+
+          }
+
+        }
+
+      </section>
+
+    }
+
+
+    @else {
+
+      <!-- ================================
+           Edit Role
+           ================================ -->
+
+      <section class="form-card">
+
+        <div class="section-header">
+
+          <div>
+
+            <h2>
+              Edit Role
+            </h2>
+
+            <p>
+              Update the role name and
+              description.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <app-role-form
+          [role]="currentRole"
+          [isSubmitting]="isSubmitting()"
+          [errorMessage]="errorMessage()"
+          (submitted)="updateRole($event)"
+          (cancelled)="cancelEditing()"
+        />
+
+      </section>
+
+    }
+
+  }
+
+</section>
