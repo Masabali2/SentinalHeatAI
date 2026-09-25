@@ -73,22 +73,29 @@
 
   </div>
 
-  <div class="filter-actions">
+ <div class="filter-actions">
 
-    <button
-      type="button"
-      class="secondary-button"
-      (click)="clearFilters()">
-      Clear
-    </button>
+  <button
+    type="button"
+    class="secondary-button"
+    (click)="clearFilters()">
+    Clear
+  </button>
 
-    <button
-      type="button"
-      class="primary-button"
-      (click)="applyFilters()">
-      Apply Filters
-    </button>
+  <button
+    type="button"
+    class="primary-button"
+    (click)="applyFilters()">
+    Apply Filters
+  </button>
 
-  </div>
+  <button
+    type="button"
+    class="primary-button"
+    (click)="markAllAsPaid.emit()">
+    Mark All as Paid
+  </button>
+
+</div>
 
 </section>

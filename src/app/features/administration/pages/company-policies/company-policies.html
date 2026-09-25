@@ -1,0 +1,637 @@
+<div class="company-policies-page">
+
+  <header class="page-header">
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="goBack()">
+
+      <span class="back-arrow">←</span>
+
+      <span>Back to Administration</span>
+
+    </button>
+
+    <div class="header-content">
+
+      <span class="eyebrow">
+        Administration
+      </span>
+
+      <h1>
+        Company Policies
+      </h1>
+
+      <p>
+        Manage company-wide payroll policies and reusable salary definitions.
+      </p>
+
+    </div>
+
+  </header>
+
+  @if (errorMessage()) {
+
+    <section class="state-card error-state">
+
+      <div class="state-icon">
+        !
+      </div>
+
+      <div>
+
+        <strong>
+          Something went wrong
+        </strong>
+
+        <p>
+          {{ errorMessage() }}
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="retry()">
+
+        Retry
+
+      </button>
+
+    </section>
+
+  }
+
+  @if (isLoading()) {
+
+    <section class="state-card loading-state">
+
+      <div class="spinner"></div>
+
+      <strong>
+        Loading company policies...
+      </strong>
+
+    </section>
+
+  }
+
+  @if (!isLoading()) {
+
+    <section class="policy-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Payroll
+          </span>
+
+          <h2>
+            Allowances
+          </h2>
+
+          <p>
+            Manage reusable allowance definitions available for payroll.
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="isSubmitting()"
+          (click)="openAllowanceForm()">
+
+          <span>+</span>
+
+          Add Allowance
+
+        </button>
+
+      </div>
+
+      @if (showAllowanceForm()) {
+
+        <div class="form-container">
+
+          <app-allowance-form
+            [isSubmitting]="isSubmitting()"
+            (submit)="createAllowance($event)"
+            (cancel)="closeAllowanceForm()">
+          </app-allowance-form>
+
+        </div>
+
+      }
+
+      @if (allowances().length > 0) {
+
+        <div class="table-card">
+
+          <div class="table-wrapper">
+
+            <table>
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    Name
+                  </th>
+
+                  <th>
+                    Code
+                  </th>
+
+                  <th>
+                    Description
+                  </th>
+
+                  <th>
+                    Status
+                  </th>
+
+                  <th>
+                    Actions
+                  </th>
+
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                @for (
+                  allowance of allowances();
+                  track allowance.id
+                ) {
+
+                  <tr>
+
+                    <td>
+
+                      <span class="policy-name">
+                        {{ allowance.name }}
+                      </span>
+
+                    </td>
+
+                    <td>
+
+                      <span class="code-badge">
+                        {{ allowance.code }}
+                      </span>
+
+                    </td>
+
+                    <td>
+
+                      <span class="description">
+
+                        {{ allowance.description || '—' }}
+
+                      </span>
+
+                    </td>
+
+                    <td>
+
+                      <span
+                        class="status-badge"
+                        [class.active]="allowance.isActive"
+                        [class.inactive]="!allowance.isActive">
+
+                        <span class="status-dot"></span>
+
+                        {{ allowance.isActive ? 'Active' : 'Inactive' }}
+
+                      </span>
+
+                    </td>
+
+                    <td>
+
+                      @if (allowance.isActive) {
+
+                        <button
+                          type="button"
+                          class="delete-button"
+                          [disabled]="isSubmitting()"
+                          (click)="deleteAllowance(allowance)">
+
+                          Deactivate
+
+                        </button>
+
+                      } @else {
+
+                        <button
+                          type="button"
+                          class="activate-button"
+                          [disabled]="isSubmitting()"
+                          (click)="activateAllowance(allowance)">
+
+                          Activate
+
+                        </button>
+
+                      }
+
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      } @else {
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            +
+          </div>
+
+          <h3>
+            No allowances configured
+          </h3>
+
+          <p>
+            Create your first company allowance to make it available
+            for payroll processing.
+          </p>
+
+          <button
+            type="button"
+            class="primary-button"
+            [disabled]="isSubmitting()"
+            (click)="openAllowanceForm()">
+
+            Add Allowance
+
+          </button>
+
+        </div>
+
+      }
+
+    </section>
+
+    <section class="policy-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Payroll
+          </span>
+
+          <h2>
+            Deductions
+          </h2>
+
+          <p>
+            Manage reusable deduction definitions available for payroll.
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="isSubmitting()"
+          (click)="openDeductionForm()">
+
+          <span>+</span>
+
+          Add Deduction
+
+        </button>
+
+      </div>
+
+      @if (showDeductionForm()) {
+
+        <div class="form-container">
+
+          <app-deduction-form
+            [isSubmitting]="isSubmitting()"
+            (submit)="createDeduction($event)"
+            (cancel)="closeDeductionForm()">
+          </app-deduction-form>
+
+        </div>
+
+      }
+
+      @if (deductions().length > 0) {
+
+        <div class="table-card">
+
+          <div class="table-wrapper">
+
+            <table>
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    Name
+                  </th>
+
+                  <th>
+                    Code
+                  </th>
+
+                  <th>
+                    Description
+                  </th>
+
+                  <th>
+                    Status
+                  </th>
+
+                  <th>
+                    Actions
+                  </th>
+
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                @for (
+                  deduction of deductions();
+                  track deduction.id
+                ) {
+
+                  <tr>
+
+                    <td>
+
+                      <span class="policy-name">
+                        {{ deduction.name }}
+                      </span>
+
+                    </td>
+
+                    <td>
+
+                      <span class="code-badge">
+                        {{ deduction.code }}
+                      </span>
+
+                    </td>
+
+                    <td>
+
+                      <span class="description">
+
+                        {{ deduction.description || '—' }}
+
+                      </span>
+
+                    </td>
+
+                    <td>
+
+                      <span
+                        class="status-badge"
+                        [class.active]="deduction.isActive"
+                        [class.inactive]="!deduction.isActive">
+
+                        <span class="status-dot"></span>
+
+                        {{ deduction.isActive ? 'Active' : 'Inactive' }}
+
+                      </span>
+
+                    </td>
+
+                    <td>
+
+                      @if (deduction.isActive) {
+
+                        <button
+                          type="button"
+                          class="delete-button"
+                          [disabled]="isSubmitting()"
+                          (click)="deleteDeduction(deduction)">
+
+                          Deactivate
+
+                        </button>
+
+                      } @else {
+
+                        <button
+                          type="button"
+                          class="activate-button"
+                          [disabled]="isSubmitting()"
+                          (click)="activateDeduction(deduction)">
+
+                          Activate
+
+                        </button>
+
+                      }
+
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      } @else {
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            +
+          </div>
+
+          <h3>
+            No deductions configured
+          </h3>
+
+          <p>
+            Create your first company deduction to make it available
+            for payroll processing.
+          </p>
+
+          <button
+            type="button"
+            class="primary-button"
+            [disabled]="isSubmitting()"
+            (click)="openDeductionForm()">
+
+            Add Deduction
+
+          </button>
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+@if (showConfirmationModal()) {
+  <div
+    class="modal-backdrop"
+    role="presentation"
+    (click)="closeConfirmationModal()">
+
+    <div
+      class="confirmation-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirmation-modal-title"
+      aria-describedby="confirmation-modal-description"
+      tabindex="-1"
+      (click)="$event.stopPropagation()"
+      (keydown.escape)="closeConfirmationModal()">
+
+      <!-- Modal Icon -->
+
+      <div
+        class="modal-icon"
+        aria-hidden="true"
+        [class.activate-icon]="confirmationType() === 'activate'"
+        [class.deactivate-icon]="confirmationType() === 'deactivate'">
+
+        @if (confirmationType() === 'activate') {
+          ✓
+        } @else {
+          !
+        }
+
+      </div>
+
+
+      <!-- Modal Content -->
+
+      <div class="modal-content">
+
+        <h3 id="confirmation-modal-title">
+
+          @if (confirmationType() === 'activate') {
+            Activate
+          } @else {
+            Deactivate
+          }
+
+          @if (selectedAllowance()) {
+            Allowance
+          } @else {
+            Deduction
+          }
+
+        </h3>
+
+
+        <p id="confirmation-modal-description">
+
+          Are you sure you want to
+
+          <strong>
+            @if (confirmationType() === 'activate') {
+              activate
+            } @else {
+              deactivate
+            }
+          </strong>
+
+          <strong>
+            @if (selectedAllowance()) {
+              "{{ selectedAllowance()?.name }}"
+            } @else {
+              "{{ selectedDeduction()?.name }}"
+            }
+          </strong>?
+
+        </p>
+
+
+        @if (confirmationType() === 'deactivate') {
+          <span class="modal-note">
+            This policy will no longer be available for new
+            payrolls, but existing payroll records will remain
+            unchanged.
+          </span>
+        }
+
+
+        @if (confirmationType() === 'activate') {
+          <span class="modal-note">
+            This policy will become available again for new
+            payrolls.
+          </span>
+        }
+
+      </div>
+
+
+      <!-- Modal Actions -->
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="modal-cancel-button"
+          [disabled]="isSubmitting()"
+          (click)="closeConfirmationModal()">
+
+          Cancel
+
+        </button>
+
+
+        <button
+          type="button"
+          class="modal-confirm-button"
+          [class.activate-confirm]="confirmationType() === 'activate'"
+          [class.deactivate-confirm]="confirmationType() === 'deactivate'"
+          [disabled]="isSubmitting()"
+          (click)="confirmPolicyAction()">
+
+          @if (isSubmitting()) {
+            Processing...
+          } @else if (confirmationType() === 'activate') {
+            Activate
+          } @else {
+            Deactivate
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+}
+</div>

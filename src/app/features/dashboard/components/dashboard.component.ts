@@ -84,7 +84,7 @@ openPriorityWork(route: string): void {
     const priorityKeys = [
       'totalEmployees',
       'totalDepartments',
-      'totalOffers',
+      'pendingOffers',
       'pendingOnboarding'
     ];
 

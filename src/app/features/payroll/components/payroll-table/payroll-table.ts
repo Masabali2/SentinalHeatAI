@@ -29,6 +29,7 @@ export class PayrollTable {
   readonly markAsPaid = output<number>();
 
   readonly PayrollStatus = PayrollStatus;
+  readonly cancel = output<number>();
 
   formatMonth(month: number): string {
     return new Date(2000, month - 1, 1).toLocaleString('en-US', {

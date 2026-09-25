@@ -22,7 +22,7 @@ import {
 import { PayrollHeader } from '../../components/payroll-header/payroll-header';
 import { PayrollStatCard } from '../../components/payroll-stat-card/payroll-stat-card';
 import { PayrollTable } from '../../components/payroll-table/payroll-table';
-
+import { NotificationService } from '../../../../core/services/notification.service';
 @Component({
   selector: 'app-payroll-dashboard',
   imports: [
@@ -49,7 +49,7 @@ export class PayrollDashboard implements OnInit {
   readonly draftPayrolls = signal(0);
   readonly processedPayrolls = signal(0);
   readonly paidPayrolls = signal(0);
-
+private readonly notificationService = inject(NotificationService);
   ngOnInit(): void {
     this.loadPayrolls();
   }
@@ -148,7 +148,7 @@ export class PayrollDashboard implements OnInit {
   }
 
   viewPayroll(payrollId: number): void {
-    this.router.navigate(['/payroll', payrollId]);
+    this.router.navigate(['/payroll/payroll-details', payrollId]);
   }
 
   processPayroll(payrollId: number): void {
@@ -180,30 +180,93 @@ export class PayrollDashboard implements OnInit {
   }
 
   markAsPaid(payrollId: number): void {
-    this.isLoading.set(true);
-    this.errorMessage.set('');
+  this.isLoading.set(true);
 
-    this.payrollService.markAsPaid(payrollId).subscribe({
-      next: response => {
-        if (response.success) {
-          this.loadPayrolls();
-          return;
-        }
-
-        this.errorMessage.set(
-          response.message || 'Unable to mark payroll as paid.'
+  this.payrollService.markAsPaid(payrollId).subscribe({
+    next: response => {
+      if (response.success) {
+        this.notificationService.success(
+          response.message || 'Payroll marked as paid successfully.'
         );
 
-        this.isLoading.set(false);
+        this.loadPayrolls();
+        return;
+      }
+
+      this.notificationService.error(
+        response.message || 'Unable to mark payroll as paid.'
+      );
+
+      this.isLoading.set(false);
+    },
+
+    error: () => {
+      this.notificationService.error(
+        'Unable to mark payroll as paid. Please try again.'
+      );
+
+      this.isLoading.set(false);
+    }
+  });
+}
+markAllAsPaid(): void {
+  const processedPayrollIds = this.filteredPayrolls()
+    .filter(payroll => payroll.status === PayrollStatus.Processed)
+    .map(payroll => payroll.id);
+
+  if (processedPayrollIds.length === 0) {
+    this.notificationService.warning(
+      'There are no processed payrolls available to mark as paid.'
+    );
+
+    return;
+  }
+
+  this.payrollService
+    .bulkMarkAsPaid(processedPayrollIds)
+    .subscribe({
+      next: () => {
+        this.notificationService.success(
+          'Selected payrolls marked as paid successfully.'
+        );
+
+        this.loadPayrolls();
       },
-
       error: () => {
-        this.errorMessage.set(
-          'Unable to mark payroll as paid. Please try again.'
+        this.notificationService.error(
+          'Failed to mark payrolls as paid.'
         );
-
-        this.isLoading.set(false);
       }
     });
-  }
+}
+  cancelPayroll(payrollId: number): void {
+  this.isLoading.set(true);
+
+  this.payrollService.cancelPayroll(payrollId).subscribe({
+    next: response => {
+      if (response.success) {
+        this.notificationService.success(
+          response.message || 'Payroll cancelled successfully.'
+        );
+
+        this.loadPayrolls();
+        return;
+      }
+
+      this.notificationService.error(
+        response.message || 'Unable to cancel payroll.'
+      );
+
+      this.isLoading.set(false);
+    },
+
+    error: () => {
+      this.notificationService.error(
+        'Unable to cancel payroll. Please try again.'
+      );
+
+      this.isLoading.set(false);
+    }
+  });
+}
 }

@@ -145,4 +145,42 @@ export class PayrollService {
       null
     );
   }
+  cancelPayroll(
+  payrollId: number
+): Observable<ApiResponse<unknown>> {
+  return this.http.post<ApiResponse<unknown>>(
+    `${this.apiUrl}/${payrollId}/cancel`,
+    null
+  );
+}
+bulkMarkAsPaid(payrollIds: number[]) {
+  return this.http.post<ApiResponse<string>>(
+    `${this.apiUrl}/bulk/pay`,
+    { payrollIds }
+  );
+}
+deleteAllowance(id: number): Observable<ApiResponse<null>> {
+  return this.http.delete<ApiResponse<null>>(
+    `${this.apiUrl}/allowances/${id}`
+  );
+}
+
+deleteDeduction(id: number): Observable<ApiResponse<null>> {
+  return this.http.delete<ApiResponse<null>>(
+    `${this.apiUrl}/deductions/${id}`
+  );
+} 
+activateAllowance(id: number): Observable<ApiResponse<null>> {
+  return this.http.patch<ApiResponse<null>>(
+    `${this.apiUrl}/allowances/${id}/activate`,
+    {}
+  );
+}
+
+activateDeduction(id: number): Observable<ApiResponse<null>> {
+  return this.http.patch<ApiResponse<null>>(
+    `${this.apiUrl}/deductions/${id}/activate`,
+    {}
+  );
+}
 }

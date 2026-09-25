@@ -55,7 +55,7 @@ export class PayrollFilter {
     { value: 11, label: 'November' },
     { value: 12, label: 'December' }
   ];
-
+readonly markAllAsPaid = output<void>();
   applyFilters(): void {
     this.filterChange.emit({
       ...this.filter

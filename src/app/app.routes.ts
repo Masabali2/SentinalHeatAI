@@ -25,14 +25,13 @@ import { AdministrationDashboard } from './features/administration/pages/adminis
 import { Roles } from './features/administration/pages/roles/roles';
 import { RoleDetails } from './features/administration/pages/role-details/role-details';
 import { Permissions } from './features/administration/pages/permissions/permissions';
-import { SystemSettings } from './features/administration/pages/system-settings/system-settings';
+import { CompanyPolicies } from './features/administration/pages/company-policies/company-policies';
+
 import { AccessControl } from './features/administration/pages/access-control/access-control';
 import { permissionGuard } from './core/guards/permission.guard';
 import { PERMISSIONS } from './core/authorization/permission.constants';
 import { PayrollDashboard } from './features/payroll/pages/payroll-dashboard/payroll-dashboard';
 import { GeneratePayroll } from './features/payroll/pages/generate-payroll/generate-payroll';
-import { Allowances } from './features/payroll/pages/allowances/allowances';
-import { Deductions } from './features/payroll/pages/deductions/deductions';
 import { PayrollDetails } from './features/payroll/pages/payroll-details/payroll-details';
 export const routes: Routes = [
   {
@@ -96,10 +95,10 @@ export const routes: Routes = [
   path: 'access-control',
   component: AccessControl
 },
-    {
-      path: 'system-settings',
-      component: SystemSettings
-    }
+   {
+  path: 'company-policies',
+  component: CompanyPolicies
+}
   ]
 },
 
@@ -116,16 +115,9 @@ export const routes: Routes = [
   component: GeneratePayroll
 },
 {
-  path: 'payroll/allowances',
-  component: Allowances
-},
-{
-  path: 'payroll/deductions',
-  component: Deductions
-},
-{
-  path: 'payroll/:payrollId',
+  path: 'payroll/payroll-details/:payrollId',
   component: PayrollDetails
+
 },
       {
   path: 'tasks',

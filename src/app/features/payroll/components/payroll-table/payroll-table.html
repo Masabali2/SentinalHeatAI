@@ -99,6 +99,21 @@
                     </button>
 
                   }
+                  @if (
+  payroll.status === PayrollStatus.Draft ||
+  payroll.status === PayrollStatus.Processing ||
+  payroll.status === PayrollStatus.Processed
+) {
+
+  <button
+    type="button"
+    class="action-button danger-button"
+    (click)="cancel.emit(payroll.id)"
+    [attr.aria-label]="'Cancel payroll for ' + payroll.employeeName">
+    Cancel
+  </button>
+
+}
 
                 </div>
 

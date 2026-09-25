@@ -55,18 +55,7 @@ export class TaskSummary {
     ).length
   );
 
-  readonly activeTasks = computed(() =>
-    this.tasks().filter(
-      task => task.isActive
-    ).length
-  );
-
-  readonly inactiveTasks = computed(() =>
-    this.tasks().filter(
-      task => !task.isActive
-    ).length
-  );
-
+  
   private isOverdue(task: EmployeeTask): boolean {
     if (!task.dueDate) {
       return false;

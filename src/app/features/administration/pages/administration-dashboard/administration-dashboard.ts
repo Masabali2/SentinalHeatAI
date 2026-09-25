@@ -11,7 +11,6 @@ import { AdministrationCard } from '../../components/administration-card/adminis
   selector: 'app-administration-dashboard',
   standalone: true,
   imports: [
-    RouterLink,
     AdministrationStatCard,
      AdministrationCard
   ],

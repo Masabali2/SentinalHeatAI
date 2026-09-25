@@ -49,7 +49,8 @@
 
   <app-payroll-filter
     (filterChange)="applyFilters($event)"
-    (clear)="clearFilters()">
+    (clear)="clearFilters()"
+    (markAllAsPaid)="markAllAsPaid()">
   </app-payroll-filter>
 
   @if (isLoading()) {
@@ -67,7 +68,8 @@
       [payrolls]="filteredPayrolls()"
       (view)="viewPayroll($event)"
       (process)="processPayroll($event)"
-      (markAsPaid)="markAsPaid($event)">
+      (markAsPaid)="markAsPaid($event)"
+      (cancel)="cancelPayroll($event)">
     </app-payroll-table>
 
   }
